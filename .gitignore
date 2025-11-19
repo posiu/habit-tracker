@@ -10,6 +10,8 @@
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
+log/*
+tmp/*
 !/log/.keep
 !/tmp/.keep
 
@@ -27,3 +29,32 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore database files
+*.sqlite3
+*.sqlite3-journal
+
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore node modules (if using npm packages)
+node_modules/
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignore test coverage
+coverage/
+
+# Ignore Rails assets
+/public/assets
+/public/packs
+/public/packs-test
+
+# Ignore Sidekiq/Redis
+*.rdb

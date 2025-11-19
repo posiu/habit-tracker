@@ -1,3 +1,19 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  devise_for :users
+
+  root 'dashboard#index'
+
+  resources :habits
+  resources :goals
+  resources :categories
+  resources :daily_entries
+
+  namespace :api do
+    namespace :v1 do
+      # API routes will be added in Stage 6
+      # post 'auth/login', to: 'authentication#create'
+      # resources :habits
+    end
+  end
 end
+

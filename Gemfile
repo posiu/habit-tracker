@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.2'
+ruby '~> 3.0.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.4', '>= 6.1.4.1'
@@ -44,3 +44,61 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+# Authentication
+gem 'devise'
+
+# Authorization
+gem 'pundit'
+
+# Background Jobs
+gem 'sidekiq'
+gem 'sidekiq-cron'
+gem 'redis', '~> 5.0'
+
+# Testing
+group :development, :test do
+  gem 'rspec-rails', '~> 6.0'
+  gem 'capybara', '~> 3.39'
+  gem 'factory_bot_rails', '~> 6.2'
+  gem 'faker', '~> 3.0'
+  gem 'shoulda-matchers', '~> 5.3'
+  gem 'webmock', '~> 3.18'
+  gem 'vcr', '~> 6.2'
+  gem 'timecop', '~> 0.9'
+  gem 'database_cleaner-active_record', '~> 2.2'
+end
+
+# Code Quality
+group :development do
+  gem 'rubocop', '~> 1.57', require: false
+  gem 'rubocop-rails', '~> 2.23', require: false
+  gem 'rubocop-rspec', '~> 2.24', require: false
+  gem 'brakeman', '~> 6.0', require: false
+  gem 'bundler-audit', '~> 0.9', require: false
+  gem 'bullet', '~> 7.0'
+  gem 'annotate', '~> 3.2'
+end
+
+# Development Tools
+group :development do
+  gem 'pry-rails'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'letter_opener'
+  gem 'dotenv-rails'
+end
+
+# Utilities
+gem 'kaminari' # Pagination
+
+# Hotwire (should be included by default, but verify)
+gem 'turbo-rails'
+gem 'stimulus-rails'
+
+# API Support (for future iOS app)
+gem 'jbuilder', '~> 2.10'
+gem 'rack-cors'
+
+# API Documentation (optional, for later)
+# gem 'rswag'
