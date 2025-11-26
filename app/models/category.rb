@@ -11,6 +11,8 @@ class Category < ApplicationRecord
   validates :icon, length: { maximum: 50 }
 
   # Scopes
+  scope :active, -> { where(is_active: true) }
+  scope :inactive, -> { where(is_active: false) }
   scope :ordered, -> { order(:position, :created_at) }
   scope :with_habits, -> { joins(:habits).distinct }
   scope :with_goals, -> { joins(:goals).distinct }
@@ -22,5 +24,6 @@ class Category < ApplicationRecord
 
   def set_defaults
     self.position ||= (user&.categories&.maximum(:position) || 0) + 1
+    self.is_active = true if is_active.nil?
   end
 end
