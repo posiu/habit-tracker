@@ -1,2 +1,171 @@
-<h1>DailyEntries#show</h1>
-<p>Find me in app/views/daily_entries/show.html.erb</p>
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">
+            <%= @daily_entry.entry_date.strftime("%A, %B %d, %Y") %>
+          </h1>
+          <p class="mt-1 text-sm text-gray-600">
+            Daily entry and habit tracking
+          </p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Edit Entry", edit_daily_entry_path(@daily_entry), class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+          <%= link_to "All Entries", daily_entries_path, class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mood and Notes -->
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">Mood</h3>
+          <% if @daily_entry.mood %>
+            <div class="flex items-center">
+              <span class="text-2xl mr-2">
+                <%= case @daily_entry.mood
+                    when 5 then '😄'
+                    when 4 then '😊'
+                    when 3 then '😐'
+                    when 2 then '😔'
+                    when 1 then '😞'
+                    end %>
+              </span>
+              <span class="text-lg text-gray-700">
+                <%= case @daily_entry.mood
+                    when 5 then 'Great'
+                    when 4 then 'Good'
+                    when 3 then 'Okay'
+                    when 2 then 'Not Great'
+                    when 1 then 'Poor'
+                    end %>
+              </span>
+            </div>
+          <% else %>
+            <p class="text-gray-500">No mood recorded</p>
+          <% end %>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-3">Notes</h3>
+          <% if @daily_entry.notes.present? %>
+            <p class="text-gray-700"><%= simple_format(@daily_entry.notes) %></p>
+          <% else %>
+            <p class="text-gray-500">No notes for this day</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Habits Section -->
+  <div class="bg-white shadow rounded-lg mb-6">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">Habits</h2>
+    </div>
+    <div class="p-6">
+      <% if @user_habits.any? %>
+        <div class="space-y-4">
+          <% @user_habits.each do |habit| %>
+            <% habit_entry = @habit_entries.find { |he| he.habit_id == habit.id } %>
+            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div class="flex-1">
+                <h3 class="text-lg font-medium text-gray-900"><%= habit.name %></h3>
+                <p class="text-sm text-gray-600">
+                  <%= habit.category&.name || 'No Category' %> • 
+                  <%= habit.habit_type.humanize %> 
+                  <% if habit.target_value %>• Target: <%= habit.target_value %><% end %>
+                </p>
+              </div>
+              <div class="flex items-center space-x-4">
+                <% if habit_entry %>
+                  <% if habit.habit_type == 'boolean' %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      ✓ Completed
+                    </span>
+                  <% else %>
+                    <span class="text-lg font-semibold text-green-600">
+                      <%= habit_entry.value %>
+                    </span>
+                  <% end %>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    Not tracked
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No habits</h3>
+          <p class="mt-1 text-sm text-gray-500">Create your first habit to start tracking.</p>
+          <div class="mt-6">
+            <%= link_to "Create Habit", new_habit_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Goals Section -->
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900">Goals</h2>
+    </div>
+    <div class="p-6">
+      <% if @user_goals.any? %>
+        <div class="space-y-4">
+          <% @user_goals.each do |goal| %>
+            <% goal_entry = @goal_entries.find { |ge| ge.goal_id == goal.id } %>
+            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+              <div class="flex-1">
+                <h3 class="text-lg font-medium text-gray-900"><%= goal.name %></h3>
+                <p class="text-sm text-gray-600">
+                  <%= goal.category&.name || 'No Category' %> • 
+                  <%= goal.goal_type.humanize %>
+                  <% if goal.target_date %>• Due: <%= goal.target_date.strftime("%b %d, %Y") %><% end %>
+                </p>
+              </div>
+              <div class="flex items-center space-x-4">
+                <% if goal_entry %>
+                  <% if goal_entry.boolean_value %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      ✓ Progress made
+                    </span>
+                  <% elsif goal_entry.numeric_value %>
+                    <span class="text-lg font-semibold text-green-600">
+                      <%= goal_entry.numeric_value %>
+                    </span>
+                  <% end %>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    No progress
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-8">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No goals</h3>
+          <p class="mt-1 text-sm text-gray-500">Create your first goal to start tracking progress.</p>
+          <div class="mt-6">
+            <%= link_to "Create Goal", new_goal_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
