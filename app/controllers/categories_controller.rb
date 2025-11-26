@@ -20,7 +20,7 @@ class CategoriesController < ApplicationController
     result = Categories::CreateService.call(user: current_user, params: category_params)
     
     if result.success?
-      redirect_to result.data, notice: 'Category was successfully created.'
+      redirect_to categories_path, notice: 'Category was successfully created.'
     else
       @category_form = CategoryForm.new(nil, category_params)
       @category_form.valid? # Trigger validations for error display
@@ -38,7 +38,7 @@ class CategoriesController < ApplicationController
     result = Categories::UpdateService.call(category: @category, params: category_params)
     
     if result.success?
-      redirect_to result.data, notice: 'Category was successfully updated.'
+      redirect_to categories_path, notice: 'Category was successfully updated.'
     else
       @category_form = CategoryForm.new(@category, category_params)
       @category_form.valid? # Trigger validations for error display

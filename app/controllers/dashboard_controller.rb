@@ -15,5 +15,6 @@ class DashboardController < ApplicationController
     @this_month_entries = current_user.daily_entries.where(entry_date: Date.current.beginning_of_month..Date.current.end_of_month).count
     @today_entry = current_user.daily_entries.find_by(entry_date: Date.current)
     @recent_entries = current_user.daily_entries.order(entry_date: :desc).limit(5)
+    @has_more_entries = current_user.daily_entries.count > 5
   end
 end
