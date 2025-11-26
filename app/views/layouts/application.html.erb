@@ -11,38 +11,51 @@
     <%= turbo_include_tags %>
     <script>
       // User menu dropdown functionality - inline to avoid Webpacker issues
-      document.addEventListener('DOMContentLoaded', function() {
-        initializeDropdown();
-      });
-
-      // Also initialize on Turbolinks page loads
-      document.addEventListener('turbolinks:load', function() {
-        initializeDropdown();
-      });
+      let dropdownInitialized = false;
+      let clickOutsideListener = null;
 
       function initializeDropdown() {
+        if (dropdownInitialized) return;
+        
         const userMenuButton = document.getElementById('user-menu-button');
         const userMenu = document.getElementById('user-menu');
         
         if (userMenuButton && userMenu) {
-          // Remove existing listeners to prevent duplicates
-          userMenuButton.replaceWith(userMenuButton.cloneNode(true));
-          const newUserMenuButton = document.getElementById('user-menu-button');
-          
-          newUserMenuButton.addEventListener('click', function(e) {
+          userMenuButton.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
             userMenu.classList.toggle('hidden');
           });
           
-          // Close menu when clicking outside
-          document.addEventListener('click', function(event) {
-            if (!newUserMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+          // Remove previous click outside listener if exists
+          if (clickOutsideListener) {
+            document.removeEventListener('click', clickOutsideListener);
+          }
+          
+          // Add new click outside listener
+          clickOutsideListener = function(event) {
+            if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
               userMenu.classList.add('hidden');
             }
-          });
+          };
+          
+          document.addEventListener('click', clickOutsideListener);
+          dropdownInitialized = true;
         }
       }
+
+      // Initialize on DOM ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeDropdown);
+      } else {
+        initializeDropdown();
+      }
+
+      // Also initialize on Turbolinks page loads
+      document.addEventListener('turbolinks:load', function() {
+        dropdownInitialized = false;
+        initializeDropdown();
+      });
     </script>
   </head>
 
@@ -82,7 +95,7 @@
                   <%= link_to "Profile", users_profile_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                   <%= link_to "Settings", users_settings_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                   <div class="border-t border-gray-100"></div>
-                  <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                  <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { confirm: "Are you sure?" }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 </div>
               </div>
             </div>
@@ -108,3 +121,4 @@
     </main>
   </body>
 </html>
+
