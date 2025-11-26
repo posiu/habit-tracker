@@ -9,8 +9,8 @@ class Habit < ApplicationRecord
     boolean: 'boolean',
     numeric: 'numeric',
     time: 'time',
-    count: 'count'
-  }
+    counter: 'count'
+  }, _suffix: true
 
   # Validations
   validates :name, presence: true, length: { maximum: 200 }
