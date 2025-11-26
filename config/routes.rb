@@ -1,11 +1,14 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { 
+    registrations: 'users/registrations' 
+  }
   
   namespace :users do
     resource :profile, only: [:show, :edit, :update], controller: 'profiles'
     resource :settings, only: [:show, :update], controller: 'settings'
   end
 
+  # Root route - redirect to dashboard (authentication handled by controller)
   root 'dashboard#index'
 
   resources :habits
