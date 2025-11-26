@@ -33,17 +33,23 @@ class DailyEntriesController < ApplicationController
   end
 
   def edit
+    authorize @daily_entry
+    @daily_entry_form = DailyEntryForm.new(@daily_entry, user: current_user)
   end
 
   def update
-    if @daily_entry.update(daily_entry_params)
+    authorize @daily_entry
+    @daily_entry_form = DailyEntryForm.new(@daily_entry, user: current_user, attributes: daily_entry_params)
+    
+    if @daily_entry_form.save
       redirect_to @daily_entry, notice: 'Daily entry was successfully updated.'
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
+    authorize @daily_entry
     @daily_entry.destroy
     redirect_to daily_entries_url, notice: 'Daily entry was successfully deleted.'
   end
