@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users, controllers: { 
-    registrations: 'users/registrations' 
-  }
+  devise_for :users
   
   namespace :users do
     resource :profile, only: [:show, :edit, :update], controller: 'profiles'
