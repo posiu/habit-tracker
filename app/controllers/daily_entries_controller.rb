@@ -55,6 +55,6 @@ class DailyEntriesController < ApplicationController
   end
 
   def daily_entry_params
-    params.require(:daily_entry).permit(:entry_date, :mood, :notes)
+    params.require(:daily_entry_form).permit(:entry_date, :mood, :notes)
   end
 end

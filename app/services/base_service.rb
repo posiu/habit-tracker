@@ -1,28 +1,48 @@
-module Services
-  class BaseService
-    attr_reader :errors
-
-    def initialize(*args)
-      @errors = []
+class BaseService
+  # Service result object to standardize return values
+  Result = Struct.new(:success?, :data, :errors) do
+    def failure?
+      !success?
     end
 
-    def call
-      raise NotImplementedError, "#{self.class} must implement #call"
+    def success_data
+      success? ? data : nil
     end
 
-    def success?
-      @errors.empty?
-    end
-
-    protected
-
-    def add_error(message)
-      @errors << message
-    end
-
-    def add_errors(error_messages)
-      @errors.concat(Array(error_messages))
+    def error_messages
+      return [] if success?
+      
+      case errors
+      when ActiveModel::Errors
+        errors.full_messages
+      when Array
+        errors
+      when String
+        [errors]
+      else
+        [errors.to_s]
+      end
     end
   end
-end
 
+  # Class method to call service
+  def self.call(**args)
+    new(**args).call
+  end
+
+  # Instance method that should be implemented by subclasses
+  def call
+    raise NotImplementedError, "#{self.class} must implement #call method"
+  end
+
+  private
+
+  # Helper methods for creating results
+  def success(data = nil)
+    Result.new(true, data, nil)
+  end
+
+  def failure(errors = nil)
+    Result.new(false, nil, errors)
+  end
+end
