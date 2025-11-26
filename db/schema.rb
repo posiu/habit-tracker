@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_26_220008) do
+ActiveRecord::Schema.define(version: 2025_11_26_230001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2025_11_26_220008) do
     t.integer "position"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "is_active", default: true, null: false
     t.index ["position"], name: "index_categories_on_position"
     t.index ["user_id", "name"], name: "index_categories_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_categories_on_user_id"
