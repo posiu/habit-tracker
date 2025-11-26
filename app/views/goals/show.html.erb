@@ -1,2 +1,136 @@
-<h1>Goals#show</h1>
-<p>Find me in app/views/goals/show.html.erb</p>
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900"><%= @goal.name %></h1>
+          <p class="mt-1 text-sm text-gray-600">
+            <%= @goal.category&.name || 'No Category' %> • 
+            <%= @goal.goal_type.humanize %>
+          </p>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Edit Goal", edit_goal_path(@goal), class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+          <%= link_to "All Goals", goals_path, class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Goal Details -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Goal Details</h3>
+          <dl class="space-y-3">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Type</dt>
+              <dd class="text-sm text-gray-900"><%= @goal.goal_type.humanize %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Start Date</dt>
+              <dd class="text-sm text-gray-900"><%= @goal.start_date.strftime("%B %d, %Y") %></dd>
+            </div>
+            <% if @goal.target_date %>
+              <div>
+                <dt class="text-sm font-medium text-gray-500">Target Date</dt>
+                <dd class="text-sm text-gray-900"><%= @goal.target_date.strftime("%B %d, %Y") %></dd>
+              </div>
+            <% end %>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Status</dt>
+              <dd class="text-sm">
+                <% if @goal.completed? %>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                    Completed on <%= @goal.completed_at.strftime("%B %d, %Y") %>
+                  </span>
+                <% elsif @goal.is_active %>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Active</span>
+                <% else %>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>
+                <% end %>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Progress -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Progress</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-600">Progress</span>
+                <span class="font-medium"><%= @goal.progress_percentage %>%</span>
+              </div>
+              <div class="mt-1 bg-gray-200 rounded-full h-2">
+                <div class="bg-green-600 h-2 rounded-full" style="width: <%= @goal.progress_percentage %>%"></div>
+              </div>
+            </div>
+            
+            <% if @goal.goal_metric %>
+              <div class="text-sm">
+                <span class="text-gray-600">Current Value:</span>
+                <span class="font-medium"><%= @goal.current_value || 0 %></span>
+              </div>
+            <% end %>
+
+            <% if @goal.days_remaining && @goal.days_remaining > 0 %>
+              <div class="text-sm">
+                <span class="text-gray-600">Days Remaining:</span>
+                <span class="font-medium text-orange-600"><%= @goal.days_remaining %> days</span>
+              </div>
+            <% elsif @goal.days_remaining && @goal.days_remaining <= 0 %>
+              <div class="text-sm">
+                <span class="text-red-600 font-medium">Goal deadline has passed</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <% if @goal.description.present? %>
+        <div class="border-t border-gray-200 pt-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-3">Description</h3>
+          <p class="text-gray-700"><%= simple_format(@goal.description) %></p>
+        </div>
+      <% end %>
+
+      <!-- Recent Goal Entries -->
+      <div class="border-t border-gray-200 pt-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Progress</h3>
+        <% recent_entries = @goal.goal_entries.joins(:daily_entry).order('daily_entries.entry_date DESC').limit(5) %>
+        <% if recent_entries.any? %>
+          <div class="space-y-2">
+            <% recent_entries.each do |entry| %>
+              <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
+                <div class="flex items-center space-x-3">
+                  <span class="text-sm font-medium text-gray-900">
+                    <%= entry.daily_entry.entry_date.strftime("%b %d") %>
+                  </span>
+                  <% if entry.boolean_value %>
+                    <span class="text-sm text-green-600">✓ Progress made</span>
+                  <% elsif entry.numeric_value %>
+                    <span class="text-sm text-gray-700">Value: <%= entry.numeric_value %></span>
+                  <% end %>
+                </div>
+                <%= link_to "View", entry.daily_entry, class: "text-sm text-green-600 hover:text-green-500" %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No progress entries</h3>
+            <p class="mt-1 text-sm text-gray-500">Start tracking your progress by logging daily entries.</p>
+            <div class="mt-6">
+              <%= link_to "Log Today's Entry", new_daily_entry_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

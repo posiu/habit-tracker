@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   resources :goals
   resources :categories
   resources :daily_entries
+  resources :habit_entries, only: [:create, :update, :destroy]
+  resources :goal_entries, only: [:create, :update, :destroy]
 
   namespace :api do
     namespace :v1 do

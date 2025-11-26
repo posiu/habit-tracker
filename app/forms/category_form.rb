@@ -11,7 +11,7 @@ class CategoryForm
 
   validates :name, presence: true, length: { maximum: 100 }
   validates :description, length: { maximum: 500 }
-  validates :color, format: { with: /\A#[0-9A-Fa-f]{6}\z/, message: "must be a valid hex color" }, allow_blank: true
+  validates :color, format: { with: /\A#[0-9A-Fa-f]{6}\z/, message: "must be a valid hex color" }, allow_blank: true, allow_nil: true
   validates :position, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
 
   def initialize(category = nil, attributes = {})

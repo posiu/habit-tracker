@@ -91,10 +91,40 @@
                       <%= habit_entry.value %>
                     </span>
                   <% end %>
+                  <%= link_to "Edit", "#", class: "text-sm text-blue-600 hover:text-blue-500", 
+                      onclick: "toggleHabitForm(#{habit.id}); return false;" %>
                 <% else %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    Not tracked
-                  </span>
+                  <%= link_to "Track", "#", class: "inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-blue-600 bg-blue-100 hover:bg-blue-200", 
+                      onclick: "toggleHabitForm(#{habit.id}); return false;" %>
+                <% end %>
+              </div>
+              
+              <!-- Inline Habit Tracking Form -->
+              <div id="habit-form-<%= habit.id %>" class="hidden mt-3 p-3 bg-gray-50 rounded">
+                <%= form_with url: habit_entries_path, local: true, class: "space-y-3" do |form| %>
+                  <%= form.hidden_field :habit_id, value: habit.id %>
+                  <%= form.hidden_field :daily_entry_id, value: @daily_entry.id %>
+                  
+                  <% if habit.habit_type == 'boolean' %>
+                    <div class="flex items-center">
+                      <%= form.check_box :completed, checked: habit_entry&.completed, 
+                          class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+                      <%= form.label :completed, "Mark as completed", class: "ml-2 text-sm text-gray-700" %>
+                    </div>
+                  <% else %>
+                    <div>
+                      <%= form.label :value, "Value", class: "block text-sm font-medium text-gray-700" %>
+                      <%= form.number_field :value, value: habit_entry&.value, step: :any,
+                          class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+                    </div>
+                  <% end %>
+                  
+                  <div class="flex space-x-2">
+                    <%= form.submit "Save", class: "inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+                    <button type="button" onclick="toggleHabitForm(<%= habit.id %>)" class="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                      Cancel
+                    </button>
+                  </div>
                 <% end %>
               </div>
             </div>
@@ -145,10 +175,40 @@
                       <%= goal_entry.numeric_value %>
                     </span>
                   <% end %>
+                  <%= link_to "Edit", "#", class: "text-sm text-green-600 hover:text-green-500", 
+                      onclick: "toggleGoalForm(#{goal.id}); return false;" %>
                 <% else %>
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                    No progress
-                  </span>
+                  <%= link_to "Track", "#", class: "inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded text-green-600 bg-green-100 hover:bg-green-200", 
+                      onclick: "toggleGoalForm(#{goal.id}); return false;" %>
+                <% end %>
+              </div>
+              
+              <!-- Inline Goal Tracking Form -->
+              <div id="goal-form-<%= goal.id %>" class="hidden mt-3 p-3 bg-gray-50 rounded">
+                <%= form_with url: goal_entries_path, local: true, class: "space-y-3" do |form| %>
+                  <%= form.hidden_field :goal_id, value: goal.id %>
+                  <%= form.hidden_field :daily_entry_id, value: @daily_entry.id %>
+                  
+                  <% if goal.goal_type == 'days_doing' || goal.goal_type == 'days_without' %>
+                    <div class="flex items-center">
+                      <%= form.check_box :boolean_value, checked: goal_entry&.boolean_value, 
+                          class: "h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded" %>
+                      <%= form.label :boolean_value, "Made progress today", class: "ml-2 text-sm text-gray-700" %>
+                    </div>
+                  <% else %>
+                    <div>
+                      <%= form.label :numeric_value, "Progress Value", class: "block text-sm font-medium text-gray-700" %>
+                      <%= form.number_field :numeric_value, value: goal_entry&.numeric_value, step: :any,
+                          class: "mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" %>
+                    </div>
+                  <% end %>
+                  
+                  <div class="flex space-x-2">
+                    <%= form.submit "Save", class: "inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700" %>
+                    <button type="button" onclick="toggleGoalForm(<%= goal.id %>)" class="inline-flex items-center px-3 py-1 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                      Cancel
+                    </button>
+                  </div>
                 <% end %>
               </div>
             </div>
@@ -169,3 +229,23 @@
     </div>
   </div>
 </div>
+
+<script>
+  function toggleHabitForm(habitId) {
+    const form = document.getElementById('habit-form-' + habitId);
+    if (form.classList.contains('hidden')) {
+      form.classList.remove('hidden');
+    } else {
+      form.classList.add('hidden');
+    }
+  }
+
+  function toggleGoalForm(goalId) {
+    const form = document.getElementById('goal-form-' + goalId);
+    if (form.classList.contains('hidden')) {
+      form.classList.remove('hidden');
+    } else {
+      form.classList.add('hidden');
+    }
+  }
+</script>
