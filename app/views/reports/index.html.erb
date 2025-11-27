@@ -1,0 +1,81 @@
+<div class="max-w-7xl mx-auto">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-2xl font-semibold text-gray-900">Reports</h1>
+      <p class="mt-2 text-sm text-gray-700">
+        Generate detailed reports about your habit tracking progress and achievements.
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @reports.each do |report| %>
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <% case report[:type] %>
+                <% when 'weekly' %>
+                  <span class="text-white font-bold">W</span>
+                <% when 'monthly' %>
+                  <span class="text-white font-bold">M</span>
+                <% when 'quarterly' %>
+                  <span class="text-white font-bold">Q</span>
+                <% end %>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-lg font-medium text-gray-900 truncate">
+                  <%= report[:name] %>
+                </dt>
+                <dd class="text-sm text-gray-500">
+                  <%= report[:description] %>
+                </dd>
+              </dl>
+            </div>
+          </div>
+          
+          <div class="mt-6">
+            <div class="flex space-x-3">
+              <%= link_to "View Report", report_path(report[:type]), 
+                  class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+              <%= link_to "Download PDF", report_path(report[:type], format: :pdf), 
+                  class: "inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="mt-12 bg-white shadow rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <h2 class="text-lg font-medium text-gray-900">Quick Overview</h2>
+    </div>
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-blue-600"><%= current_user.habits.active.count %></div>
+          <div class="text-sm text-gray-500">Active Habits</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-green-600"><%= current_user.goals.active.count %></div>
+          <div class="text-sm text-gray-500">Active Goals</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-purple-600"><%= current_user.daily_entries.count %></div>
+          <div class="text-sm text-gray-500">Total Entries</div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-orange-600">
+            <%= current_user.daily_entries.where(entry_date: Date.current.beginning_of_month..Date.current.end_of_month).count %>
+          </div>
+          <div class="text-sm text-gray-500">This Month</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

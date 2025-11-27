@@ -105,6 +105,36 @@
       </div>
     </div>
 
+    <!-- Activity Heatmap -->
+    <div class="bg-white shadow rounded-lg mb-8">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Activity Overview</h2>
+        <p class="mt-1 text-sm text-gray-600">Your habit tracking activity over the past year</p>
+      </div>
+      <div class="p-6">
+        <div class="heatmap-container">
+          <div class="heatmap-grid">
+            <% @heatmap_data.each do |day_data| %>
+              <div class="heatmap-day level-<%= day_data[:level] %>" 
+                   title="<%= day_data[:date] %>: <%= day_data[:count] %> activities"
+                   data-date="<%= day_data[:date] %>"
+                   data-count="<%= day_data[:count] %>">
+              </div>
+            <% end %>
+          </div>
+          <div class="heatmap-legend mt-4 flex items-center justify-end space-x-2">
+            <span class="text-xs text-gray-500">Less</span>
+            <div class="heatmap-day level-0"></div>
+            <div class="heatmap-day level-1"></div>
+            <div class="heatmap-day level-2"></div>
+            <div class="heatmap-day level-3"></div>
+            <div class="heatmap-day level-4"></div>
+            <span class="text-xs text-gray-500">More</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Daily Entries Summary -->
     <div class="bg-white shadow rounded-lg mb-8">
       <div class="px-6 py-4 border-b border-gray-200">

@@ -1,0 +1,158 @@
+<div class="max-w-4xl mx-auto">
+  <div class="bg-white shadow rounded-lg">
+    <div class="px-6 py-4 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="w-6 h-6 rounded-full mr-3" style="background-color: <%= @category.color || '#6B7280' %>"></div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900"><%= @category.name %></h1>
+            <% if @category.description.present? %>
+              <p class="mt-1 text-sm text-gray-600"><%= @category.description %></p>
+            <% end %>
+          </div>
+        </div>
+        <div class="flex space-x-3">
+          <%= link_to "Edit Category", edit_category_path(@category), class: "inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+          <%= link_to "All Categories", categories_path, class: "inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <!-- Category Stats -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Statistics</h3>
+          <dl class="space-y-3">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Total Habits</dt>
+              <dd class="text-2xl font-bold text-blue-600"><%= @category.habits.count %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Active Habits</dt>
+              <dd class="text-2xl font-bold text-green-600"><%= @category.habits.active.count %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Total Goals</dt>
+              <dd class="text-2xl font-bold text-purple-600"><%= @category.goals.count %></dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Active Goals</dt>
+              <dd class="text-2xl font-bold text-green-600"><%= @category.goals.active.count %></dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Category Details -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Details</h3>
+          <dl class="space-y-3">
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Color</dt>
+              <dd class="flex items-center">
+                <div class="w-4 h-4 rounded-full mr-2" style="background-color: <%= @category.color || '#6B7280' %>"></div>
+                <span class="text-sm text-gray-900"><%= @category.color || 'Default' %></span>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Status</dt>
+              <dd class="text-sm">
+                <% if @category.is_active %>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                <% else %>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">Inactive</span>
+                <% end %>
+              </dd>
+            </div>
+            <div>
+              <dt class="text-sm font-medium text-gray-500">Created</dt>
+              <dd class="text-sm text-gray-900"><%= @category.created_at.strftime("%B %d, %Y") %></dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+      <!-- Associated Habits -->
+      <% if @category.habits.any? %>
+        <div class="border-t border-gray-200 pt-6 mb-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Habits in this Category</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <% @category.habits.active.limit(6).each do |habit| %>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900"><%= habit.name %></h4>
+                    <p class="text-xs text-gray-500 mt-1"><%= habit.habit_type.humanize %></p>
+                  </div>
+                  <% if habit.is_active %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Active</span>
+                  <% end %>
+                </div>
+                <div class="mt-3">
+                  <%= link_to "View", habit, class: "text-sm text-blue-600 hover:text-blue-500" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <% if @category.habits.count > 6 %>
+            <div class="mt-4">
+              <%= link_to "View All Habits", habits_path(category: @category.id), class: "text-sm text-purple-600 hover:text-purple-500" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Associated Goals -->
+      <% if @category.goals.any? %>
+        <div class="border-t border-gray-200 pt-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Goals in this Category</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <% @category.goals.active.limit(6).each do |goal| %>
+              <div class="bg-gray-50 rounded-lg p-4">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h4 class="text-sm font-medium text-gray-900"><%= goal.name %></h4>
+                    <p class="text-xs text-gray-500 mt-1"><%= goal.goal_type.humanize %></p>
+                    <% if goal.target_date %>
+                      <p class="text-xs text-gray-400 mt-1">Due: <%= goal.target_date.strftime("%b %d") %></p>
+                    <% end %>
+                  </div>
+                  <% if goal.completed_at %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Completed</span>
+                  <% elsif goal.is_active %>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Active</span>
+                  <% end %>
+                </div>
+                <div class="mt-3">
+                  <%= link_to "View", goal, class: "text-sm text-purple-600 hover:text-purple-500" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <% if @category.goals.count > 6 %>
+            <div class="mt-4">
+              <%= link_to "View All Goals", goals_path(category: @category.id), class: "text-sm text-purple-600 hover:text-purple-500" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Empty State -->
+      <% if @category.habits.empty? && @category.goals.empty? %>
+        <div class="border-t border-gray-200 pt-6">
+          <div class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">No habits or goals yet</h3>
+            <p class="mt-1 text-sm text-gray-500">Start by adding habits and goals to this category.</p>
+            <div class="mt-6 flex justify-center space-x-3">
+              <%= link_to "Add Habit", new_habit_path(category: @category.id), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+              <%= link_to "Add Goal", new_goal_path(category: @category.id), class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

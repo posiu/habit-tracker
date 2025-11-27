@@ -32,12 +32,21 @@ class Habit < ApplicationRecord
 
   # Instance methods
   def current_streak
-    # Will be implemented with service
-    0
+    result = Habits::CalculateStreakService.new(self).call
+    result.success? ? result.data : 0
   end
 
   def completed_today?
-    today_entry&.completed?
+    return false unless today_entry
+    
+    case habit_type
+    when 'boolean'
+      today_entry.completed
+    when 'numeric', 'time', 'counter'
+      today_entry.value.present? && today_entry.value > 0
+    else
+      false
+    end
   end
 
   def archive!

@@ -8,8 +8,8 @@
     </div>
     
     <div class="p-6">
-      <%= form_with(model: @category_form, url: categories_path, local: true, class: "space-y-6") do |form| %>
-        <% if @category_form.errors.any? %>
+      <%= form_with(model: Category.new, url: categories_path, local: true, class: "space-y-6") do |form| %>
+        <% if @category_form && @category_form.errors.any? %>
           <div class="bg-red-50 border border-red-200 rounded-md p-4">
             <div class="flex">
               <div class="flex-shrink-0">

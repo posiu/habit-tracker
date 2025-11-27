@@ -1,0 +1,213 @@
+<% if @report_data.success? %>
+  <% data = @report_data.data %>
+  <div class="max-w-7xl mx-auto">
+    <div class="sm:flex sm:items-center mb-8">
+      <div class="sm:flex-auto">
+        <h1 class="text-2xl font-semibold text-gray-900">
+          <%= @report_type.humanize %> Report
+        </h1>
+        <p class="mt-2 text-sm text-gray-700">
+          <%= data[:period] %>
+        </p>
+      </div>
+      <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+        <div class="flex space-x-3">
+          <%= link_to "Download PDF", report_path(@report_type, format: :pdf), 
+              class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+          <%= link_to "Download CSV", report_path(@report_type, format: :csv), 
+              class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+          <%= link_to "Back to Reports", reports_path, 
+              class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Section -->
+    <div class="bg-white shadow rounded-lg mb-8">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Summary</h2>
+      </div>
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-600"><%= data[:summary][:active_days] %></div>
+            <div class="text-sm text-gray-500">Active Days</div>
+            <div class="text-xs text-gray-400">out of <%= data[:summary][:total_days] %></div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-green-600"><%= data[:summary][:habit_completions] %></div>
+            <div class="text-sm text-gray-500">Habit Completions</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-purple-600"><%= data[:summary][:goal_entries] %></div>
+            <div class="text-sm text-gray-500">Goal Entries</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-orange-600"><%= data[:summary][:completion_rate] %>%</div>
+            <div class="text-sm text-gray-500">Completion Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Habits Performance -->
+    <div class="bg-white shadow rounded-lg mb-8">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Habits Performance</h2>
+      </div>
+      <div class="p-6">
+        <% if data[:habits].any? %>
+          <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table class="min-w-full divide-y divide-gray-300">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Habit</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Type</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Completions</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Rate</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Streak</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <% data[:habits].each do |habit| %>
+                  <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900"><%= habit[:name] %></div>
+                      <% if habit[:category] %>
+                        <div class="text-sm text-gray-500"><%= habit[:category] %></div>
+                      <% end %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <%= habit[:type].humanize %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <%= habit[:completions] %>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="flex items-center">
+                        <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                          <div class="bg-blue-600 h-2 rounded-full" style="width: <%= habit[:completion_rate] %>%"></div>
+                        </div>
+                        <span class="text-sm text-gray-900"><%= habit[:completion_rate] %>%</span>
+                      </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <%= habit[:streak] %> days
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <p class="text-gray-500">No active habits found for this period.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Goals Progress -->
+    <div class="bg-white shadow rounded-lg mb-8">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-lg font-medium text-gray-900">Goals Progress</h2>
+      </div>
+      <div class="p-6">
+        <% if data[:goals].any? %>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <% data[:goals].each do |goal| %>
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex justify-between items-start mb-2">
+                  <h3 class="text-sm font-medium text-gray-900"><%= goal[:name] %></h3>
+                  <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full 
+                    <%= goal[:status] == 'completed' ? 'bg-green-100 text-green-800' : 
+                        goal[:status] == 'overdue' ? 'bg-red-100 text-red-800' : 
+                        'bg-blue-100 text-blue-800' %>">
+                    <%= goal[:status].humanize %>
+                  </span>
+                </div>
+                <div class="mb-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600"><%= goal[:type].humanize %></span>
+                    <span class="font-medium"><%= goal[:progress_percentage] %>%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div class="bg-green-600 h-2 rounded-full" style="width: <%= goal[:progress_percentage] %>%"></div>
+                  </div>
+                </div>
+                <div class="text-xs text-gray-500">
+                  <%= goal[:entries] %> entries
+                  <% if goal[:category] %>
+                    • <%= goal[:category] %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <p class="text-gray-500">No active goals found for this period.</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Additional sections for monthly/quarterly reports -->
+    <% if @report_type == 'monthly' && data[:weekly_breakdown] %>
+      <div class="bg-white shadow rounded-lg mb-8">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-medium text-gray-900">Weekly Breakdown</h2>
+        </div>
+        <div class="p-6">
+          <div class="space-y-4">
+            <% data[:weekly_breakdown].each_with_index do |week, index| %>
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                <div>
+                  <div class="text-sm font-medium text-gray-900">Week <%= index + 1 %></div>
+                  <div class="text-xs text-gray-500">
+                    <%= week[:start_date].strftime('%b %d') %> - <%= week[:end_date].strftime('%b %d') %>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-sm font-medium text-gray-900"><%= week[:total_activities] %> activities</div>
+                  <div class="text-xs text-gray-500"><%= week[:active_days] %> active days</div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @report_type == 'quarterly' && data[:achievements] %>
+      <div class="bg-white shadow rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <h2 class="text-lg font-medium text-gray-900">Achievements</h2>
+        </div>
+        <div class="p-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <% data[:achievements].each do |achievement| %>
+              <div class="text-center p-4 bg-yellow-50 rounded-lg">
+                <div class="text-2xl font-bold text-yellow-600"><%= achievement[:count] %></div>
+                <div class="text-sm text-gray-700"><%= achievement[:description] %></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="max-w-7xl mx-auto">
+    <div class="bg-red-50 border border-red-200 rounded-md p-4">
+      <div class="flex">
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">Error generating report</h3>
+          <div class="mt-2 text-sm text-red-700">
+            <p><%= @report_data.errors.join(', ') %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

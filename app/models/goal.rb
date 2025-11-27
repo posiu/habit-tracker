@@ -2,7 +2,7 @@ class Goal < ApplicationRecord
   # Associations
   belongs_to :user
   belongs_to :category, optional: true
-  has_one :goal_metric, dependent: :destroy
+  has_many :goal_metrics, dependent: :destroy
   has_many :goal_entries, dependent: :destroy
 
   # Enums
@@ -35,12 +35,17 @@ class Goal < ApplicationRecord
   after_create :create_goal_metric
 
   # Delegations
-  delegate :current_value, :current_days_doing, :current_days_without, to: :goal_metric, allow_nil: true
+  delegate :current_value, :current_days_doing, :current_days_without, to: :primary_goal_metric, allow_nil: true
 
   # Instance methods
   def progress_percentage
-    # Will be implemented with service
-    0
+    result = Goals::CalculateProgressService.new(self).call
+    result.success? ? result.data[:percentage] : 0
+  end
+
+  def progress_data
+    result = Goals::CalculateProgressService.new(self).call
+    result.success? ? result.data : { percentage: 0, current: 0, target: 0, status: 'unknown' }
   end
 
   def completed?
@@ -69,7 +74,11 @@ class Goal < ApplicationRecord
     errors.add(:target_date, 'must be after start date') if target_date < start_date
   end
 
+  def primary_goal_metric
+    goal_metrics.first
+  end
+
   def create_goal_metric
-    build_goal_metric.save! unless goal_metric
+    goal_metrics.create! unless goal_metrics.any?
   end
 end

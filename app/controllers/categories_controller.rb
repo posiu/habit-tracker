@@ -17,7 +17,8 @@ class CategoriesController < ApplicationController
 
   def create
     authorize Category
-    result = Categories::CreateService.call(user: current_user, params: category_params)
+    service = Categories::CreateService.new(user: current_user, params: category_params)
+    result = service.call
     
     if result.success?
       redirect_to categories_path, notice: 'Category was successfully created.'
@@ -35,7 +36,8 @@ class CategoriesController < ApplicationController
 
   def update
     authorize @category
-    result = Categories::UpdateService.call(category: @category, params: category_params)
+    service = Categories::UpdateService.new(category: @category, params: category_params)
+    result = service.call
     
     if result.success?
       redirect_to categories_path, notice: 'Category was successfully updated.'
@@ -48,7 +50,8 @@ class CategoriesController < ApplicationController
 
   def destroy
     authorize @category
-    result = Categories::DeleteService.call(category: @category)
+    service = Categories::DeleteService.new(category: @category)
+    result = service.call
     
     if result.success?
       redirect_to categories_url, notice: 'Category was successfully deleted.'

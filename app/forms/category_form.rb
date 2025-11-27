@@ -65,6 +65,7 @@ class CategoryForm
   end
 
   def next_position(user)
-    user.categories.maximum(:position).to_i + 1
+    return 1 unless user
+    (user.categories.maximum(:position) || 0) + 1
   end
 end
