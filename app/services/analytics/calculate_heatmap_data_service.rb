@@ -1,6 +1,6 @@
 module Analytics
   class CalculateHeatmapDataService < BaseService
-    def initialize(user, start_date: 1.year.ago, end_date: Date.current)
+    def initialize(user, start_date: 1.year.ago.to_date, end_date: Date.current)
       @user = user
       @start_date = start_date
       @end_date = end_date

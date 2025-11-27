@@ -1,6 +1,6 @@
 module Reports
   class GenerateWeeklyReportService < BaseService
-    def initialize(user, start_date: 1.week.ago.beginning_of_week)
+    def initialize(user, start_date: 1.week.ago.to_date.beginning_of_week)
       @user = user
       @start_date = start_date
       @end_date = start_date.end_of_week

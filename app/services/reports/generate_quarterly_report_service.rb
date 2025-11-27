@@ -1,6 +1,6 @@
 module Reports
   class GenerateQuarterlyReportService < BaseService
-    def initialize(user, start_date: 3.months.ago.beginning_of_month)
+    def initialize(user, start_date: 3.months.ago.to_date.beginning_of_month)
       @user = user
       @start_date = start_date
       @end_date = Date.current.end_of_month
