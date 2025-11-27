@@ -9,7 +9,7 @@ module Categories
     def call
       return failure(@form.errors) unless @form.valid?
 
-      if @form.save(user: @category.user)
+      if @form.save
         success(@form.category)
       else
         failure(@form.category.errors)

@@ -3,7 +3,9 @@ class CategoriesController < ApplicationController
   before_action :set_category, only: [:show, :edit, :update, :destroy]
 
   def index
-    @categories = policy_scope(Category).order(:position, :name)
+    @categories = policy_scope(Category).ordered
+    @active_categories = @categories.where(is_active: true)
+    @inactive_categories = @categories.where(is_active: false)
   end
 
   def show
@@ -67,6 +69,6 @@ class CategoriesController < ApplicationController
   end
 
   def category_params
-    params.require(:category).permit(:name, :description, :color, :position, :is_active)
+    params.require(:category).permit(:name, :description, :color, :icon, :position, :is_active)
   end
 end

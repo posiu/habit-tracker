@@ -9,10 +9,23 @@ Rails.application.routes.draw do
   # Root route - redirect to dashboard (authentication handled by controller)
   root 'dashboard#index'
 
-  resources :habits
-  resources :goals
+  resources :habits do
+    member do
+      patch :archive
+    end
+  end
+  resources :goals do
+    member do
+      patch :complete
+    end
+  end
   resources :categories
-  resources :daily_entries
+  resources :daily_entries do
+    resources :habit_entries, only: [:create, :update, :destroy]
+    resources :goal_entries, only: [:create, :update, :destroy]
+  end
+
+  # keep top-level entry routes for backward compatibility
   resources :habit_entries, only: [:create, :update, :destroy]
   resources :goal_entries, only: [:create, :update, :destroy]
   resources :reports, only: [:index, :show]
