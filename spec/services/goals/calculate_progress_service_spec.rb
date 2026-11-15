@@ -8,7 +8,8 @@ RSpec.describe Goals::CalculateProgressService do
   describe '#call' do
     context 'with target_value goal type' do
       let(:goal) { create(:goal, user: user, goal_type: 'target_value') }
-      let!(:goal_metric) { create(:goal_metric, goal: goal, target_value: 100, current_value: 30) }
+
+      before { goal.goal_metric.update!(target_value: 100, current_value: 30) }
 
       it 'calculates correct progress percentage' do
         result = service.call
@@ -28,7 +29,7 @@ RSpec.describe Goals::CalculateProgressService do
         5.times do |i|
           date = Date.current - i.days
           daily_entry = create(:daily_entry, user: user, entry_date: date)
-          create(:goal_entry, goal: goal, daily_entry: daily_entry, numeric_value: 1)
+          create(:goal_entry, :boolean_type, goal: goal, daily_entry: daily_entry)
         end
       end
 

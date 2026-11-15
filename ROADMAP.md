@@ -443,31 +443,31 @@ Implementacja systemu raportów (tygodniowe, miesięczne, kwartalne), rozszerzon
 ### Zadania techniczne
 
 #### 5.1 Reports Generation
-- [ ] Controller `ReportsController` (index, show, generate)
-- [ ] Service: `Reports::GenerateWeeklyReportService`
-- [ ] Service: `Reports::GenerateMonthlyReportService`
-- [ ] Service: `Reports::GenerateQuarterlyReportService`
+- [x] Controller `ReportsController` (index, show, generate)
+- [x] Service: `Reports::GenerateWeeklyReportService`
+- [x] Service: `Reports::GenerateMonthlyReportService`
+- [x] Service: `Reports::GenerateQuarterlyReportService`
 - [ ] Query Object: `ReportQuery` (weekly_data, monthly_data, quarterly_data)
 - [ ] Presenter: `ReportPresenter` (formatowanie danych)
-- [ ] Widoki: report index, report show (with charts)
+- [x] Widoki: report index, report show (bez wykresów — patrz 5.5)
 
 #### 5.2 Report Content
-- [ ] Statystyki dla okresu (completed habits, goal progress)
+- [x] Statystyki dla okresu (completed habits, goal progress)
 - [ ] Wykresy trendów (line charts dla habit completions)
 - [ ] Porównania z poprzednimi okresami
 - [ ] Insights i recommendations (opcjonalnie)
 
 #### 5.3 Report Export
-- [ ] Export do PDF (gem `wicked_pdf` lub `prawn`)
-- [ ] Export do CSV
-- [ ] Service: `Reports::ExportReportService`
-- [ ] Download buttons w report view
+- [x] Export do PDF (gem `wicked_pdf` lub `prawn`)
+- [x] Export do CSV
+- [x] Service: `Reports::ExportReportService`
+- [x] Download buttons w report view
 
 #### 5.4 Email Reports
-- [ ] Mailer: `ReportMailer` (weekly_report, monthly_report)
-- [ ] Background Job: `ReportGenerationJob` (scheduled)
-- [ ] Email templates (HTML)
-- [ ] User preferences: email frequency setting
+- [x] Mailer: `ReportMailer` (weekly_report, monthly_report)
+- [x] Background Job: `ReportGenerationJob` (scheduled)
+- [x] Email templates (HTML)
+- [x] User preferences: email frequency setting
 
 #### 5.5 Extended Analytics
 - [ ] Service: `Analytics::CalculateStatsService` (rozszerzone statystyki)
@@ -477,36 +477,36 @@ Implementacja systemu raportów (tygodniowe, miesięczne, kwartalne), rozszerzon
 
 #### 5.6 Notifications System
 - [ ] Model `Notification` (opcjonalnie, lub użyć ActionMailer bezpośrednio)
-- [ ] Service: `Notifications::SendReminderService`
-- [ ] Service: `Notifications::CheckDeadlinesService`
-- [ ] Background Job: `ReminderJob` (scheduled via sidekiq-cron)
-- [ ] Background Job: `DeadlineCheckJob` (daily)
+- [x] Service: `Notifications::SendReminderService`
+- [x] Service: `Notifications::CheckDeadlinesService`
+- [x] Background Job: `ReminderJob` (scheduled via sidekiq-cron)
+- [x] Background Job: `DeadlineCheckJob` (daily)
 
 #### 5.7 Reminder Configuration
-- [ ] User settings: reminder preferences (enabled/disabled, time)
-- [ ] Habit settings: reminder_enabled, reminder_days
-- [ ] Email templates dla reminders
+- [x] User settings: reminder preferences (enabled/disabled, time)
+- [x] Habit settings: reminder_enabled, reminder_days
+- [x] Email templates dla reminders
 
 #### 5.8 Sidekiq Cron Configuration
-- [ ] Konfiguracja `config/schedule.rb`
-- [ ] Job: Daily reminders (9 AM)
-- [ ] Job: Deadline checks (daily)
+- [x] Konfiguracja harmonogramu (`config/schedule.yml`, ładowany w `config/initializers/sidekiq.rb`)
+- [x] Job: Daily reminders (co godzinę, wg `reminder_time` i strefy użytkownika; domyślnie 9:00)
+- [x] Job: Deadline checks (daily)
 - [ ] Job: Streak calculations (nightly)
-- [ ] Job: Weekly reports (Monday morning)
-- [ ] Job: Monthly reports (1st of month)
+- [x] Job: Weekly reports (Monday morning)
+- [x] Job: Monthly reports (1st of month)
 
 #### 5.9 Frontend - Reports
-- [ ] Reports index page (lista raportów)
+- [x] Reports index page (lista raportów)
 - [ ] Report show page (z wykresami)
-- [ ] Date range picker dla custom reports
-- [ ] Export buttons (PDF, CSV)
+- [x] Date range picker dla custom reports
+- [x] Export buttons (PDF, CSV)
 
 #### 5.10 Tests
-- [ ] Feature tests: generate reports
-- [ ] Feature tests: export reports
-- [ ] Service tests: report generation (all types)
-- [ ] Job tests: reminder jobs
-- [ ] Mailer tests: report emails
+- [x] Feature tests: generate reports (request specs)
+- [x] Feature tests: export reports (request specs)
+- [x] Service tests: report generation (all types)
+- [x] Job tests: reminder jobs
+- [x] Mailer tests: report emails
 
 ### Definition of Done (DoD)
 

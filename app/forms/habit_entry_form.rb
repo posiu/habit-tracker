@@ -20,12 +20,13 @@ class HabitEntryForm
   def save
     return false unless valid?
 
+    # habit must be assigned first: HabitEntry#value= depends on habit.habit_type
+    @habit_entry.habit = @habit
+    @habit_entry.daily_entry = @daily_entry
     @habit_entry.assign_attributes(
       completed: completed_for_habit_type,
       value: value_for_habit_type,
-      notes: notes,
-      habit: @habit,
-      daily_entry: @daily_entry
+      notes: notes
     )
 
     @habit_entry.save

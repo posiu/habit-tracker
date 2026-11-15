@@ -2,25 +2,25 @@ FactoryBot.define do
   factory :habit_entry do
     association :habit
     association :daily_entry
-    completed { true }
+    boolean_value { true }
     numeric_value { nil }
     time_value { nil }
     notes { nil }
 
     trait :numeric do
-      completed { false }
+      association :habit, factory: %i[habit numeric]
+      boolean_value { nil }
       numeric_value { 5.0 }
     end
 
     trait :time_based do
-      completed { false }
+      association :habit, factory: :habit, habit_type: 'time'
+      boolean_value { nil }
       time_value { 3600 } # 1 hour in seconds
     end
 
     trait :incomplete do
-      completed { false }
-      numeric_value { nil }
-      time_value { nil }
+      boolean_value { false }
     end
   end
 end

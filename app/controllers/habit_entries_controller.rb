@@ -10,9 +10,9 @@ class HabitEntriesController < ApplicationController
     result = Entries::CreateHabitEntryService.new(daily_entry: daily_entry, habit: habit, params: habit_entry_params).call
 
     if result.success?
-      redirect_back fallback_location: daily_entry || dashboard_path, notice: 'Habit entry saved.'
+      redirect_back fallback_location: daily_entry || root_path, notice: 'Habit entry saved.'
     else
-      redirect_back fallback_location: daily_entry || dashboard_path, alert: result.error_messages || 'Failed to save habit entry.'
+      redirect_back fallback_location: daily_entry || root_path, alert: result.error_messages.to_sentence.presence || 'Failed to save habit entry.'
     end
   end
 
@@ -24,9 +24,9 @@ class HabitEntriesController < ApplicationController
     result = Entries::UpdateHabitEntryService.new(habit_entry: @habit_entry, habit: habit, daily_entry: daily_entry, params: habit_entry_params).call
 
     if result.success?
-      redirect_back fallback_location: daily_entry || dashboard_path, notice: 'Habit entry updated.'
+      redirect_back fallback_location: daily_entry || root_path, notice: 'Habit entry updated.'
     else
-      redirect_back fallback_location: daily_entry || dashboard_path, alert: result.error_messages || 'Failed to update habit entry.'
+      redirect_back fallback_location: daily_entry || root_path, alert: result.error_messages.to_sentence.presence || 'Failed to update habit entry.'
     end
   end
 
@@ -35,7 +35,7 @@ class HabitEntriesController < ApplicationController
     authorize @habit_entry
     daily_entry = @habit_entry.daily_entry
     @habit_entry.destroy
-    redirect_back fallback_location: daily_entry || dashboard_path, notice: 'Habit entry deleted.'
+    redirect_back fallback_location: daily_entry || root_path, notice: 'Habit entry deleted.'
   end
 
   private

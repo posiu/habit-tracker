@@ -9,9 +9,9 @@ class GoalEntriesController < ApplicationController
     result = Entries::CreateGoalEntryService.new(daily_entry: daily_entry, goal: goal, params: goal_entry_params).call
 
     if result.success?
-      redirect_back fallback_location: daily_entry || dashboard_path, notice: 'Goal entry saved.'
+      redirect_back fallback_location: daily_entry || root_path, notice: 'Goal entry saved.'
     else
-      redirect_back fallback_location: daily_entry || dashboard_path, alert: result.error_messages || 'Failed to save goal entry.'
+      redirect_back fallback_location: daily_entry || root_path, alert: result.error_messages.to_sentence.presence || 'Failed to save goal entry.'
     end
   end
 
@@ -23,9 +23,9 @@ class GoalEntriesController < ApplicationController
     result = Entries::UpdateGoalEntryService.new(goal_entry: @goal_entry, goal: goal, daily_entry: daily_entry, params: goal_entry_params).call
 
     if result.success?
-      redirect_back fallback_location: daily_entry || dashboard_path, notice: 'Goal entry updated.'
+      redirect_back fallback_location: daily_entry || root_path, notice: 'Goal entry updated.'
     else
-      redirect_back fallback_location: daily_entry || dashboard_path, alert: result.error_messages || 'Failed to update goal entry.'
+      redirect_back fallback_location: daily_entry || root_path, alert: result.error_messages.to_sentence.presence || 'Failed to update goal entry.'
     end
   end
 
@@ -34,7 +34,7 @@ class GoalEntriesController < ApplicationController
     authorize @goal_entry
     daily_entry = @goal_entry.daily_entry
     @goal_entry.destroy
-    redirect_back fallback_location: daily_entry || dashboard_path, notice: 'Goal entry deleted.'
+    redirect_back fallback_location: daily_entry || root_path, notice: 'Goal entry deleted.'
   end
 
   private

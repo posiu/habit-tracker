@@ -102,3 +102,5 @@ gem 'rack-cors'
 
 # API Documentation (optional, for later)
 # gem 'rswag'
+# PDF export of reports
+gem 'prawn', '~> 2.4'

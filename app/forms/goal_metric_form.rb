@@ -8,12 +8,10 @@ class GoalMetricForm
   attribute :current_value, :decimal
   attribute :current_days_doing, :integer
   attribute :current_days_without, :integer
-  attribute :unit, :string
   attribute :_destroy, :boolean
 
   validates :target_value, numericality: { greater_than: 0 }, allow_nil: true
   validates :current_value, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
-  validates :unit, length: { maximum: 50 }, allow_blank: true
 
   attr_reader :goal_metric, :goal
 
@@ -31,7 +29,6 @@ class GoalMetricForm
       current_value: current_value,
       current_days_doing: current_days_doing,
       current_days_without: current_days_without,
-      unit: unit,
       goal: goal
     )
 
@@ -60,8 +57,7 @@ class GoalMetricForm
       target_value: @goal_metric.target_value,
       current_value: @goal_metric.current_value,
       current_days_doing: @goal_metric.current_days_doing,
-      current_days_without: @goal_metric.current_days_without,
-      unit: @goal_metric.unit
+      current_days_without: @goal_metric.current_days_without
     }
   end
 end

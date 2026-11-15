@@ -1,15 +1,17 @@
+redis_config = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
+
 Sidekiq.configure_server do |config|
-  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
+  config.redis = redis_config
+
+  # Register recurring jobs (config/schedule.yml) once the server has booted.
+  config.on(:startup) do
+    schedule_file = Rails.root.join('config/schedule.yml')
+    if schedule_file.exist?
+      Sidekiq::Cron::Job.load_from_hash!(YAML.safe_load(schedule_file.read))
+    end
+  end
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = { url: ENV.fetch('REDIS_URL', 'redis://localhost:6379/0') }
+  config.redis = redis_config
 end
-
-# Load scheduled jobs
-schedule_file = "config/schedule.rb"
-if File.exist?(schedule_file) && Sidekiq.server?
-  require 'yaml'
-  # Sidekiq::Cron::Job.load_from_hash YAML.load_file(schedule_file) if defined?(Sidekiq::Cron)
-end
-

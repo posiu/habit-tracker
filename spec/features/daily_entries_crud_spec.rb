@@ -21,13 +21,12 @@ RSpec.describe 'Daily Entries CRUD', type: :feature do
 
   describe 'creating habit entry from daily entry view' do
     let(:daily_entry) { create(:daily_entry, user: user) }
-    let(:habit) { create(:habit, user: user, habit_type: 'boolean') }
+    let!(:habit) { create(:habit, user: user, habit_type: 'boolean') }
 
     it 'creates habit entry for daily entry' do
       visit daily_entry_path(daily_entry)
 
       expect(page).to have_text(habit.name)
-      click_button 'Track'
       check 'Mark as completed'
       click_button 'Save'
 
@@ -38,13 +37,12 @@ RSpec.describe 'Daily Entries CRUD', type: :feature do
 
   describe 'creating goal entry from daily entry view' do
     let(:daily_entry) { create(:daily_entry, user: user) }
-    let(:goal) { create(:goal, user: user, goal_type: 'days_doing') }
+    let!(:goal) { create(:goal, user: user, goal_type: 'days_doing') }
 
     it 'creates goal entry for daily entry' do
       visit daily_entry_path(daily_entry)
 
       expect(page).to have_text(goal.name)
-      click_button 'Track'
       check 'Made progress today'
       click_button 'Save'
 
@@ -61,7 +59,7 @@ RSpec.describe 'Daily Entries CRUD', type: :feature do
 
       select '😄 Great', from: 'daily_entry_form_mood'
       fill_in 'Notes', with: 'Updated notes'
-      click_button 'Save'
+      click_button 'Update Entry'
 
       expect(page).to have_text('Daily entry was successfully updated')
       daily_entry.reload
@@ -77,10 +75,9 @@ RSpec.describe 'Daily Entries CRUD', type: :feature do
       visit daily_entry_path(daily_entry)
 
       click_link 'All Entries'
-      expect(page).to have_text(daily_entry.entry_date.strftime("%b %d"))
+      expect(page).to have_text(daily_entry.entry_date.strftime("%B %-d, %Y"))
 
-      visit daily_entry_path(daily_entry)
-      click_button 'Delete'
+      click_link 'Delete'
 
       expect(page).to have_text('Daily entry was successfully deleted')
       expect(DailyEntry.find_by(id: daily_entry.id)).to be_nil
@@ -92,9 +89,7 @@ RSpec.describe 'Daily Entries CRUD', type: :feature do
     let(:other_daily_entry) { create(:daily_entry, user: other_user) }
 
     it 'prevents viewing other user\'s daily entry' do
-      visit daily_entry_path(other_daily_entry)
-
-      expect(page).to have_text('not authorized')
+      expect { visit daily_entry_path(other_daily_entry) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

@@ -50,7 +50,7 @@ RSpec.describe 'Dashboard with Heatmap', type: :feature do
   end
 
   describe 'recent entries section' do
-    let!(:entries) { create_list(:daily_entry, 3, user: user, entry_date: Date.current) }
+    let!(:entries) { (0..2).map { |i| create(:daily_entry, user: user, entry_date: Date.current - i.days) } }
 
     it 'displays recent entries' do
       visit root_path

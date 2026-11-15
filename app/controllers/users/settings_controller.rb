@@ -23,7 +23,7 @@ class Users::SettingsController < ApplicationController
 
   def settings_params
     params.require(:user).permit(
-      :email_notifications_enabled, :reminder_time, :time_zone, :locale
+      :email_notifications_enabled, :reminder_time, :report_frequency, :time_zone, :locale
     )
   end
 end

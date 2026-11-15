@@ -10,7 +10,6 @@ FactoryBot.define do
     start_date { Date.current }
     end_date { nil }
     reminder_enabled { false }
-    reminder_time { nil }
     reminder_days { [] }
     is_active { true }
 

@@ -82,7 +82,7 @@ class HabitsController < ApplicationController
   def habit_params
     params.require(:habit).permit(:name, :description, :category_id, :habit_type, 
                                   :target_value, :unit, :start_date, :end_date, 
-                                  :reminder_enabled, :reminder_time, :is_active,
+                                  :reminder_enabled, :is_active,
                                   reminder_days: [])
   end
 end

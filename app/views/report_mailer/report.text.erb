@@ -1,0 +1,22 @@
+<%= @type.humanize %> report - <%= @report[:period] %>
+
+<% @report[:summary].each do |key, value| %>
+<%= key.to_s.humanize %>: <%= value %>
+<% end %>
+<% if @report[:habits].present? %>
+
+Habits
+<% @report[:habits].each do |habit| %>
+- <%= habit[:name] %>: <%= habit[:completions] %> completions (<%= habit[:completion_rate] %>%)
+<% end %>
+<% end %>
+<% if @report[:goals].present? %>
+
+Goals
+<% @report[:goals].each do |goal| %>
+- <%= goal[:name] %>: <%= goal[:progress_percentage] %>%
+<% end %>
+<% end %>
+
+Full report: <%= report_url(@type) %> (CSV copy attached)
+Report frequency: <%= users_settings_url %>

@@ -2,6 +2,7 @@ class CategoryForm
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Validations
+  include FormModelName
 
   attribute :name, :string
   attribute :description, :string

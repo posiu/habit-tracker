@@ -27,7 +27,7 @@ class Users::ProfilesController < ApplicationController
   def profile_params
     params.require(:user).permit(
       :first_name, :last_name, :time_zone, :locale,
-      :email_notifications_enabled, :reminder_time
+      :email_notifications_enabled, :reminder_time, :report_frequency
     )
   end
 end

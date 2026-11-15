@@ -1,0 +1,27 @@
+# Recurring jobs, loaded by config/initializers/sidekiq.rb (sidekiq-cron).
+# Times are server time (UTC in production).
+habit_reminders:
+  cron: "0 * * * *"        # hourly; ReminderJob picks users whose reminder hour it is
+  class: "ReminderJob"
+  queue: default
+  description: "Daily habit reminders (per-user hour, default 09:00)"
+
+deadline_check:
+  cron: "0 8 * * *"        # every day 08:00
+  class: "DeadlineCheckJob"
+  queue: default
+  description: "Alert about goals with approaching deadlines"
+
+weekly_reports:
+  cron: "0 7 * * 1"        # Monday 07:00
+  class: "ReportGenerationJob"
+  args: ["weekly"]
+  queue: default
+  description: "E-mail last week's report to users on the weekly plan"
+
+monthly_reports:
+  cron: "0 7 1 * *"        # 1st of month 07:00
+  class: "ReportGenerationJob"
+  args: ["monthly"]
+  queue: default
+  description: "E-mail last month's report to users on the monthly plan"

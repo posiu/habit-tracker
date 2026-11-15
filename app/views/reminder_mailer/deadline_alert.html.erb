@@ -1,0 +1,12 @@
+<h2>Hi <%= @user.display_name %>,</h2>
+<p>These goals are approaching their deadline:</p>
+<ul>
+  <% @goals.each do |goal| %>
+    <% days = (goal.target_date - @today).to_i %>
+    <li>
+      <%= link_to goal.name, goal_url(goal) %> &mdash;
+      <%= days.zero? ? 'due today' : "due in #{pluralize(days, 'day')}" %> (<%= l(goal.target_date, format: :long) %>)
+    </li>
+  <% end %>
+</ul>
+<p style="color:#666;font-size:12px">You can turn these e-mails off in <%= link_to 'your settings', users_settings_url %>.</p>

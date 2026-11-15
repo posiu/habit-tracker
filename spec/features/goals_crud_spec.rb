@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Goals CRUD', type: :feature do
   let(:user) { create(:user, email: 'test@example.com', password: 'password123') }
-  let(:category) { create(:category, user: user) }
+  let!(:category) { create(:category, user: user, name: 'Health') }
 
   before do
     sign_in user
@@ -10,7 +10,7 @@ RSpec.feature 'Goals CRUD', type: :feature do
 
   scenario 'User creates a new goal' do
     visit goals_path
-    click_link 'New Goal'
+    click_link 'New Goal', match: :first
 
     fill_in 'Name', with: 'Run 10K'
     select 'Health', from: 'Category'

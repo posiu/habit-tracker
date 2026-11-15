@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_26_230001) do
+ActiveRecord::Schema.define(version: 2025_11_27_100002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,8 @@ ActiveRecord::Schema.define(version: 2025_11_26_230001) do
     t.string "locale", limit: 10, default: "en"
     t.boolean "email_notifications_enabled", default: true
     t.time "reminder_time"
+    t.boolean "admin", default: false, null: false
+    t.string "report_frequency", default: "none", null: false
     t.index ["created_at"], name: "index_users_on_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

@@ -1,22 +1,20 @@
 FactoryBot.define do
   factory :goal_metric do
     association :goal
-    metric_type { 'numeric' }
     target_value { 100.0 }
     current_value { 0.0 }
-    unit { 'points' }
-    target_date { 1.month.from_now }
+    current_days_doing { 0 }
+    current_days_without { 0 }
+    target_date { 1.month.from_now.to_date }
 
-    trait :boolean_type do
-      metric_type { 'boolean' }
-      target_value { 1.0 }
-      unit { nil }
+    trait :days_doing do
+      days_doing_target { 30 }
+      target_value { nil }
     end
 
-    trait :text_type do
-      metric_type { 'text' }
+    trait :days_without do
+      days_without_target { 30 }
       target_value { nil }
-      unit { nil }
     end
   end
 end

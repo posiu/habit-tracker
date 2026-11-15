@@ -1,0 +1,9 @@
+<h2>Hi <%= @user.display_name %>,</h2>
+<p>These habits are still open for <%= l(@date, format: :long) %>:</p>
+<ul>
+  <% @habits.each do |habit| %>
+    <li><%= habit.name %></li>
+  <% end %>
+</ul>
+<p><%= link_to 'Log today\'s progress', new_daily_entry_url %></p>
+<p style="color:#666;font-size:12px">You can change reminders in <%= link_to 'your settings', users_settings_url %>.</p>

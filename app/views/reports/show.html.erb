@@ -12,15 +12,26 @@
       </div>
       <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
         <div class="flex space-x-3">
-          <%= link_to "Download PDF", report_path(@report_type, format: :pdf), 
+          <%= link_to "Download PDF", report_path(@report_type, format: :pdf, start_date: @start_date), 
               class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
-          <%= link_to "Download CSV", report_path(@report_type, format: :csv), 
+          <%= link_to "Download CSV", report_path(@report_type, format: :csv, start_date: @start_date), 
               class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
           <%= link_to "Back to Reports", reports_path, 
               class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700" %>
         </div>
       </div>
     </div>
+
+    <!-- Period picker -->
+    <%= form_with url: report_path(@report_type), method: :get, local: true,
+                  class: "mb-6 flex items-end space-x-3" do |form| %>
+      <div>
+        <%= form.label :start_date, "Period containing", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.date_field :start_date, value: @start_date,
+            class: "mt-1 block border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" %>
+      </div>
+      <%= form.submit "Show report", class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 cursor-pointer" %>
+    <% end %>
 
     <!-- Summary Section -->
     <div class="bg-white shadow rounded-lg mb-8">

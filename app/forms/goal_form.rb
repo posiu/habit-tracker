@@ -2,6 +2,7 @@ class GoalForm
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Validations
+  include FormModelName
 
   attribute :name, :string
   attribute :description, :string
@@ -83,7 +84,6 @@ class GoalForm
       id: metric.id,
       target_value: metric.target_value,
       current_value: metric.current_value,
-      unit: metric.unit,
       _destroy: false
     }
   end

@@ -8,6 +8,10 @@ class GoalEntry < ApplicationRecord
   validates :value, numericality: true, allow_nil: true
   validate :value_or_boolean_present
 
+  # Callbacks
+  after_save :refresh_goal_metric
+  after_destroy :refresh_goal_metric, unless: :destroyed_by_association
+
   # Scopes
   scope :for_goal, ->(goal) { where(goal: goal) }
   scope :for_date_range, ->(start_date, end_date) { joins(:daily_entry).where(daily_entries: { entry_date: start_date..end_date }) }
@@ -39,6 +43,10 @@ class GoalEntry < ApplicationRecord
   end
 
   private
+
+  def refresh_goal_metric
+    Goals::UpdateMetricService.new(goal).call
+  end
 
   def value_or_boolean_present
     case goal&.goal_type

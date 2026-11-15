@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.feature 'Habits CRUD', type: :feature do
   let(:user) { create(:user, email: 'test@example.com', password: 'password123') }
-  let(:category) { create(:category, user: user) }
+  let!(:category) { create(:category, user: user, name: 'Health') }
 
   before do
     sign_in user
@@ -10,7 +10,7 @@ RSpec.feature 'Habits CRUD', type: :feature do
 
   scenario 'User creates a new habit' do
     visit habits_path
-    click_link 'New Habit'
+    click_link 'New Habit', match: :first
 
     fill_in 'Name', with: 'Morning Jog'
     select 'Health', from: 'Category'
@@ -60,8 +60,6 @@ RSpec.feature 'Habits CRUD', type: :feature do
     other_user = create(:user)
     other_habit = create(:habit, user: other_user)
     
-    visit habit_path(other_habit)
-    
-    expect(page).to have_content('not authorized')
+    expect { visit habit_path(other_habit) }.to raise_error(ActiveRecord::RecordNotFound)
   end
 end

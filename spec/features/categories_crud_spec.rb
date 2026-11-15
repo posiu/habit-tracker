@@ -9,7 +9,7 @@ RSpec.feature 'Categories CRUD', type: :feature do
 
   scenario 'User creates a new category' do
     visit categories_path
-    click_link 'New Category'
+    click_link 'New Category', match: :first
 
     fill_in 'Name', with: 'Health'
     fill_in 'Description', with: 'Health related activities'

@@ -33,7 +33,7 @@ RSpec.describe Entries::CreateDailyEntryService do
         result = described_class.new(user: user, params: params).call
 
         expect(result.success?).to be false
-        expect(result.error_messages).to include(match(/can't be in the future/))
+        expect(result.error_messages).to include(match(/cannot be in the future/))
       end
     end
 

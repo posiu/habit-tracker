@@ -45,6 +45,16 @@
                     class: 'mt-1 block w-full max-w-xs border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500' %>
                 <p class="mt-1 text-sm text-gray-500">Time when you want to receive daily reminders</p>
               </div>
+
+              <div>
+                <%= form.label :report_frequency, 'E-mail reports', 
+                    class: 'block text-sm font-medium text-gray-700' %>
+                <%= form.select :report_frequency,
+                    [['Never', 'none'], ['Weekly (Mondays)', 'weekly'], ['Monthly (1st of the month)', 'monthly']],
+                    {},
+                    class: 'mt-1 block w-full max-w-xs border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500' %>
+                <p class="mt-1 text-sm text-gray-500">Receive a summary of your progress by e-mail</p>
+              </div>
             </div>
           </div>
           

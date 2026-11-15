@@ -1,5 +1,12 @@
 class ReportsController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_report_type, only: :show
+
+  REPORT_TYPES = {
+    'weekly' => Reports::GenerateWeeklyReportService,
+    'monthly' => Reports::GenerateMonthlyReportService,
+    'quarterly' => Reports::GenerateQuarterlyReportService
+  }.freeze
 
   def index
     @reports = [
@@ -10,38 +17,58 @@ class ReportsController < ApplicationController
   end
 
   def show
-    @report_type = params[:id]
-    @report_data = generate_report(@report_type)
-    
+    @start_date = parse_start_date(params[:start_date])
+    @report_data = generate_report(@report_type, @start_date)
+
     respond_to do |format|
       format.html
-      format.pdf { render_pdf }
-      format.csv { render_csv }
+      format.pdf { export(:pdf) }
+      format.csv { export(:csv) }
     end
   end
 
   private
 
-  def generate_report(type)
-    case type
-    when 'weekly'
-      Reports::GenerateWeeklyReportService.new(current_user).call
-    when 'monthly'
-      Reports::GenerateMonthlyReportService.new(current_user).call
-    when 'quarterly'
-      Reports::GenerateQuarterlyReportService.new(current_user).call
-    else
-      OpenStruct.new(success?: false, data: {}, errors: ['Invalid report type'])
+  def set_report_type
+    @report_type = params[:id]
+    return if REPORT_TYPES.key?(@report_type)
+
+    redirect_to reports_path, alert: 'Unknown report type.'
+  end
+
+  def generate_report(type, start_date)
+    service = REPORT_TYPES.fetch(type)
+    options = start_date ? { start_date: period_start(type, start_date) } : {}
+    service.new(current_user, **options).call
+  end
+
+  # Snap the picked date to the beginning of the period it belongs to.
+  def period_start(type, date)
+    type == 'weekly' ? date.beginning_of_week : date.beginning_of_month
+  end
+
+  def parse_start_date(value)
+    return nil if value.blank?
+
+    Date.iso8601(value.to_s)
+  rescue ArgumentError
+    nil
+  end
+
+  def export(format)
+    unless @report_data.success?
+      return redirect_to reports_path, alert: @report_data.error_messages.to_sentence
     end
-  end
 
-  def render_pdf
-    # TODO: Implement PDF generation
-    redirect_to reports_path, alert: 'PDF export not yet implemented'
-  end
+    result = Reports::ExportReportService.new(
+      report_type: @report_type, data: @report_data.data, format: format
+    ).call
 
-  def render_csv
-    # TODO: Implement CSV export
-    redirect_to reports_path, alert: 'CSV export not yet implemented'
+    return redirect_to reports_path, alert: result.error_messages.to_sentence unless result.success?
+
+    send_data result.data[:content],
+              filename: result.data[:filename],
+              type: result.data[:content_type],
+              disposition: 'attachment'
   end
 end

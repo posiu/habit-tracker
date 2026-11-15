@@ -61,6 +61,11 @@ class Goal < ApplicationRecord
     (target_date - Date.current).to_i
   end
 
+  # A goal has a single metric (unique index on goal_metrics.goal_id).
+  def goal_metric
+    goal_metrics.first
+  end
+
   private
 
   def set_defaults
@@ -75,7 +80,7 @@ class Goal < ApplicationRecord
   end
 
   def primary_goal_metric
-    goal_metrics.first
+    goal_metric
   end
 
   def create_goal_metric

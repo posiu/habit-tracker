@@ -10,11 +10,14 @@ class User < ApplicationRecord
   has_many :goals, dependent: :destroy
   has_many :daily_entries, dependent: :destroy
 
+  REPORT_FREQUENCIES = %w[none weekly monthly].freeze
+
   # Validations
   validates :first_name, length: { maximum: 100 }
   validates :last_name, length: { maximum: 100 }
   validates :time_zone, length: { maximum: 50 }
   validates :locale, length: { maximum: 10 }
+  validates :report_frequency, inclusion: { in: REPORT_FREQUENCIES }
 
   # Scopes
   scope :with_notifications_enabled, -> { where(email_notifications_enabled: true) }

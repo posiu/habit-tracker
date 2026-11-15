@@ -1,0 +1,9 @@
+Hi <%= @user.display_name %>,
+
+These habits are still open for <%= l(@date, format: :long) %>:
+<% @habits.each do |habit| %>
+- <%= habit.name %>
+<% end %>
+
+Log today's progress: <%= new_daily_entry_url %>
+Change reminders: <%= users_settings_url %>

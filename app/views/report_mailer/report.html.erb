@@ -1,0 +1,29 @@
+<h2><%= @type.humanize %> report</h2>
+<p><%= @report[:period] %></p>
+<% summary = @report[:summary] %>
+<table cellpadding="6" style="border-collapse:collapse">
+  <% summary.each do |key, value| %>
+    <tr>
+      <td style="border-bottom:1px solid #eee"><%= key.to_s.humanize %></td>
+      <td style="border-bottom:1px solid #eee"><strong><%= value %></strong></td>
+    </tr>
+  <% end %>
+</table>
+<% if @report[:habits].present? %>
+  <h3>Habits</h3>
+  <ul>
+    <% @report[:habits].each do |habit| %>
+      <li><%= habit[:name] %>: <%= habit[:completions] %> completions (<%= habit[:completion_rate] %>%)</li>
+    <% end %>
+  </ul>
+<% end %>
+<% if @report[:goals].present? %>
+  <h3>Goals</h3>
+  <ul>
+    <% @report[:goals].each do |goal| %>
+      <li><%= goal[:name] %>: <%= goal[:progress_percentage] %>%</li>
+    <% end %>
+  </ul>
+<% end %>
+<p><%= link_to 'Open full report', report_url(@type) %> &middot; a CSV copy is attached.</p>
+<p style="color:#666;font-size:12px">Change how often you get reports in <%= link_to 'your settings', users_settings_url %>.</p>

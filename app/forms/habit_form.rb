@@ -2,6 +2,7 @@ class HabitForm
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Validations
+  include FormModelName
 
   attribute :name, :string
   attribute :description, :string
@@ -13,7 +14,6 @@ class HabitForm
   attribute :end_date, :date
   attribute :reminder_enabled, :boolean, default: false
   attribute :reminder_days, default: []
-  attribute :reminder_time, :time
   attribute :is_active, :boolean, default: true
 
   validates :name, presence: true, length: { maximum: 200 }
@@ -49,8 +49,7 @@ class HabitForm
       start_date: start_date,
       end_date: end_date,
       reminder_enabled: reminder_enabled,
-      reminder_days: reminder_days,
-      reminder_time: reminder_time,
+      reminder_days: normalized_reminder_days,
       is_active: is_active,
       user: user
     )
@@ -72,6 +71,12 @@ class HabitForm
 
   private
 
+  # Weekdays 0 (Sunday) .. 6 (Saturday); the form posts a blank entry so that
+  # unchecking every day clears the list.
+  def normalized_reminder_days
+    Array(reminder_days).reject(&:blank?).map(&:to_i).select { |day| (0..6).cover?(day) }.uniq.sort
+  end
+
   def habit_attributes
     return {} unless @habit
 
@@ -86,7 +91,6 @@ class HabitForm
       end_date: @habit.end_date,
       reminder_enabled: @habit.reminder_enabled,
       reminder_days: @habit.reminder_days,
-      reminder_time: @habit.reminder_time,
       is_active: @habit.is_active
     }
   end

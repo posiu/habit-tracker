@@ -1,0 +1,9 @@
+Hi <%= @user.display_name %>,
+
+These goals are approaching their deadline:
+<% @goals.each do |goal| %>
+<% days = (goal.target_date - @today).to_i %>
+- <%= goal.name %> - <%= days.zero? ? 'due today' : "due in #{pluralize(days, 'day')}" %> (<%= l(goal.target_date, format: :long) %>)
+<% end %>
+
+Turn these e-mails off: <%= users_settings_url %>

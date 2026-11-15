@@ -46,10 +46,9 @@ module Goals
     end
 
     def calculate_days_doing_progress
-      # Count days where goal entries exist and have positive values
+      # Count days where the goal was marked as done (boolean) or has a positive value
       days_done = goal.goal_entries
-                     .joins(:daily_entry)
-                     .where('numeric_value > 0 OR boolean_value = true OR text_value IS NOT NULL')
+                     .where('goal_entries.boolean_value = TRUE OR goal_entries.value > 0')
                      .count
 
       # Calculate target days from start_date to target_date
