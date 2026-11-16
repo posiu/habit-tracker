@@ -19,9 +19,16 @@ class User < ApplicationRecord
   validates :locale, length: { maximum: 10 }
   validates :report_frequency, inclusion: { in: REPORT_FREQUENCIES }
 
+  before_create { self.jwt_jti ||= SecureRandom.uuid }
+
   # Scopes
   scope :with_notifications_enabled, -> { where(email_notifications_enabled: true) }
   scope :created_recently, -> { where('created_at >= ?', 1.week.ago) }
+
+  # Invalidates every JWT issued so far (used on logout / password change).
+  def rotate_jwt_jti!
+    update_columns(jwt_jti: SecureRandom.uuid)
+  end
 
   def full_name
     "#{first_name} #{last_name}".strip

@@ -57,6 +57,7 @@ bundle exec brakeman
 **Stage 1-3:** Core infrastructure, authentication, and CRUD for Habits/Goals/Categories
 **Stage 4:** Dashboard, daily entries system, and GitHub-style heatmap visualization
 **Stage 5 (core):** Reports, exports, e-mail reports, reminders and deadline alerts (see below)
+**Stage 6 (API):** JSON API v1 with JWT authentication — see [docs/API.md](docs/API.md)
 
 ### 📊 Current Features
 
@@ -74,7 +75,10 @@ bundle exec brakeman
 - **Habit reminders** (per habit: enabled + weekdays; per user: hour and time zone) and
   **goal deadline alerts**
 - Authorization system (Pundit policies)
-- ~240 automated tests (`bundle exec rspec`)
+- **JSON API v1** (`/api/v1`) for the iOS app: JWT login/refresh/logout (tokens revoked on logout),
+  CRUD for categories/habits/goals/daily entries, habit & goal tracking, dashboard, heatmap and reports,
+  pagination, uniform error format, rate limiting (`rack-attack`) and CORS (`CORS_ORIGINS`)
+- ~280 automated tests (`bundle exec rspec`)
 
 ### ⏰ Background jobs
 
@@ -97,7 +101,11 @@ Configuration (environment variables): `REDIS_URL`, `MAILER_FROM` (sender addres
 - `ReportQuery` / `ReportPresenter`, insights and comparison with previous periods
 - Nightly streak persistence job (streaks are currently computed on demand)
 
-### 🔜 Next: Stage 6 – JSON API for the iOS app (JWT, `Api::V1`, rack-attack)
+### 🔜 Remaining before production
+- Upgrade Ruby and Rails: Ruby 3.0 and Rails 6.1 are end-of-life and `bundle-audit` reports
+  vulnerabilities that cannot be fixed within Rails 6.1 (actionpack, activestorage, nokogiri, puma, ...)
+- OpenAPI/Swagger (RSwag) spec, measured test coverage, production deployment guide
+- Fix `.rubocop.yml` for current RuboCop
 
 ## Documentation
 
@@ -105,6 +113,7 @@ See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup instructions.
 See [ARCHITECTURE.md](ARCHITECTURE.md) for architecture documentation.
 See [DOMAIN_MODEL.md](DOMAIN_MODEL.md) for domain model.
 See [ROADMAP.md](ROADMAP.md) for project roadmap.
+See [docs/API.md](docs/API.md) for the JSON API.
 
 ### Stage Guides
 - [Stage 3 Guide](STAGE3_GUIDE.md) - CRUD patterns and Services

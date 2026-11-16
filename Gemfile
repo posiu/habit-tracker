@@ -104,3 +104,7 @@ gem 'rack-cors'
 # gem 'rswag'
 # PDF export of reports
 gem 'prawn', '~> 2.4'
+
+# API: JWT authentication and rate limiting
+gem 'jwt', '~> 2.7'
+gem 'rack-attack', '~> 6.7'

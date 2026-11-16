@@ -32,10 +32,28 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # API routes will be added in Stage 6
-      # post 'auth/login', to: 'authentication#create'
-      # resources :habits
+      post 'auth/login', to: 'authentication#create'
+      post 'auth/refresh', to: 'authentication#refresh'
+      delete 'auth/logout', to: 'authentication#destroy'
+
+      resource :profile, only: [:show, :update]
+      resources :categories
+      resources :habits do
+        member { patch :archive }
+      end
+      resources :goals do
+        member { patch :complete }
+      end
+      resources :daily_entries do
+        resources :habit_entries, only: :create
+        resources :goal_entries, only: :create
+      end
+      resources :habit_entries, only: [:update, :destroy]
+      resources :goal_entries, only: [:update, :destroy]
+
+      get 'dashboard', to: 'dashboard#show'
+      get 'dashboard/heatmap', to: 'dashboard#heatmap'
+      resources :reports, only: [:index, :show]
     end
   end
 end
-

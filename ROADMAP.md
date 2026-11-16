@@ -567,76 +567,76 @@ Implementacja RESTful API wersji 1.0 dla przyszłej aplikacji iOS, finalizacja p
 ### Zadania techniczne
 
 #### 6.1 API Authentication
-- [ ] JWT token implementation (`jwt` gem)
-- [ ] Controller `Api::V1::AuthenticationController` (login, logout)
-- [ ] Concern `Api::Authenticatable` (token validation)
-- [ ] Base controller `Api::V1::BaseController`
-- [ ] Token refresh mechanism (opcjonalnie)
+- [x] JWT token implementation (`jwt` gem)
+- [x] Controller `Api::V1::AuthenticationController` (login, refresh, logout)
+- [x] Concern `Api::Authenticatable` (token validation)
+- [x] Base controller `Api::V1::BaseController`
+- [x] Token refresh mechanism (opcjonalnie)
 
 #### 6.2 API Controllers
-- [ ] `Api::V1::HabitsController` (CRUD + JSON responses)
-- [ ] `Api::V1::GoalsController` (CRUD)
-- [ ] `Api::V1::DailyEntriesController` (CRUD)
-- [ ] `Api::V1::CategoriesController` (CRUD)
-- [ ] `Api::V1::DashboardController` (stats, heatmap data)
-- [ ] `Api::V1::ReportsController` (list, generate)
+- [x] `Api::V1::HabitsController` (CRUD + JSON responses)
+- [x] `Api::V1::GoalsController` (CRUD)
+- [x] `Api::V1::DailyEntriesController` (CRUD)
+- [x] `Api::V1::CategoriesController` (CRUD)
+- [x] `Api::V1::DashboardController` (stats, heatmap data)
+- [x] `Api::V1::ReportsController` (list, generate)
 
 #### 6.3 API Serialization
-- [ ] Jbuilder templates dla wszystkich zasobów (`app/views/api/v1/`)
-- [ ] Consistent JSON response format
-- [ ] Error response format standard
-- [ ] Pagination (Kaminari integration)
+- [ ] Jbuilder templates — zastąpione zwykłymi serializerami (`app/serializers/api/v1/serializers.rb`)
+- [x] Consistent JSON response format
+- [x] Error response format standard
+- [x] Pagination (Kaminari integration)
 
 #### 6.4 API Concerns & Helpers
-- [ ] Concern `ApiResponsable` (render_success, render_error)
-- [ ] Concern `ApiErrorHandler` (consistent error handling)
-- [ ] Helper methods dla serialization
+- [x] Concern `Api::Responsable` (render_data, render_error, render_paginated)
+- [x] Concern `Api::ErrorHandler`
+- [x] Helper methods dla serialization (`Api::V1::Serializers`)
 
 #### 6.5 API Routes
-- [ ] Namespace `/api/v1` w routes
-- [ ] RESTful routes dla wszystkich zasobów
-- [ ] Custom routes (stats, heatmap data)
+- [x] Namespace `/api/v1` w routes
+- [x] RESTful routes dla wszystkich zasobów
+- [x] Custom routes (stats, heatmap data)
 - [ ] API documentation endpoint (opcjonalnie)
 
 #### 6.6 API Documentation
 - [ ] RSwag setup (Swagger/OpenAPI)
-- [ ] API endpoint documentation
-- [ ] Authentication flow documentation
-- [ ] Request/response examples
-- [ ] Error codes documentation
+- [x] API endpoint documentation (`docs/API.md`)
+- [x] Authentication flow documentation
+- [x] Request/response examples
+- [x] Error codes documentation
 
 #### 6.7 CORS Configuration
-- [ ] `rack-cors` gem configuration
-- [ ] Development: allow all origins
-- [ ] Production: restrict to iOS app domains
-- [ ] Preflight requests handling
+- [x] `rack-cors` gem configuration
+- [x] Development: allow all origins
+- [x] Production: restrict via `CORS_ORIGINS` (domyślnie nic)
+- [x] Preflight requests handling
 
 #### 6.8 API Versioning
-- [ ] Versioning strategy implemented
-- [ ] Future-proof structure (ready for v2)
-- [ ] Version headers handling
+- [x] Versioning strategy implemented
+- [x] Future-proof structure (ready for v2)
+- [x] Version headers (`X-API-Version`)
 
 #### 6.9 API Tests
-- [ ] Request specs dla wszystkich API endpoints
-- [ ] Authentication tests (valid/invalid tokens)
-- [ ] Authorization tests (users can only access own data)
-- [ ] Error handling tests
-- [ ] Pagination tests
+- [x] Request specs dla wszystkich API endpoints
+- [x] Authentication tests (valid/invalid tokens)
+- [x] Authorization tests (users can only access own data)
+- [x] Error handling tests
+- [x] Pagination tests
 
 #### 6.10 Shared Services
-- [ ] Weryfikacja że Services działają zarówno dla web jak i API
-- [ ] Query Objects używane w API controllers
-- [ ] Form Objects używane w API (validation)
+- [x] Weryfikacja że Services działają zarówno dla web jak i API
+- [x] Query Objects używane w API controllers
+- [x] Form Objects używane w API (validation)
 
 #### 6.11 Rate Limiting
-- [ ] `rack-attack` gem configuration
-- [ ] Rate limits dla API endpoints
-- [ ] IP-based throttling
+- [x] `rack-attack` gem configuration
+- [x] Rate limits dla API endpoints
+- [x] IP-based throttling
 - [ ] Token-based throttling (opcjonalnie)
 
 #### 6.12 Finalization Tasks
 - [ ] Comprehensive test suite (coverage > 85%)
-- [ ] Documentation update (README, API docs)
+- [x] Documentation update (README, API docs)
 - [ ] Code review (RuboCop, Brakeman)
 - [ ] Performance optimization (N+1, slow queries)
 - [ ] Security audit (Brakeman, bundler-audit)
