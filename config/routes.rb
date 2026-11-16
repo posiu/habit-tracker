@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 
       get 'dashboard', to: 'dashboard#show'
       get 'dashboard/heatmap', to: 'dashboard#heatmap'
+      get 'dashboard/stats', to: 'dashboard#stats'
       resources :reports, only: [:index, :show]
     end
   end

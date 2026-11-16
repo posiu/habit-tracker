@@ -79,3 +79,10 @@ curl -s localhost:3000/api/v1/habits -H "Authorization: Bearer $TOKEN"
 curl -s -X POST localhost:3000/api/v1/habits -H "Authorization: Bearer $TOKEN" -H 'Content-Type: application/json' \
   -d '{"habit":{"name":"Read","habit_type":"boolean","start_date":"2026-11-16"}}'
 ```
+
+## Dashboard statistics
+
+`GET /api/v1/dashboard/stats?days=30` (days: 1–365, default 30) returns extended statistics:
+`period`, `summary` (completions, previous_completions, change_percent, active_days, active_day_rate, average_mood),
+`daily_series`, `weekly_trend` (12 weeks), `weekday_distribution`, `habits`, `goals` and `insights`
+(`[{type: "positive|warning|info", message}]`).

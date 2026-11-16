@@ -28,6 +28,14 @@ module Api
         render_data(result.data, meta: { from: from, to: to })
       end
 
+      # GET /api/v1/dashboard/stats?days=30
+      def stats
+        result = Analytics::CalculateStatsService.new(current_user, days: params[:days] || 30).call
+        raise ActionController::BadRequest, result.error_messages.to_sentence unless result.success?
+
+        render_data(result.data.merge(insights: Analytics::GenerateInsightsService.new(result.data).call.data))
+      end
+
       private
 
       def parse_date(value)

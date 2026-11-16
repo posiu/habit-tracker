@@ -22,6 +22,11 @@ class DashboardController < ApplicationController
     # Heatmap data for the last year
     heatmap_result = Analytics::CalculateHeatmapDataService.new(current_user).call
     @heatmap_data = heatmap_result.success? ? heatmap_result.data : []
+
+    # Extended statistics, charts and insights
+    stats_result = Analytics::CalculateStatsService.new(current_user, days: params[:days] || 30).call
+    @stats = stats_result.success? ? stats_result.data : nil
+    @insights = @stats ? Analytics::GenerateInsightsService.new(@stats).call.data : []
   end
 
   private

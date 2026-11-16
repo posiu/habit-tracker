@@ -453,9 +453,9 @@ Implementacja systemu raportów (tygodniowe, miesięczne, kwartalne), rozszerzon
 
 #### 5.2 Report Content
 - [x] Statystyki dla okresu (completed habits, goal progress)
-- [ ] Wykresy trendów (line charts dla habit completions)
-- [ ] Porównania z poprzednimi okresami
-- [ ] Insights i recommendations (opcjonalnie)
+- [x] Wykresy trendów (line charts dla habit completions)
+- [x] Porównania z poprzednimi okresami
+- [x] Insights i recommendations (opcjonalnie)
 
 #### 5.3 Report Export
 - [x] Export do PDF (gem `wicked_pdf` lub `prawn`)
@@ -470,10 +470,10 @@ Implementacja systemu raportów (tygodniowe, miesięczne, kwartalne), rozszerzon
 - [x] User preferences: email frequency setting
 
 #### 5.5 Extended Analytics
-- [ ] Service: `Analytics::CalculateStatsService` (rozszerzone statystyki)
-- [ ] Service: `Analytics::GenerateInsightsService` (patterns, trends)
-- [ ] Dashboard: extended stats section
-- [ ] Wykresy (Chart.js lub podobny): habit completion trends, goal progress
+- [x] Service: `Analytics::CalculateStatsService` (rozszerzone statystyki)
+- [x] Service: `Analytics::GenerateInsightsService` (patterns, trends)
+- [x] Dashboard: extended stats section
+- [x] Wykresy (Chart.js lub podobny): habit completion trends, goal progress
 
 #### 5.6 Notifications System
 - [ ] Model `Notification` (opcjonalnie, lub użyć ActionMailer bezpośrednio)
