@@ -50,7 +50,27 @@ Rails.application.configure do
 
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
-  config.log_level = :info
+  config.log_level = ENV.fetch('RAILS_LOG_LEVEL', 'info').to_sym
+
+  # TLS: terminate at the proxy/load balancer (sets X-Forwarded-Proto). Set FORCE_SSL=false only for local smoke tests.
+  config.force_ssl = ENV.fetch('FORCE_SSL', 'true') != 'false'
+  config.ssl_options = { redirect: { exclude: ->(request) { request.path == '/up' } } }
+
+  # Optional host allow-list (comma separated), e.g. ALLOWED_HOSTS=habits.example.com
+  config.hosts = ENV['ALLOWED_HOSTS'].split(',').map(&:strip) if ENV['ALLOWED_HOSTS'].present?
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch('SMTP_ADDRESS', 'localhost'),
+    port: ENV.fetch('SMTP_PORT', 587).to_i,
+    user_name: ENV['SMTP_USERNAME'],
+    password: ENV['SMTP_PASSWORD'],
+    authentication: :plain,
+    enable_starttls_auto: true
+  }.compact
+
+  config.active_job.queue_adapter = :sidekiq
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]

@@ -9,6 +9,15 @@ Rails.application.routes.draw do
   # Root route - redirect to dashboard (authentication handled by controller)
   root 'dashboard#index'
 
+  # Liveness/readiness probe for load balancers (no auth).
+  get 'up', to: 'health#show'
+
+  # Sidekiq monitoring UI, admins only.
+  require 'sidekiq/web'
+  authenticate :user, ->(user) { user.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   resources :habits do
     member do
       patch :archive

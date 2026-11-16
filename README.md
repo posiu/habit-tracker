@@ -110,7 +110,7 @@ Configuration (environment variables): `REDIS_URL`, `MAILER_FROM` (sender addres
 
 ## Documentation
 
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup instructions.
+See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup instructions and [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for production deployment.
 See [ARCHITECTURE.md](ARCHITECTURE.md) for architecture documentation.
 See [DOMAIN_MODEL.md](DOMAIN_MODEL.md) for domain model.
 See [ROADMAP.md](ROADMAP.md) for project roadmap.
