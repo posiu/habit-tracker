@@ -53,7 +53,7 @@ RSpec.feature "Authentication", type: :feature do
       
       click_button "Sign in"
       
-      expect(page).to have_content("Invalid Email or password.")
+      expect(page).to have_content("Invalid email or password.")
     end
   end
   

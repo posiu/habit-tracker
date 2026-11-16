@@ -27,7 +27,7 @@ class CategoriesController < ApplicationController
     else
       @category_form = CategoryForm.new(nil, category_params)
       @category_form.valid? # Trigger validations for error display
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -46,7 +46,7 @@ class CategoriesController < ApplicationController
     else
       @category_form = CategoryForm.new(@category, category_params)
       @category_form.valid? # Trigger validations for error display
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

@@ -36,7 +36,8 @@ RSpec.describe 'Habits', type: :request do
 
     it 'does not expose habits of other users' do
       other = create(:habit, user: create(:user))
-      expect { get habit_path(other) }.to raise_error(ActiveRecord::RecordNotFound)
+      get habit_path(other)
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

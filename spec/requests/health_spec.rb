@@ -18,7 +18,8 @@ RSpec.describe 'Health check', type: :request do
     expect(response).to have_http_status(:found)
     expect(response.location).to end_with('/users/sign_in')
     sign_in create(:user)
-    expect { get '/sidekiq' }.to raise_error(ActionController::RoutingError)
+    get '/sidekiq'
+    expect(response).to have_http_status(:not_found)
   end
 
   it 'shows the Sidekiq UI to admins' do

@@ -55,7 +55,7 @@ RSpec.describe 'API v1 dashboard, reports and profile', type: :request do
     expect(user.reload).to have_attributes(first_name: 'Ola', report_frequency: 'weekly')
 
     patch '/api/v1/profile', params: { user: { report_frequency: 'hourly' } }, headers: headers, as: :json
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it 'cannot escalate privileges through the profile' do

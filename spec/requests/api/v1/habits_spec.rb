@@ -16,7 +16,7 @@ RSpec.describe 'API v1 habits', type: :request do
   it 'returns validation errors in the standard format' do
     post '/api/v1/habits', params: { habit: { name: '' } }, headers: headers, as: :json
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
     expect(json['error']).to include('code' => 'validation_failed')
     expect(json['error']['details']).to include('name')
   end
@@ -96,7 +96,7 @@ RSpec.describe 'API v1 habits', type: :request do
     it 'does not let a habit be attached to another users category' do
       foreign_category = create(:category, user: create(:user))
       post '/api/v1/habits', params: { habit: valid[:habit].merge(category_id: foreign_category.id) }, headers: headers, as: :json
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

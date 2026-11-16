@@ -6,7 +6,7 @@ class Goal < ApplicationRecord
   has_many :goal_entries, dependent: :destroy
 
   # Enums
-  enum goal_type: {
+  enum :goal_type, {
     days_doing: 'days_doing',
     days_without: 'days_without',
     target_value: 'target_value',

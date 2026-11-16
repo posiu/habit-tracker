@@ -1,6 +1,6 @@
 # Deployment
 
-The app needs Ruby 3.0.2, PostgreSQL 12+, Redis (Sidekiq) and an SMTP server.
+The app needs Ruby 3.4, PostgreSQL 12+, Redis (Sidekiq) and an SMTP server.
 See `.env.example` for every environment variable.
 
 ## Required configuration
@@ -38,8 +38,7 @@ docker run --env-file .env habit-tracker bundle exec sidekiq
 - **Logs:** set `RAILS_LOG_TO_STDOUT=true` and collect them from the platform.
 - **Backups:** back up PostgreSQL regularly; Redis holds only job queues.
 
-## Known limitations
+## Versions
 
-Ruby 3.0 and Rails 6.1 are end-of-life and `bundle-audit` reports vulnerabilities that need a Rails/Ruby upgrade.
-Plan that upgrade before exposing the app to the public internet.
-The assets pipeline (webpacker + Tailwind CDN) was not verified with `rails assets:precompile` in this environment, and the Dockerfile was not built.
+Ruby 3.4 and Rails 8.1 (both supported). `rails assets:precompile` was verified; the Dockerfile itself was not built.
+There is no Node/webpack step: JavaScript is served through importmap (Turbo, Stimulus).

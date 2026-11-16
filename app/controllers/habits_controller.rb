@@ -26,7 +26,7 @@ class HabitsController < ApplicationController
     else
       @habit_form = HabitForm.new(current_user, nil, habit_params)
       @habit_form.valid? # Trigger validations for error display
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -45,7 +45,7 @@ class HabitsController < ApplicationController
     else
       @habit_form = HabitForm.new(current_user, @habit, habit_params)
       @habit_form.valid? # Trigger validations for error display
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

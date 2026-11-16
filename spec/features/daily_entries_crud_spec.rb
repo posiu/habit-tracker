@@ -89,7 +89,8 @@ RSpec.describe 'Daily Entries CRUD', type: :feature do
     let(:other_daily_entry) { create(:daily_entry, user: other_user) }
 
     it 'prevents viewing other user\'s daily entry' do
-      expect { visit daily_entry_path(other_daily_entry) }.to raise_error(ActiveRecord::RecordNotFound)
+      visit daily_entry_path(other_daily_entry)
+      expect(page.status_code).to eq(404)
     end
   end
 end

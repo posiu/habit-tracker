@@ -28,7 +28,7 @@ class DailyEntriesController < ApplicationController
     else
       @daily_entry_form = DailyEntryForm.new(nil, user: current_user, attributes: daily_entry_params)
       @daily_entry_form.valid? # Trigger validations for error display
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -44,7 +44,7 @@ class DailyEntriesController < ApplicationController
     if @daily_entry_form.save
       redirect_to @daily_entry, notice: 'Daily entry was successfully updated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 

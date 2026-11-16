@@ -60,6 +60,7 @@ RSpec.feature 'Habits CRUD', type: :feature do
     other_user = create(:user)
     other_habit = create(:habit, user: other_user)
     
-    expect { visit habit_path(other_habit) }.to raise_error(ActiveRecord::RecordNotFound)
+    visit habit_path(other_habit)
+      expect(page.status_code).to eq(404)
   end
 end

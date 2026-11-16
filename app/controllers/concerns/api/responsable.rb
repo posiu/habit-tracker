@@ -21,7 +21,7 @@ module Api
 
     def render_validation_error(errors)
       details = errors.respond_to?(:to_hash) ? errors.to_hash : { base: Array(errors) }
-      render_error('validation_failed', 'Validation failed', status: :unprocessable_entity, details: details)
+      render_error('validation_failed', 'Validation failed', status: :unprocessable_content, details: details)
     end
 
     # Renders a BaseService::Result failure.
@@ -30,7 +30,7 @@ module Api
       if errors.respond_to?(:to_hash) && !errors.is_a?(Array)
         render_validation_error(errors)
       else
-        render_error('unprocessable', result.error_messages.to_sentence, status: :unprocessable_entity)
+        render_error('unprocessable', result.error_messages.to_sentence, status: :unprocessable_content)
       end
     end
 

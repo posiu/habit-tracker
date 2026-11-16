@@ -8,7 +8,7 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <script src="https://cdn.tailwindcss.com"></script>
-    <%= turbo_include_tags %>
+    <%= javascript_importmap_tags %>
     
     <style>
       /* Heatmap Styles */
@@ -57,7 +57,7 @@
       }
     </style>
     <script>
-      // User menu dropdown functionality - inline to avoid Webpacker issues
+      // User menu dropdown functionality
       let dropdownInitialized = false;
       let clickOutsideListener = null;
 
@@ -98,8 +98,8 @@
         initializeDropdown();
       }
 
-      // Also initialize on Turbolinks page loads
-      document.addEventListener('turbolinks:load', function() {
+      // Re-initialize after Turbo navigations
+      document.addEventListener('turbo:load', function() {
         dropdownInitialized = false;
         initializeDropdown();
       });
@@ -143,7 +143,7 @@
                   <%= link_to "Profile", users_profile_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                   <%= link_to "Settings", users_settings_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                   <div class="border-t border-gray-100"></div>
-                  <%= link_to "Logout", destroy_user_session_path, method: :delete, data: { confirm: "Are you sure?" }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                  <%= link_to "Logout", destroy_user_session_path, data: { method: :delete, turbo_method: :delete, confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 </div>
               </div>
             </div>

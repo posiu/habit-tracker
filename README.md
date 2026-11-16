@@ -4,7 +4,7 @@ Personal habit and performance tracking application built with Ruby on Rails.
 
 ## Tech Stack
 
-- Ruby on Rails (latest stable)
+- Ruby 3.4, Ruby on Rails 8.1
 - PostgreSQL
 - Hotwire (Turbo + Stimulus)
 - Tailwind CSS
@@ -18,7 +18,7 @@ Personal habit and performance tracking application built with Ruby on Rails.
 1. Install dependencies:
    ```bash
    bundle install
-   npm install  # if needed
+   # no Node/yarn needed: JavaScript is served via importmap
    ```
 
 2. Setup database:
@@ -98,14 +98,11 @@ Configuration (environment variables): `REDIS_URL`, `MAILER_FROM` (sender addres
 `config/environments/production.rb` before enabling e-mails.
 
 ### 🔄 Still open from Stage 5 (see [ROADMAP.md](ROADMAP.md))
-- Charts (Chart.js) on report pages and an extended-statistics section on the dashboard
-- `ReportQuery` / `ReportPresenter`, insights and comparison with previous periods
+- `ReportQuery` / `ReportPresenter`; charts on the report pages (the dashboard already has them)
 - Nightly streak persistence job (streaks are currently computed on demand)
 
 ### 🔜 Remaining before production
-- Upgrade Ruby and Rails: Ruby 3.0 and Rails 6.1 are end-of-life and `bundle-audit` reports
-  vulnerabilities that cannot be fixed within Rails 6.1 (actionpack, activestorage, nokogiri, puma, ...)
-- OpenAPI/Swagger (RSwag) spec, measured test coverage, production deployment guide
+- OpenAPI/Swagger (RSwag) spec; raise test coverage from ~84% to >85%
 - Fix `.rubocop.yml` for current RuboCop
 
 ## Documentation

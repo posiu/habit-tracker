@@ -16,10 +16,10 @@ RSpec.describe 'API v1 daily entries', type: :request do
 
   it 'rejects future dates and invalid moods' do
     post '/api/v1/daily_entries', params: { daily_entry: { entry_date: 1.day.from_now.to_date.iso8601 } }, headers: headers, as: :json
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
 
     post '/api/v1/daily_entries', params: { daily_entry: { entry_date: Date.current.iso8601, mood: 9 } }, headers: headers, as: :json
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it 'filters by date range and rejects malformed dates' do
@@ -102,7 +102,7 @@ RSpec.describe 'API v1 daily entries', type: :request do
     it 'returns validation errors for bad values' do
       habit = create(:habit, user: user, habit_type: 'numeric', target_value: 10)
       post "/api/v1/daily_entries/#{entry.id}/habit_entries", params: { habit_id: habit.id, value: -5 }, headers: headers, as: :json
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 end

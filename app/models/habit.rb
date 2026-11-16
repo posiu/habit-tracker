@@ -5,12 +5,12 @@ class Habit < ApplicationRecord
   has_many :habit_entries, dependent: :destroy
 
   # Enums
-  enum habit_type: {
+  enum :habit_type, {
     boolean: 'boolean',
     numeric: 'numeric',
     time: 'time',
     counter: 'count'
-  }, _suffix: true
+  }, suffix: true
 
   # Validations
   validates :name, presence: true, length: { maximum: 200 }

@@ -23,7 +23,7 @@ RSpec.describe 'Users::Settings', type: :request do
 
     it 'rejects an unknown report frequency' do
       patch users_settings_path, params: { user: { report_frequency: 'hourly' } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(user.reload.report_frequency).to eq('none')
     end
 
