@@ -17,9 +17,13 @@ module Analytics
 
     def calculate_heatmap_data
       # Get all daily entries for the user in the date range
-      daily_entries = user.daily_entries
-                          .where(entry_date: start_date..end_date)
-                          .includes(:habit_entries, :goal_entries)
+      range = start_date..end_date
+      habit_counts = HabitEntry.joins(:daily_entry)
+                               .where(completed: true, daily_entries: { user_id: user.id, entry_date: range })
+                               .group('daily_entries.entry_date').count
+      goal_counts = GoalEntry.joins(:daily_entry)
+                             .where(daily_entries: { user_id: user.id, entry_date: range })
+                             .group('daily_entries.entry_date').count
 
       # Create a hash with all dates in the range initialized to 0
       date_range = (start_date..end_date).to_a
@@ -32,15 +36,11 @@ module Analytics
       end.index_by { |item| item[:date] }
 
       # Calculate activity for each day
-      daily_entries.each do |entry|
-        date_key = entry.entry_date.strftime('%Y-%m-%d')
+      (habit_counts.keys | goal_counts.keys).each do |date|
+        date_key = date.strftime('%Y-%m-%d')
         next unless heatmap_data[date_key]
 
-        # Count completed habits and goal entries for this day
-        completed_habits = entry.habit_entries.where(completed: true).count
-        goal_entries = entry.goal_entries.count
-
-        total_activity = completed_habits + goal_entries
+        total_activity = habit_counts.fetch(date, 0) + goal_counts.fetch(date, 0)
         
         heatmap_data[date_key][:count] = total_activity
         heatmap_data[date_key][:level] = calculate_activity_level(total_activity)

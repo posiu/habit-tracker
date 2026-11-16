@@ -45,6 +45,7 @@ Personal habit and performance tracking application built with Ruby on Rails.
 
 ```bash
 bundle exec rspec        # no Redis needed; PostgreSQL required
+COVERAGE=1 bundle exec rspec   # also writes coverage/index.html (currently ~84% lines)
 bundle exec brakeman
 ```
 

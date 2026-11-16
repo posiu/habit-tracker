@@ -108,3 +108,7 @@ gem 'prawn', '~> 2.4'
 # API: JWT authentication and rate limiting
 gem 'jwt', '~> 2.7'
 gem 'rack-attack', '~> 6.7'
+
+group :test do
+  gem 'simplecov', require: false
+end
