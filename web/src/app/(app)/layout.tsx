@@ -17,6 +17,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           Habit Tracker
         </Link>
         <nav className="flex gap-4">
+          <Link href="/daily" className="hover:underline">
+            Dziś
+          </Link>
           <Link href="/habits" className="hover:underline">
             Nawyki
           </Link>

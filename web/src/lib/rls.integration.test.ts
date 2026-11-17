@@ -83,4 +83,53 @@ describe("row level security", () => {
     expect((await a.client.from("categories").insert({ name: "Zdrowie" })).error?.code).toBe("23505");
     expect((await b.client.from("categories").insert({ name: "Zdrowie" })).error).toBeNull();
   });
+
+  describe("save_day", () => {
+    const date = "2026-05-04";
+    let numericHabit: string;
+
+    const save = (client: SupabaseClient, args: { entries?: unknown[]; clear?: string[]; mood?: number | null }) =>
+      client.rpc("save_day", {
+        p_date: date,
+        p_mood: args.mood ?? null,
+        p_notes: "notatka",
+        p_entries: args.entries ?? [],
+        p_clear: args.clear ?? [],
+      });
+
+    beforeAll(async () => {
+      const h = await a.client.from("habits").insert({ name: "Woda", habit_type: "numeric" }).select("id").single();
+      numericHabit = h.data!.id;
+    });
+
+    it("creates the day with entries, then updates instead of duplicating", async () => {
+      const entry = (v: number) => ({ habit_id: numericHabit, completed: true, boolean_value: null, numeric_value: v, time_value: null });
+
+      expect((await save(a.client, { entries: [entry(2)], mood: 4 })).error).toBeNull();
+      expect((await save(a.client, { entries: [entry(3)], mood: 5 })).error).toBeNull();
+
+      const days = await a.client.from("daily_entries").select("mood,notes,habit_entries(numeric_value)").eq("entry_date", date);
+      expect(days.data).toHaveLength(1);
+      expect(days.data![0]).toMatchObject({ mood: 5, notes: "notatka" });
+      expect(days.data![0].habit_entries).toEqual([{ numeric_value: 3 }]);
+    });
+
+    it("removes an entry when its habit is in the clear list", async () => {
+      await save(a.client, { clear: [numericHabit] });
+      const days = await a.client.from("daily_entries").select("habit_entries(id)").eq("entry_date", date);
+      expect(days.data![0].habit_entries).toEqual([]);
+    });
+
+    it("rolls back everything when an entry is invalid", async () => {
+      const bad = { habit_id: habitA, completed: true, boolean_value: null, numeric_value: 1, time_value: null };
+      const r = await save(b.client, { entries: [bad], mood: 3 }); // habitA belongs to user A
+      expect(r.error).not.toBeNull();
+      const days = await b.client.from("daily_entries").select("id").eq("entry_date", date);
+      expect(days.data).toEqual([]);
+    });
+
+    it("does not let another user see or change the day", async () => {
+      expect((await b.client.from("daily_entries").select("id").eq("entry_date", date)).data).toEqual([]);
+    });
+  });
 });
