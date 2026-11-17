@@ -132,4 +132,66 @@ describe("row level security", () => {
       expect((await b.client.from("daily_entries").select("id").eq("entry_date", date)).data).toEqual([]);
     });
   });
+
+  describe("goals", () => {
+    const saveGoal = (client: SupabaseClient, over: Record<string, unknown> = {}) =>
+      client.rpc("save_goal", {
+        p_id: null,
+        p_name: "Oszczędności",
+        p_goal_type: "target_value",
+        p_unit: "zł",
+        p_category_id: null,
+        p_start_date: "2026-01-01",
+        p_target_date: null,
+        p_target_value: 1000,
+        p_days_target: null,
+        ...over,
+      });
+
+    it("creates a goal together with its metric targets", async () => {
+      const id = (await saveGoal(a.client)).data as string;
+      const row = await a.client.from("goals").select("name,goal_metrics(target_value,days_doing_target)").eq("id", id).single();
+      expect(row.data).toMatchObject({ name: "Oszczędności", goal_metrics: { target_value: 1000, days_doing_target: null } });
+    });
+
+    it("keeps only the targets relevant for the new type on update", async () => {
+      const id = (await saveGoal(a.client)).data as string;
+      await saveGoal(a.client, { p_id: id, p_goal_type: "days_doing", p_target_value: null, p_days_target: 21 });
+      const row = await a.client.from("goal_metrics").select("target_value,days_doing_target").eq("goal_id", id).single();
+      expect(row.data).toEqual({ target_value: null, days_doing_target: 21 });
+    });
+
+    it("rejects another user's goal and category", async () => {
+      const id = (await saveGoal(a.client)).data as string;
+      expect((await saveGoal(b.client, { p_id: id, p_name: "hacked" })).error).not.toBeNull();
+      expect((await saveGoal(b.client, { p_category_id: categoryA })).error).not.toBeNull();
+      const still = await a.client.from("goals").select("name").eq("id", id).single();
+      expect(still.data?.name).toBe("Oszczędności");
+    });
+
+    it("stores goal entries through save_day, updates them and clears them", async () => {
+      const id = (await saveGoal(a.client)).data as string;
+      const day = "2026-06-01";
+      const call = (entries: unknown[], clear: string[]) =>
+        a.client.rpc("save_day", { p_date: day, p_mood: null, p_notes: null, p_entries: [], p_clear: [], p_goal_entries: entries, p_goal_clear: clear });
+
+      await call([{ goal_id: id, value: 300, boolean_value: null, is_increment: true }], []);
+      await call([{ goal_id: id, value: 120, boolean_value: null, is_increment: false }], []);
+      let rows = await a.client.from("goal_entries").select("value,is_increment").eq("goal_id", id);
+      expect(rows.data).toEqual([{ value: 120, is_increment: false }]);
+
+      await call([], [id]);
+      rows = await a.client.from("goal_entries").select("value,is_increment").eq("goal_id", id);
+      expect(rows.data).toEqual([]);
+    });
+
+    it("cannot log an entry for another user's goal", async () => {
+      const id = (await saveGoal(a.client)).data as string;
+      const r = await b.client.rpc("save_day", {
+        p_date: "2026-06-02", p_mood: null, p_notes: null, p_entries: [], p_clear: [],
+        p_goal_entries: [{ goal_id: id, value: 5, boolean_value: null, is_increment: true }], p_goal_clear: [],
+      });
+      expect(r.error).not.toBeNull();
+    });
+  });
 });

@@ -23,6 +23,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Link href="/habits" className="hover:underline">
             Nawyki
           </Link>
+          <Link href="/goals" className="hover:underline">
+            Cele
+          </Link>
           <Link href="/categories" className="hover:underline">
             Kategorie
           </Link>

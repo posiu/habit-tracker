@@ -2,7 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { DayForm } from "@/components/day-form";
 import { addDays, isValidDate, todayIn } from "@/lib/domain/entries";
-import { getDayEntry, getTimeZone, listHabitsForDate } from "@/lib/queries";
+import { goalLoggableOn } from "@/lib/domain/goals";
+import { getDayEntry, getDayGoalEntries, getTimeZone, listGoalsForDate, listHabitsForDate } from "@/lib/queries";
 
 async function Day({ params }: { params: PageProps<"/daily/[date]">["params"] }) {
   const { date } = await params;
@@ -11,7 +12,13 @@ async function Day({ params }: { params: PageProps<"/daily/[date]">["params"] })
   const today = todayIn(await getTimeZone());
   if (date > today) redirect(`/daily/${today}`);
 
-  const [habits, day] = await Promise.all([listHabitsForDate(date), getDayEntry(date)]);
+  const [habits, day, allGoals, goalEntries] = await Promise.all([
+    listHabitsForDate(date),
+    getDayEntry(date),
+    listGoalsForDate(date),
+    getDayGoalEntries(date),
+  ]);
+  const goals = allGoals.filter((g) => goalLoggableOn(g, date));
   return (
     <DayForm
       date={date}
@@ -19,6 +26,8 @@ async function Day({ params }: { params: PageProps<"/daily/[date]">["params"] })
       nextDate={date < today ? addDays(date, 1) : null}
       habits={habits}
       day={day}
+      goals={goals}
+      goalEntries={goalEntries}
     />
   );
 }

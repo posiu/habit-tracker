@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Heatmap } from "@/components/heatmap";
+import { ProgressSummary } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
 import { buildHeatmap, currentStreak, heatmapStart, longestStreak } from "@/lib/domain/stats";
-import { getHeatmapCounts, getTimeZone, listCompletions, listHabitsForDate } from "@/lib/queries";
+import { goalProgress } from "@/lib/domain/goals";
+import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate } from "@/lib/queries";
 
 function Tile({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -17,11 +19,29 @@ function Tile({ label, value, hint }: { label: string; value: string; hint?: str
 
 async function Dashboard() {
   const today = todayIn(await getTimeZone());
-  const [habits, completions, counts] = await Promise.all([
+  const [habits, completions, counts, goals] = await Promise.all([
     listHabitsForDate(today),
     listCompletions(),
     getHeatmapCounts(heatmapStart(today), today),
+    listGoals(false),
   ]);
+  const goalEntries = await listGoalEntries(goals.map((g) => g.id));
+  const goalRows = goals.map((g) => ({
+    goal: g,
+    progress: goalProgress(
+      {
+        goal_type: g.goal_type,
+        start_date: g.start_date,
+        target_date: g.target_date,
+        completed_at: g.completed_at,
+        target_value: g.goal_metrics?.target_value ?? null,
+        days_doing_target: g.goal_metrics?.days_doing_target ?? null,
+        days_without_target: g.goal_metrics?.days_without_target ?? null,
+      },
+      goalEntries.filter((e) => e.goal_id === g.id),
+      today,
+    ),
+  }));
 
   const datesByHabit = new Map<string, string[]>();
   for (const c of completions) {
@@ -72,6 +92,30 @@ async function Dashboard() {
                 <span className="ml-auto text-zinc-500">
                   seria <strong data-testid="streak">{streak}</strong> · rekord {best}
                 </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold">Cele</h2>
+        {goalRows.length === 0 ? (
+          <p className="text-sm text-zinc-500">
+            Brak aktywnych celów.{" "}
+            <Link href="/goals/new" className="underline">
+              Dodaj pierwszy
+            </Link>
+            .
+          </p>
+        ) : (
+          <ul className="space-y-3">
+            {goalRows.map(({ goal, progress }) => (
+              <li key={goal.id} className="space-y-1" data-testid="dash-goal">
+                <Link href={`/goals/${goal.id}`} className="text-sm font-medium underline">
+                  {goal.name}
+                </Link>
+                <ProgressSummary progress={progress} unit={goal.unit} />
               </li>
             ))}
           </ul>

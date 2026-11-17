@@ -43,3 +43,26 @@ export function rawValues(fd: FormData): RawValues {
   }
   return out;
 }
+
+function num(fd: FormData, key: string): number | undefined {
+  const v = fd.get(key);
+  if (typeof v !== "string" || v.trim() === "") return undefined;
+  return Number(v.trim().replace(",", "."));
+}
+
+export function goalFromForm(fd: FormData): Record<string, unknown> {
+  const str = (k: string) => {
+    const v = fd.get(k);
+    return typeof v === "string" && v.trim() !== "" ? v.trim() : undefined;
+  };
+  return {
+    name: str("name") ?? "",
+    goal_type: str("goal_type"),
+    unit: str("unit"),
+    category_id: str("category_id"),
+    start_date: str("start_date"),
+    target_date: str("target_date"),
+    target_value: num(fd, "target_value"),
+    days_target: num(fd, "days_target"),
+  };
+}

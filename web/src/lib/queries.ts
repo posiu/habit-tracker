@@ -144,3 +144,106 @@ export async function getHeatmapCounts(from: string, to: string): Promise<Record
   if (error) throw error;
   return Object.fromEntries((data as { entry_date: string; count: number }[]).map((r) => [r.entry_date, r.count]));
 }
+
+// ---- goals ----------------------------------------------------------------
+
+export type Goal = {
+  id: string;
+  name: string;
+  goal_type: import("@/lib/domain/goals").GoalType;
+  unit: string | null;
+  start_date: string;
+  target_date: string | null;
+  is_active: boolean;
+  completed_at: string | null;
+  category_id: string | null;
+  categories: { name: string; color: string | null } | null;
+  goal_metrics: {
+    target_value: number | null;
+    days_doing_target: number | null;
+    days_without_target: number | null;
+  } | null;
+};
+
+const GOAL_COLUMNS =
+  "id,name,goal_type,unit,start_date,target_date,is_active,completed_at,category_id,categories(name,color),goal_metrics(target_value,days_doing_target,days_without_target)";
+
+export async function listGoals(closed: boolean): Promise<Goal[]> {
+  const supabase = await createClient();
+  let q = supabase.from("goals").select(GOAL_COLUMNS).order("position").order("created_at");
+  q = closed ? q.not("completed_at", "is", null) : q.is("completed_at", null);
+  const { data, error } = await q.overrideTypes<Goal[], { merge: false }>();
+  if (error) throw error;
+  return data;
+}
+
+export async function getGoal(id: string): Promise<Goal | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("goals")
+    .select(GOAL_COLUMNS)
+    .eq("id", id)
+    .maybeSingle()
+    .overrideTypes<Goal, { merge: false }>();
+  if (error) throw error;
+  return data;
+}
+
+export type GoalEntryRow = {
+  goal_id: string;
+  date: string;
+  value: number | null;
+  boolean_value: boolean | null;
+  is_increment: boolean | null;
+};
+
+/** Entries of the given goals (all dates), paginated. */
+export async function listGoalEntries(goalIds: string[]): Promise<GoalEntryRow[]> {
+  if (goalIds.length === 0) return [];
+  const supabase = await createClient();
+  const out: GoalEntryRow[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await supabase
+      .from("goal_entries")
+      .select("goal_id,value,boolean_value,is_increment,daily_entries!inner(entry_date)")
+      .in("goal_id", goalIds)
+      .order("created_at")
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    for (const r of data as unknown as (Omit<GoalEntryRow, "date"> & { daily_entries: { entry_date: string } })[]) {
+      out.push({ goal_id: r.goal_id, date: r.daily_entries.entry_date, value: r.value, boolean_value: r.boolean_value, is_increment: r.is_increment });
+    }
+    if (data.length < PAGE) return out;
+  }
+}
+
+export type DayGoal = Pick<Goal, "id" | "name" | "goal_type" | "unit" | "start_date" | "completed_at"> & {
+  goal_metrics: { target_value: number | null } | null;
+};
+
+export type DayGoalEntry = { goal_id: string; value: number | null; boolean_value: boolean | null; is_increment: boolean | null };
+
+/** Goals that can be logged on a day (days/value goals open on that date). */
+export async function listGoalsForDate(date: string): Promise<DayGoal[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("goals")
+    .select("id,name,goal_type,unit,start_date,completed_at,goal_metrics(target_value)")
+    .in("goal_type", ["days_doing", "days_without", "target_value"])
+    .lte("start_date", date)
+    .order("position")
+    .order("created_at")
+    .overrideTypes<DayGoal[], { merge: false }>();
+  if (error) throw error;
+  return data.filter((g) => !g.completed_at || g.completed_at.slice(0, 10) >= date);
+}
+
+export async function getDayGoalEntries(date: string): Promise<DayGoalEntry[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("goal_entries")
+    .select("goal_id,value,boolean_value,is_increment,daily_entries!inner(entry_date)")
+    .eq("daily_entries.entry_date", date);
+  if (error) throw error;
+  return data as unknown as DayGoalEntry[];
+}

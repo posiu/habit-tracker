@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { saveDay, type DayState } from "@/app/(app)/daily/actions";
 import { MOODS, formatDayPl } from "@/lib/domain/entries";
-import type { DayEntry, DayHabit } from "@/lib/queries";
+import type { DayEntry, DayGoal, DayGoalEntry, DayHabit } from "@/lib/queries";
 import { Field, SubmitButton, inputClass } from "./field";
 
 type Props = {
@@ -13,13 +13,17 @@ type Props = {
   nextDate: string | null;
   habits: DayHabit[];
   day: DayEntry | null;
+  goals: DayGoal[];
+  goalEntries: DayGoalEntry[];
 };
 
-export function DayForm({ date, prevDate, nextDate, habits, day }: Props) {
+export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntries }: Props) {
   const [state, action, pending] = useActionState<DayState, FormData>(saveDay.bind(null, date), undefined);
   const e = state?.errors ?? {};
   const sv = state?.values;
   const entryFor = (id: string) => day?.habit_entries.find((h) => h.habit_id === id);
+
+  const goalEntryFor = (id: string) => goalEntries.find((g) => g.goal_id === id);
 
   const defaultFor = (h: DayHabit): string => {
     if (sv) return String(sv[`habit_${h.id}`] ?? "");
@@ -90,6 +94,63 @@ export function DayForm({ date, prevDate, nextDate, habits, day }: Props) {
           </ul>
         )}
       </section>
+
+
+      {goals.length > 0 && (
+        <section className="space-y-3">
+          <h3 className="text-sm font-semibold">Cele</h3>
+          <ul className="space-y-3">
+            {goals.map((g) => {
+              const name = `goal_${g.id}`;
+              const entry = goalEntryFor(g.id);
+              if (g.goal_type === "target_value") {
+                const dir = sv ? String(sv[`${name}_dir`] ?? "inc") : entry?.is_increment === false ? "dec" : "inc";
+                return (
+                  <li key={g.id}>
+                    <div className="space-y-1 text-sm">
+                      <label htmlFor={name} className="block font-medium">
+                        {g.name}
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <select name={`${name}_dir`} defaultValue={dir} aria-label={`Kierunek zmiany: ${g.name}`} className="rounded-md border border-zinc-300 bg-transparent px-2 py-2 text-sm dark:border-zinc-700">
+                          <option value="inc">+</option>
+                          <option value="dec">−</option>
+                        </select>
+                        <input
+                          id={name}
+                          name={name}
+                          inputMode="decimal"
+                          defaultValue={sv ? String(sv[name] ?? "") : String(entry?.value ?? "")}
+                          className={inputClass}
+                        />
+                        {g.unit && <span className="text-sm text-zinc-500">{g.unit}</span>}
+                      </div>
+                      {e[name] && (
+                        <span role="alert" className="block text-red-600">
+                          {e[name]}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                );
+              }
+              return (
+                <li key={g.id}>
+                  <label className="flex items-center gap-3 text-sm">
+                    <input
+                      type="checkbox"
+                      name={name}
+                      defaultChecked={sv ? sv[name] === "on" : entry?.boolean_value === true}
+                    />
+                    {g.name}
+                    <span className="text-xs text-zinc-500">{g.goal_type === "days_without" ? "(dzień bez)" : "(dzień z działaniem)"}</span>
+                  </label>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
 
       <fieldset className="space-y-2">
         <legend className="text-sm font-semibold">Nastrój</legend>

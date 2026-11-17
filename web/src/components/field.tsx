@@ -5,15 +5,17 @@ export const inputClass =
 
 export function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
-    <label className="block space-y-1 text-sm">
-      <span className="font-medium">{label}</span>
-      {children}
+    <div className="space-y-1 text-sm">
+      <label className="block space-y-1">
+        <span className="font-medium">{label}</span>
+        {children}
+      </label>
       {error && (
         <span role="alert" className="block text-red-600">
           {error}
         </span>
       )}
-    </label>
+    </div>
   );
 }
 
