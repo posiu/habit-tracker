@@ -43,3 +43,5 @@ next-env.d.ts
 
 # turbopack loader artifacts (created when turbopack.root is set)
 /web/
+/test-results/
+/playwright-report/
