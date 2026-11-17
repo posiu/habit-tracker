@@ -1,18 +1,12 @@
 # Otwarte pytania
 
-Pytania, na które nie ma jeszcze decyzji. Odpowiedź zamykamy zmianą w `requirements.md` i usunięciem pytania tutaj.
+Odpowiedź zamykamy zmianą w `requirements.md` i usunięciem pytania stąd. Rozstrzygnięte w wywiadzie (rundy 4-5): zaproszenia e-mailem, cel z nawyku (dni i seria), zmiany tylko od teraz, PWA bez offline, kategorie w filtrach i raportach, brak dni wolnych, eksport CSV i usunięcie konta na prośbę, deploy po UI i funkcjach. Przyjęte jako domyślne: reset hasła (tak), edycja przeszłości bez limitu, dostępność WCAG 2.2 AA, bez raportu kwartalnego.
 
 | # | Pytanie | Dotyczy | Moja propozycja do potwierdzenia |
 |---|---|---|---|
-| Q1 | Jak działają zaproszenia: Ty dodajesz konta w panelu Supabase, czy aplikacja wysyła link zaproszenia e-mailem? | AUTH-1 | Zaproszenie e-mailem z Supabase Auth, rejestracja publiczna wyłączona. |
-| Q2 | Czy potrzebny jest reset hasła w aplikacji? | AUTH-3 | Tak, bo zaproszeni użytkownicy zapomną hasła. |
-| Q3 | Jak dokładnie cel liczy się z nawyku? Które typy celów mogą być powiązane (suma wartości, liczba ukończonych dni, seria)? Czy cele ręczne zostają? | GOAL-2 | Cel wartościowy może zliczać sumę nawyku liczbowego, cel „dni z działaniem” liczbę ukończonych dni nawyku. Typy ręczne zostają. |
-| Q4 | Czy potrzebne są eksport danych i usunięcie konta (RODO dla bliskich)? | SET-2 | Eksport CSV jest i tak w raportach. Usunięcie konta na życzenie przez właściciela. |
-| Q5 | Co ze zmianą celu albo harmonogramu nawyku: obowiązuje wstecz, czy tylko od teraz? | HAB-3, HAB-4 | Tylko od teraz, historia zachowuje stan z dnia wpisu (wymaga historii zmian). |
-| Q6 | Czy dni z przeszłości można edytować bez limitu? | DAY-3 | Bez limitu. |
-| Q7 | Czy potrzebne są „dni wolne” (choroba, urlop), które nie przerywają serii? | HAB-5 | Nie w v1. |
-| Q8 | Czy aplikacja ma być instalowalna na telefonie (PWA, ikona na ekranie głównym)? | NFR-1 | Tak, to tani sposób na szybkie odhaczanie. |
-| Q9 | Jaki poziom dostępności jako cel (np. WCAG 2.2 AA)? | NFR-2 | AA. |
-| Q10 | Czy kategorie są potrzebne i do czego służą (filtry, raporty), czy można je usunąć? | HAB-1 | Zostają, ale używane w raportach i filtrach. |
-| Q11 | Czy raport kwartalny (z pierwotnego roadmapu) jest potrzebny? | REP-1 | Nie, tydzień i miesiąc wystarczą. |
-| Q12 | Kiedy i na jakiej domenie deploy? Czy włączać potwierdzanie e-mail? | Deploy | Przy zaproszeniach potwierdzanie jest wbudowane w link zaproszenia. |
+| Q13 | Czy cel liczony z nawyku zlicza tylko dni od daty startu celu, czy także historię nawyku sprzed startu? | GOAL-2 | Tylko od daty startu celu. |
+| Q14 | Cel „X dni z rzędu”: liczy się aktualna seria, czy najlepsza seria od startu celu? | GOAL-2 | Najlepsza seria od startu celu (aktualna może się zerować i cel nigdy by się nie domknął). |
+| Q15 | Czy wpis w dniu spoza harmonogramu jest dozwolony i liczy się jako bonus do serii? | HAB-3 | Dozwolony, nie przerywa serii i jej nie wydłuża. |
+| Q16 | Które pola nawyku mają historię zmian (cel, harmonogram), a które nie (nazwa, kategoria)? | HAB-3, HAB-4 | Tylko cel i harmonogram. |
+| Q17 | Czy wiadomość z zaproszeniem ma być po polsku (własny szablon e-mail)? | AUTH-1 | Tak, prosty polski szablon. |
+| Q18 | Czy po zaproszeniu użytkownik widzi krótkie wprowadzenie (kategorie, pierwszy nawyk), czy od razu pusty pulpit? | AUTH-1 | Pusty pulpit z podpowiedziami. |
