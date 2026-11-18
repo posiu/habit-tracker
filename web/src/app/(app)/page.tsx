@@ -77,10 +77,9 @@ async function Dashboard() {
 
   return (
     <>
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <section className="grid grid-cols-2 gap-3">
         <Tile label="Dziś ukończone" value={`${doneToday}/${habits.length}`} hint="nawyków" />
         <Tile label="Najdłuższa aktualna seria" value={`${bestCurrent}`} hint={bestCurrent === 1 ? "dzień" : "dni"} />
-        <Tile label="Aktywności w ostatnim roku" value={`${total}`} />
       </section>
 
       <section className="space-y-3">
@@ -165,6 +164,9 @@ async function Dashboard() {
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold">Ostatni rok</h2>
+        <p className="text-sm text-muted">
+          <span>Aktywności w ostatnim roku</span> <strong className="text-foreground">{total}</strong>
+        </p>
         <Heatmap weeks={weeks} total={total} />
       </section>
     </>
