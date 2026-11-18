@@ -110,6 +110,7 @@ async function Dashboard() {
                   <p className="min-h-8 text-xs leading-4 text-[#c8c8d0]">
                     seria <strong data-testid="streak">{streak}</strong> · rekord {best}
                   </p>
+                  {habit.plan_text && <p className="text-xs leading-4 text-[#c8c8d0]">{habit.plan_text}</p>}
                   {habit.habit_type === "boolean" ? (
                     <form action={checkIn.bind(null, habit.id, !done)} className="mt-auto">
                       <button

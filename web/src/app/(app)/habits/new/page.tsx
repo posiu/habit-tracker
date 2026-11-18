@@ -2,11 +2,12 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { HabitForm } from "@/components/habit-form";
 import { today } from "@/lib/domain/habits";
-import { listCategories } from "@/lib/queries";
+import { listCategories, listHabits } from "@/lib/queries";
 
 async function Form() {
   await connection();
-  return <HabitForm categories={await listCategories()} defaultStart={today()} />;
+  const [categories, habits] = await Promise.all([listCategories(), listHabits(true)]);
+  return <HabitForm categories={categories} habits={habits} defaultStart={today()} />;
 }
 
 export default function NewHabitPage() {

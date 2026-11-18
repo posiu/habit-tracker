@@ -73,6 +73,15 @@ describe("row level security", () => {
     expect(r.error !== null || r.data?.length === 0).toBe(true);
   });
 
+  it("cannot anchor a habit to another user's habit", async () => {
+    const r = await b.client.from("habits").insert({ name: "Sneaky anchor", anchor_habit_id: habitA });
+    expect(r.error).not.toBeNull();
+    const ok = await a.client
+      .from("habits")
+      .insert({ name: "Czytanie", anchor_habit_id: habitA, identity: "Jestem czytelnikiem", plan_text: "21:00", minimum_text: "1 strona" });
+    expect(ok.error).toBeNull();
+  });
+
   it("cannot log an entry for another user's habit", async () => {
     const day = await b.client.from("daily_entries").insert({ entry_date: "2026-01-01" }).select("id").single();
     const r = await b.client.from("habit_entries").insert({ daily_entry_id: day.data!.id, habit_id: habitA });
