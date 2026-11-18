@@ -27,3 +27,11 @@ Status: kierunek wybrany przez Michała na podstawie inspiracji, projekt ekranó
 ## Do zrobienia
 
 Paleta i tokeny, makiety ekranów (pulpit, dzień, szczegóły nawyku, formularz nawyku, raporty), potem implementacja po stabilizacji ISSUE-1.
+
+## Makiety (2026-11-18)
+
+Pięć ekranów mobilnych (Dziś, Szczegóły nawyku, Nastrój, Nowy nawyk, Analiza/rok), źródła w [`docs/design/mockups/`](../design/mockups) (format `.dc.html` z kanwy Claude Design; kanwa: https://claude.ai/artifact/RwPx8t2hovqio6UgjhR1aV, prywatna).
+
+Ustalenia po przeglądzie: kafelki o równej wysokości, historia jako małe kropki z odstępami (3 tygodnie), przycisk niewykonanego nawyku „Odhacz”, wykonanego „✓ Zrobione”. Brakuje: siatki miesiąca (desktop), ustawień, ekranu logowania i zaproszenia.
+
+Paleta nawyków: #FF8A1F, #5BB8E0, #A99CFF, #FF6B8E, #8CE563, #FFD23F na czarnym tle; akcent akcji #FF8A1F; czcionka Inter.

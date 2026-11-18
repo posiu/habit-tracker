@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Dziś</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif}
+button{font-family:inherit}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#000;color:#fff;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative">
+  <div style="padding:56px 20px 12px;display:flex;align-items:flex-end;justify-content:space-between">
+    <div>
+      <div style="font-size:14px;color:#A7A7B0">wtorek, 18 listopada</div>
+      <h1 style="margin:2px 0 0;font-size:34px;font-weight:700;letter-spacing:-0.02em">Dziś</h1>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:22px;background:#1C1C20;font-size:15px;font-weight:600">
+      <span style="width:10px;height:10px;border-radius:5px;background:#FF8A1F"></span>4 z 6 dziś
+    </div>
+  </div>
+
+  <div style="margin:4px 20px 12px;padding:14px 16px;border-radius:16px;background:#2A1F0E;border:1px solid #6B4A1A;display:flex;flex-direction:column;gap:4px">
+    <div style="font-size:13px;font-weight:600;color:#FFB454">Nie przegap dwa razy</div>
+    <div style="font-size:15px;line-height:1.4">Wczoraj ominąłeś „Czytanie 20 min”. Zrób dziś chociaż 2 minuty.</div>
+  </div>
+
+  <div style="padding:0 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;flex:1;align-content:start;align-items:stretch;overflow-y:auto;padding-bottom:110px">
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="6">
+      <div style="{{t.tileStyle}}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <span style="font-size:15px;font-weight:600;line-height:1.2">{{t.name}}</span>
+          <span style="{{t.dotStyle}}"></span>
+        </div>
+        <div style="font-size:12px;line-height:16px;min-height:32px;color:#C8C8D0">{{t.sub}}</div>
+        <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));row-gap:8px;padding:2px 0">
+          <sc-for list="{{t.cells}}" as="c" hint-placeholder-count="21">
+            <div style="display:flex;align-items:center;justify-content:center"><div style="{{c.style}}"></div></div>
+          </sc-for>
+        </div>
+        <button style="{{t.btnStyle}}">{{t.btn}}</button>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position:absolute;left:16px;right:16px;bottom:24px;display:flex;gap:10px;align-items:center">
+    <div style="flex:1;height:64px;border-radius:32px;background:#1C1C20;display:flex;align-items:center;justify-content:space-around;padding:0 8px;font-size:12px;font-weight:500;color:#A7A7B0">
+      <span style="padding:10px 14px;border-radius:24px;background:#2C2C32;color:#fff;font-weight:600">Dziś</span>
+      <span>Analiza</span><span>Nawyki</span><span>Ustawienia</span>
+    </div>
+    <button aria-label="Dodaj nawyk" style="width:64px;height:64px;border-radius:32px;border:0;background:#FF8A1F;display:flex;align-items:center;justify-content:center">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const specs = [
+      { name: 'Bieg poranny', c: '#FF8A1F', bg: '#2B1707', bd: '#6B3A0F', seed: 3, done: true, sub: 'seria 12 dni', btn: '✓ Zrobione' },
+      { name: 'Woda', c: '#5BB8E0', bg: '#0A2029', bd: '#1D5266', seed: 5, done: true, sub: '2 z 8 szklanek', btn: '✓ × 2' },
+      { name: 'Czytanie 20 min', c: '#A99CFF', bg: '#17152E', bd: '#3F3A7A', seed: 7, done: false, sub: 'seria 0 · wczoraj pominięte', btn: 'Odhacz' },
+      { name: 'Medytacja', c: '#FF6B8E', bg: '#2E0F18', bd: '#7A2A40', seed: 2, done: false, sub: 'minimum: 2 min', btn: 'Odhacz' },
+      { name: 'Bez cukru', c: '#8CE563', bg: '#12230A', bd: '#3A6B22', seed: 4, done: true, sub: 'seria 9 dni', btn: '✓ Zrobione' },
+      { name: 'Rozciąganie', c: '#FFD23F', bg: '#2A2205', bd: '#6B5A12', seed: 6, done: true, sub: 'seria 3 dni', btn: '✓ Zrobione' }
+    ];
+    const tiles = specs.map(s => {
+      const cells = [];
+      for (let i = 0; i < 21; i++) {
+        const on = ((i * s.seed + i * i) % 7) > 2;
+        cells.push({ style: 'width:9px;height:9px;border-radius:5px;background:' + (on ? s.c : 'rgba(255,255,255,0.16)') });
+      }
+      return {
+        name: s.name, sub: s.sub, btn: s.btn, cells,
+        tileStyle: 'box-sizing:border-box;padding:14px;border-radius:22px;display:flex;flex-direction:column;gap:10px;background:' + s.bg + ';border:1px solid ' + s.bd,
+        dotStyle: 'flex:none;width:12px;height:12px;border-radius:4px;background:' + s.c,
+        btnStyle: s.done
+          ? 'margin-top:auto;height:44px;border-radius:22px;border:0;font-size:15px;font-weight:600;background:rgba(255,255,255,0.14);color:#fff'
+          : 'margin-top:auto;height:44px;border-radius:22px;border:1.5px solid ' + s.c + ';font-size:15px;font-weight:600;background:transparent;color:#fff'
+      };
+    });
+    return { tiles };
+  }
+}
+</script>
+</body>
+</html>

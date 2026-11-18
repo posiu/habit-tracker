@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Nowy nawyk</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif}
+button,input{font-family:inherit}
+input::placeholder{color:#8A8A94}
+</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#000;color:#fff;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden">
+  <div style="padding:56px 20px 8px;display:flex;align-items:center;justify-content:space-between">
+    <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-0.02em">Nowy nawyk</h1>
+    <button aria-label="Zamknij" style="width:44px;height:44px;border-radius:22px;border:0;background:#1C1C20;display:flex;align-items:center;justify-content:center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <div style="padding:8px 20px 0;display:flex;flex-direction:column;gap:12px;flex:1;overflow:hidden">
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <label for="n" style="display:block;font-size:12px;color:#A7A7B0">Nazwa</label>
+      <input id="n" type="text" value="Czytanie 20 min" style="width:100%;box-sizing:border-box;margin-top:4px;padding:0;border:0;background:transparent;color:#fff;font-size:17px;outline:none">
+    </div>
+
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <label for="id" style="display:block;font-size:12px;color:#A7A7B0">Kim się staję (tożsamość)</label>
+      <input id="id" type="text" value="Jestem czytelnikiem" style="width:100%;box-sizing:border-box;margin-top:4px;padding:0;border:0;background:transparent;color:#fff;font-size:17px;outline:none">
+    </div>
+
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <div style="font-size:12px;color:#A7A7B0">Typ</div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        <sc-for list="{{types}}" as="t" hint-placeholder-count="4">
+          <span style="{{t.style}}">{{t.label}}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <div style="font-size:12px;color:#A7A7B0">Harmonogram</div>
+      <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:10px">
+        <sc-for list="{{days}}" as="d" hint-placeholder-count="7">
+          <span style="{{d.style}}">{{d.label}}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <label for="w" style="display:block;font-size:12px;color:#A7A7B0">Kiedy i gdzie to zrobię</label>
+      <input id="w" type="text" placeholder="np. o 21:00 w fotelu przy oknie" style="width:100%;box-sizing:border-box;margin-top:4px;padding:0;border:0;background:transparent;color:#fff;font-size:17px;outline:none">
+    </div>
+
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <label for="a" style="display:block;font-size:12px;color:#A7A7B0">Po tym, jak zrobię (nawyk)</label>
+      <input id="a" type="text" value="Medytacja" style="width:100%;box-sizing:border-box;margin-top:4px;padding:0;border:0;background:transparent;color:#fff;font-size:17px;outline:none">
+    </div>
+
+    <div style="padding:14px 16px;border-radius:18px;background:#111114">
+      <label for="m" style="display:block;font-size:12px;color:#A7A7B0">Wersja 2-minutowa</label>
+      <input id="m" type="text" placeholder="np. przeczytać jedną stronę" style="width:100%;box-sizing:border-box;margin-top:4px;padding:0;border:0;background:transparent;color:#fff;font-size:17px;outline:none">
+    </div>
+  </div>
+
+  <div style="padding:16px 20px 32px">
+    <button style="width:100%;height:56px;border-radius:28px;border:0;background:#FF8A1F;color:#000;font-size:17px;font-weight:600">Zapisz nawyk</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const chip = (on) => 'height:44px;padding:0 16px;border-radius:22px;display:inline-flex;align-items:center;font-size:15px;font-weight:600;box-sizing:border-box;' + (on ? 'background:#E4E4EA;color:#000' : 'background:#26262B;color:#C8C8D0');
+    const types = [['Tak / nie', true], ['Liczba', false], ['Czas', false], ['Licznik', false]].map(([label, on]) => ({ label, style: chip(on) }));
+    const dchip = (on) => 'height:44px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;box-sizing:border-box;' + (on ? 'background:#E4E4EA;color:#000' : 'background:#26262B;color:#C8C8D0');
+    const days = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'So', 'Nd'].map((label, i) => ({ label, style: dchip(i < 5) }));
+    return { types, days };
+  }
+}
+</script>
+</body>
+</html>

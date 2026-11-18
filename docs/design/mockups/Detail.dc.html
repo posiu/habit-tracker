@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Szczegóły nawyku</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;font-family:'Inter',system-ui,sans-serif}button{font-family:inherit}</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#000;color:#fff;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden">
+  <div style="padding:56px 20px 8px;display:flex;align-items:center;justify-content:space-between">
+    <button aria-label="Wróć" style="width:44px;height:44px;border-radius:22px;border:0;background:#1C1C20;display:flex;align-items:center;justify-content:center">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    </button>
+    <button style="height:44px;padding:0 18px;border-radius:22px;border:0;background:#1C1C20;color:#fff;font-size:15px;font-weight:600">Edytuj</button>
+  </div>
+
+  <div style="padding:8px 20px 0">
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="width:14px;height:14px;border-radius:5px;background:#A99CFF"></span>
+      <h1 style="margin:0;font-size:28px;font-weight:700;letter-spacing:-0.02em">Czytanie 20 min</h1>
+    </div>
+    <div style="margin-top:6px;font-size:14px;color:#A7A7B0">Tożsamość: jestem czytelnikiem</div>
+  </div>
+
+  <div style="margin:16px 20px 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+    <div style="padding:14px;border-radius:18px;background:#17152E;border:1px solid #3F3A7A"><div style="font-size:26px;font-weight:700">0</div><div style="font-size:12px;color:#C8C8D0">seria teraz</div></div>
+    <div style="padding:14px;border-radius:18px;background:#17152E;border:1px solid #3F3A7A"><div style="font-size:26px;font-weight:700">14</div><div style="font-size:12px;color:#C8C8D0">rekord serii</div></div>
+    <div style="padding:14px;border-radius:18px;background:#17152E;border:1px solid #3F3A7A"><div style="font-size:26px;font-weight:700">27</div><div style="font-size:12px;color:#C8C8D0">głosów na tożsamość</div></div>
+  </div>
+
+  <div style="margin:12px 20px 0;padding:16px;border-radius:22px;background:#111114">
+    <div style="font-size:13px;color:#A7A7B0;margin-bottom:10px">Ten tydzień</div>
+    <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;text-align:center;font-size:12px;color:#A7A7B0">
+      <sc-for list="{{week}}" as="d" hint-placeholder-count="7">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <span>{{d.label}}</span>
+          <span style="{{d.style}}">{{d.mark}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin-top:12px;font-size:13px;color:#C8C8D0">Cel: 60 dni z rzędu · ukończone 27 dni</div>
+  </div>
+
+  <div style="margin:12px 20px 0;padding:16px;border-radius:22px;background:#111114;display:flex;flex-direction:column;gap:12px">
+    <div>
+      <div style="font-size:12px;color:#A7A7B0">Kiedy i gdzie</div>
+      <div style="font-size:15px;margin-top:2px">Codziennie o 21:00, w fotelu przy oknie</div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:#A7A7B0">Po tym, jak zrobię</div>
+      <div style="font-size:15px;margin-top:2px">Medytacja</div>
+    </div>
+    <div>
+      <div style="font-size:12px;color:#A7A7B0">Wersja 2-minutowa</div>
+      <div style="font-size:15px;margin-top:2px">Przeczytać jedną stronę</div>
+    </div>
+  </div>
+
+  <div style="margin-top:auto;padding:16px 20px 32px;display:flex;gap:10px">
+    <button style="flex:1;height:56px;border-radius:28px;border:0;background:#E4E4EA;color:#000;font-size:17px;font-weight:600">Zaloguj dziś</button>
+    <button style="height:56px;padding:0 18px;border-radius:28px;border:0;background:#2A2212;color:#FFB454;font-size:15px;font-weight:600">Tylko 2 min</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = 'width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;box-sizing:border-box;';
+    const days = [['Pn',1],['Wt',1],['Śr',1],['Cz',1],['Pt',0],['So',0],['Nd',null]];
+    const week = days.map(([label, v]) => ({
+      label,
+      mark: v === 1 ? '✓' : v === 0 ? '–' : '',
+      style: v === 1 ? base + 'background:#A99CFF;color:#000'
+        : v === 0 ? base + 'background:#26262B;color:#C8C8D0'
+        : base + 'border:1px dashed #5A5A64;color:#A7A7B0'
+    }));
+    return { week };
+  }
+}
+</script>
+</body>
+</html>
