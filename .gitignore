@@ -1,4 +1,4 @@
-# Dependencies and build output (see also web/.gitignore and legacy-rails/.gitignore)
+# Dependencies and build output (see also web/.gitignore)
 node_modules/
 .next/
 

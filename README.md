@@ -2,7 +2,7 @@
 
 Osobisty tracker nawyków i celów: codzienne wpisy (nawyki, nastrój, notatka), serie, mapa aktywności z ostatniego roku oraz cele z automatycznie liczonym postępem.
 
-Aplikacja jest **w trakcie przepisywania z Ruby on Rails na Next.js + Supabase**, tak by całość hostować na Vercel i Supabase bez dodatkowych usług. Nowa aplikacja żyje w [`web/`](web), a pierwotny kod Rails jest zachowany w [`legacy-rails/`](legacy-rails) jako referencja.
+Aplikacja jest **w trakcie przepisywania z Ruby on Rails na Next.js + Supabase**, tak by całość hostować na Vercel i Supabase bez dodatkowych usług. Nowa aplikacja żyje w [`web/`](web), a pierwotny kod Rails został usunięty z repo (pozostaje w historii git, ostatni commit z nim to `f63ec5a`).
 
 ## Stan
 
@@ -16,7 +16,7 @@ Aplikacja jest **w trakcie przepisywania z Ruby on Rails na Next.js + Supabase**
 | Cele (dni z działaniem, dni bez, wartość, termin, własny) z postępem | gotowe |
 | Raporty tygodniowe, miesięczne, kwartalne | do zrobienia |
 | Ustawienia profilu (imię, strefa czasowa, język, przypomnienia) | do zrobienia |
-| Deploy na Vercel + Supabase, usunięcie `legacy-rails/` | do zrobienia |
+| Deploy na Vercel + Supabase | do zrobienia |
 
 ## Stack
 
@@ -34,7 +34,6 @@ web/                 aplikacja Next.js
   src/lib/supabase/  klienty Supabase (przeglądarka, serwer, proxy sesji)
   supabase/          konfiguracja lokalnego stosu i migracje SQL
   e2e/               testy Playwright
-legacy-rails/        pierwotna aplikacja Rails 6.1 (archiwum, nie rozwijana)
 ```
 
 ## Uruchomienie lokalne
@@ -92,8 +91,7 @@ Migracje SQL (`web/supabase/migrations`) są jedynym źródłem prawdy o schemac
 1. Utworzyć projekt Supabase i zastosować migracje (`npx supabase link`, `npx supabase db push`).
 2. W Supabase Auth włączyć potwierdzanie e-mail i ustawić adresy przekierowań na domenę Vercel.
 3. W Vercel zaimportować repozytorium z **Root Directory = `web`** i ustawić zmienne `NEXT_PUBLIC_SUPABASE_URL` oraz `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-4. Po weryfikacji usunąć `legacy-rails/`.
 
 ## Legacy
 
-[`legacy-rails/`](legacy-rails) zawiera pierwotną aplikację (Rails 6.1, Devise, Pundit, Sidekiq, PostgreSQL) razem z dokumentacją etapów. Nie jest rozwijana i służy tylko jako referencja podczas przepisywania.
+Pierwotna aplikacja Rails 6.1 (Devise, Pundit, Sidekiq, PostgreSQL) została usunięta z drzewa roboczego. Kod odzyskasz z historii git, np. `git show f63ec5a:legacy-rails/README.md`.
