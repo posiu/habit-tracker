@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Ustawienia</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;font-family:'Inter',system-ui,sans-serif}button{font-family:inherit}</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#000;color:#fff;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative">
+  <div style="padding:56px 20px 8px"><h1 style="margin:0;font-size:34px;font-weight:700;letter-spacing:-0.02em">Ustawienia</h1></div>
+
+  <div style="padding:8px 20px 0;display:flex;flex-direction:column;gap:12px">
+    <div style="padding:16px;border-radius:22px;background:#111114;display:flex;align-items:center;gap:14px">
+      <span style="width:52px;height:52px;border-radius:26px;background:#2A1F0E;color:#FFB454;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700">M</span>
+      <div><div style="font-size:17px;font-weight:600">Michał</div><div style="font-size:13px;color:#A7A7B0">michal@example.com</div></div>
+    </div>
+
+    <div style="border-radius:22px;background:#111114;overflow:hidden">
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1C1C20"><span style="font-size:15px">Strefa czasowa</span><span style="font-size:15px;color:#A7A7B0">Europa/Warszawa</span></div>
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1C1C20"><span style="font-size:15px">Kategorie</span><span style="font-size:15px;color:#A7A7B0">5 ›</span></div>
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px">Cele</span><span style="font-size:15px;color:#A7A7B0">3 w toku ›</span></div>
+    </div>
+
+    <div style="border-radius:22px;background:#111114;overflow:hidden">
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1C1C20"><span style="font-size:15px">Eksport danych (CSV)</span><span style="font-size:15px;color:#A7A7B0">Pobierz ›</span></div>
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:15px">Zainstaluj na ekranie głównym</span><span style="font-size:15px;color:#A7A7B0">›</span></div>
+    </div>
+
+    <div style="border-radius:22px;background:#111114;overflow:hidden">
+      <div style="padding:16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1C1C20"><span style="font-size:15px">Zaproś osobę</span><span style="font-size:13px;color:#FFB454">tylko administrator ›</span></div>
+      <div style="padding:16px;font-size:15px;color:#FF8A8A">Wyloguj się</div>
+    </div>
+    <div style="font-size:12px;line-height:1.5;color:#8A8A94;padding:0 8px">Usunięcie konta: napisz do administratora, a dane zostaną skasowane na Twoją prośbę.</div>
+  </div>
+
+  <div style="position:absolute;left:16px;right:16px;bottom:24px;display:flex;gap:10px;align-items:center">
+    <div style="flex:1;height:64px;border-radius:32px;background:#1C1C20;display:flex;align-items:center;justify-content:space-around;padding:0 8px;font-size:12px;font-weight:500;color:#A7A7B0">
+      <span>Dziś</span><span>Analiza</span><span>Nawyki</span>
+      <span style="padding:10px 14px;border-radius:24px;background:#2C2C32;color:#fff;font-weight:600">Ustawienia</span>
+    </div>
+    <button aria-label="Dodaj nawyk" style="width:64px;height:64px;border-radius:32px;border:0;background:#FF8A1F;display:flex;align-items:center;justify-content:center">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
