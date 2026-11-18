@@ -9,7 +9,7 @@ test("log a day: habits, mood, notes; persists and validates", async ({ page }) 
   await page.getByLabel("E-mail").fill(email);
   await page.getByLabel("Hasło").fill("correct-horse-9");
   await page.getByRole("button", { name: "Zarejestruj" }).click();
-  await expect(page.getByRole("heading", { name: "Pulpit" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
 
   // two habits: a yes/no one and a numeric one
   for (const [name, type, unit] of [["Medytacja", "boolean", ""], ["Woda", "numeric", "l"]]) {
@@ -22,8 +22,8 @@ test("log a day: habits, mood, notes; persists and validates", async ({ page }) 
     await expect(ui().getByText(name)).toBeVisible();
   }
 
-  // "Dziś" redirects to /daily/<today>
-  await page.getByRole("link", { name: "Dziś" }).click();
+  // /daily redirects to /daily/<today>
+  await page.goto("/daily");
   await expect(page).toHaveURL(/\/daily\/\d{4}-\d{2}-\d{2}$/);
   const todayUrl = page.url();
 
