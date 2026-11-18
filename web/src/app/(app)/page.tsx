@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { checkIn } from "./actions";
 import { Heatmap } from "@/components/heatmap";
 import { ProgressSummary } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
@@ -7,12 +8,21 @@ import { buildHeatmap, currentStreak, heatmapStart, longestStreak } from "@/lib/
 import { goalProgress } from "@/lib/domain/goals";
 import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate } from "@/lib/queries";
 
+const PALETTE = [
+  { dot: "#ff8a1f", bg: "#2b1707", border: "#6b3a0f" },
+  { dot: "#5bb8e0", bg: "#0a2029", border: "#1d5266" },
+  { dot: "#a99cff", bg: "#17152e", border: "#3f3a7a" },
+  { dot: "#ff6b8e", bg: "#2e0f18", border: "#7a2a40" },
+  { dot: "#8ce563", bg: "#12230a", border: "#3a6b22" },
+  { dot: "#ffd23f", bg: "#2a2205", border: "#6b5a12" },
+];
+
 function Tile({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className="rounded-lg border border-zinc-200 p-4 dark:border-zinc-800">
-      <p className="text-xs text-zinc-500">{label}</p>
+    <div className="rounded-3xl bg-surface p-4">
+      <p className="text-xs text-muted">{label}</p>
       <p className="mt-1 text-2xl font-semibold">{value}</p>
-      {hint && <p className="text-xs text-zinc-500">{hint}</p>}
+      {hint && <p className="text-xs text-muted">{hint}</p>}
     </div>
   );
 }
@@ -67,16 +77,15 @@ async function Dashboard() {
 
   return (
     <>
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <section className="grid grid-cols-2 gap-3">
         <Tile label="Dziś ukończone" value={`${doneToday}/${habits.length}`} hint="nawyków" />
         <Tile label="Najdłuższa aktualna seria" value={`${bestCurrent}`} hint={bestCurrent === 1 ? "dzień" : "dni"} />
-        <Tile label="Aktywności w ostatnim roku" value={`${total}`} />
       </section>
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold">Nawyki dziś</h2>
         {rows.length === 0 ? (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-muted">
             Brak aktywnych nawyków.{" "}
             <Link href="/habits/new" className="underline">
               Dodaj pierwszy
@@ -84,16 +93,47 @@ async function Dashboard() {
             .
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {rows.map(({ habit, doneToday: done, streak, best }) => (
-              <li key={habit.id} className="flex items-center gap-3 py-2 text-sm" data-testid="habit-row">
-                <span aria-label={done ? "ukończony dziś" : "nieukończony dziś"}>{done ? "✅" : "⬜"}</span>
-                <span className="font-medium">{habit.name}</span>
-                <span className="ml-auto text-zinc-500">
-                  seria <strong data-testid="streak">{streak}</strong> · rekord {best}
-                </span>
-              </li>
-            ))}
+          <ul className="grid grid-cols-2 gap-3">
+            {rows.map(({ habit, doneToday: done, streak, best }, i) => {
+              const c = PALETTE[i % PALETTE.length];
+              return (
+                <li
+                  key={habit.id}
+                  data-testid="habit-row"
+                  className="flex flex-col gap-2.5 rounded-3xl border p-3.5"
+                  style={{ background: c.bg, borderColor: c.border }}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[15px] font-semibold leading-tight">{habit.name}</span>
+                    <span aria-hidden="true" className="size-3 flex-none rounded" style={{ background: c.dot }} />
+                  </div>
+                  <p className="min-h-8 text-xs leading-4 text-[#c8c8d0]">
+                    seria <strong data-testid="streak">{streak}</strong> · rekord {best}
+                  </p>
+                  {habit.habit_type === "boolean" ? (
+                    <form action={checkIn.bind(null, habit.id, !done)} className="mt-auto">
+                      <button
+                        type="submit"
+                        aria-label={`${habit.name}: ${done ? "ukończony dziś, kliknij aby cofnąć" : "nieukończony dziś, kliknij aby odhaczyć"}`}
+                        className={`h-11 w-full rounded-full text-[15px] font-semibold ${done ? "bg-white/15 text-white" : "border-[1.5px] bg-transparent text-white"}`}
+                        style={done ? undefined : { borderColor: c.dot }}
+                      >
+                        {done ? "✓ Zrobione" : "Odhacz"}
+                      </button>
+                    </form>
+                  ) : (
+                    <Link
+                      href="/daily"
+                      aria-label={`${habit.name}: ${done ? "ukończony dziś" : "uzupełnij wartość"}`}
+                      className={`mt-auto flex h-11 items-center justify-center rounded-full text-[15px] font-semibold ${done ? "bg-white/15 text-white" : "border-[1.5px] text-white"}`}
+                      style={done ? undefined : { borderColor: c.dot }}
+                    >
+                      {done ? "✓ Zrobione" : "Uzupełnij"}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
@@ -101,7 +141,7 @@ async function Dashboard() {
       <section className="space-y-3">
         <h2 className="text-sm font-semibold">Cele</h2>
         {goalRows.length === 0 ? (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-muted">
             Brak aktywnych celów.{" "}
             <Link href="/goals/new" className="underline">
               Dodaj pierwszy
@@ -124,6 +164,9 @@ async function Dashboard() {
 
       <section className="space-y-3">
         <h2 className="text-sm font-semibold">Ostatni rok</h2>
+        <p className="text-sm text-muted">
+          <span>Aktywności w ostatnim roku</span> <strong className="text-foreground">{total}</strong>
+        </p>
         <Heatmap weeks={weeks} total={total} />
       </section>
     </>
@@ -133,9 +176,9 @@ async function Dashboard() {
 export default function Home() {
   return (
     <main className="space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Pulpit</h1>
-        <Link href="/daily" className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900">
+      <div className="flex items-end justify-between">
+        <h1 className="text-[34px] font-bold tracking-tight">Dziś</h1>
+        <Link href="/daily" className="flex h-11 items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold">
           Uzupełnij dzień
         </Link>
       </div>

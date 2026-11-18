@@ -9,7 +9,7 @@ test("goals: create, log on the day screen, track progress, close and reopen", a
   await page.getByLabel("E-mail").fill(email);
   await page.getByLabel("Hasło").fill("correct-horse-9");
   await page.getByRole("button", { name: "Zarejestruj" }).click();
-  await expect(page.getByRole("heading", { name: "Pulpit" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
 
   // value goal: validation first (missing target), then success
   await page.goto("/goals/new");
@@ -43,7 +43,7 @@ test("goals: create, log on the day screen, track progress, close and reopen", a
   await expect(ui().getByRole("heading", { name: "Maraton" })).toBeVisible();
 
   // log the day: +300 zł, walked today; date/custom goals are not loggable
-  await page.getByRole("link", { name: "Dziś" }).click();
+  await page.goto("/daily");
   await expect(ui().getByRole("textbox", { name: "Oszczędności" })).toBeVisible();
   await expect(ui().getByText("Maraton")).toHaveCount(0);
   await ui().getByRole("textbox", { name: "Oszczędności" }).fill("0");
@@ -65,7 +65,7 @@ test("goals: create, log on the day screen, track progress, close and reopen", a
   await expect(walk.getByTestId("goal-amount")).toContainText("20%");
 
   // a decrement lowers the sum: +300 then −100 on the same day replaces the entry (one entry per day)
-  await page.getByRole("link", { name: "Dziś" }).click();
+  await page.goto("/daily");
   await ui().getByLabel("Kierunek zmiany: Oszczędności").selectOption("dec");
   await ui().getByRole("textbox", { name: "Oszczędności" }).fill("100");
   await page.getByRole("button", { name: "Zapisz dzień" }).click();

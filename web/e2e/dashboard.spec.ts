@@ -14,7 +14,7 @@ test("dashboard shows today's progress, streaks and heatmap", async ({ page }) =
   await page.getByLabel("E-mail").fill(email);
   await page.getByLabel("Hasło").fill("correct-horse-9");
   await page.getByRole("button", { name: "Zarejestruj" }).click();
-  await expect(page.getByRole("heading", { name: "Pulpit" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
   await expect(ui().getByText("Brak aktywnych nawyków.")).toBeVisible();
 
   await page.goto("/habits/new");
@@ -51,5 +51,15 @@ test("dashboard shows today's progress, streaks and heatmap", async ({ page }) =
   await expect(ui().getByText("Zapisano.")).toBeVisible();
   await page.goto("/");
   await expect(ui().getByTestId("habit-row").filter({ hasText: "Czytanie" }).getByTestId("streak")).toHaveText("2");
+  await expect(ui().getByText("0/1")).toBeVisible();
+
+  // one-tap check-in from the dashboard, and undo
+  const tile = ui().getByTestId("habit-row").filter({ hasText: "Czytanie" });
+  await tile.getByRole("button", { name: /Czytanie/ }).click();
+  await expect(tile.getByRole("button", { name: /Czytanie/ })).toHaveText("✓ Zrobione");
+  await expect(tile.getByTestId("streak")).toHaveText("3");
+  await expect(ui().getByText("1/1")).toBeVisible();
+  await tile.getByRole("button", { name: /Czytanie/ }).click();
+  await expect(tile.getByRole("button", { name: /Czytanie/ })).toHaveText("Odhacz");
   await expect(ui().getByText("0/1")).toBeVisible();
 });

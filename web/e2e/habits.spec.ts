@@ -10,7 +10,7 @@ test("sign up, manage categories and habits", async ({ page }) => {
   await ui().getByLabel("E-mail").fill(email);
   await ui().getByLabel("Hasło").fill("correct-horse-9");
   await page.getByRole("button", { name: "Zarejestruj" }).click();
-  await expect(page.getByRole("heading", { name: "Pulpit" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
 
   // category: create + duplicate is rejected and input is kept
   await page.goto("/categories/new");
