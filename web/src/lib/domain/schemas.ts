@@ -35,6 +35,10 @@ export const habitSchema = z
     category_id: z.uuid("Nieprawidłowa kategoria").optional(),
     start_date: isoDate,
     end_date: isoDate.optional(),
+    identity: z.string().trim().max(200, "Maksymalnie 200 znaków").optional(),
+    plan_text: z.string().trim().max(300, "Maksymalnie 300 znaków").optional(),
+    minimum_text: z.string().trim().max(200, "Maksymalnie 200 znaków").optional(),
+    anchor_habit_id: z.uuid("Nieprawidłowy nawyk").optional(),
     reminder_enabled: z.boolean(),
     reminder_days: z.array(z.number().int().min(0).max(6)),
   })

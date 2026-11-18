@@ -17,7 +17,17 @@ const DAYS = [
   [0, "Nd"],
 ] as const;
 
-export function HabitForm({ habit, categories, defaultStart }: { habit?: Habit; categories: Category[]; defaultStart: string }) {
+export function HabitForm({
+  habit,
+  categories,
+  habits,
+  defaultStart,
+}: {
+  habit?: Habit;
+  categories: Category[];
+  habits: { id: string; name: string }[];
+  defaultStart: string;
+}) {
   const [state, action, pending] = useActionState<FormState, FormData>(
     saveHabit.bind(null, habit?.id ?? null),
     undefined,
@@ -48,6 +58,26 @@ export function HabitForm({ habit, categories, defaultStart }: { habit?: Habit; 
           <input name="unit" maxLength={50} defaultValue={v("unit", habit?.unit)} className={inputClass} />
         </Field>
       </div>
+      <fieldset className="space-y-4 rounded-3xl bg-surface p-4">
+        <legend className="px-1 text-sm font-semibold">Plan (Atomic Habits)</legend>
+        <Field label="Kim się staję (tożsamość)" error={e.identity}>
+          <input name="identity" maxLength={200} placeholder="np. Jestem czytelnikiem" defaultValue={v("identity", habit?.identity)} className={inputClass} />
+        </Field>
+        <Field label="Kiedy i gdzie to zrobię" error={e.plan_text}>
+          <input name="plan_text" maxLength={300} placeholder="np. o 21:00 w fotelu przy oknie" defaultValue={v("plan_text", habit?.plan_text)} className={inputClass} />
+        </Field>
+        <Field label="Po tym, jak zrobię (nawyk)" error={e.anchor_habit_id}>
+          <select name="anchor_habit_id" defaultValue={v("anchor_habit_id", habit?.anchor_habit_id)} className={inputClass}>
+            <option value="">Bez powiązania</option>
+            {habits.filter((h) => h.id !== habit?.id).map((h) => (
+              <option key={h.id} value={h.id}>{h.name}</option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Wersja 2-minutowa" error={e.minimum_text}>
+          <input name="minimum_text" maxLength={200} placeholder="np. przeczytać jedną stronę" defaultValue={v("minimum_text", habit?.minimum_text)} className={inputClass} />
+        </Field>
+      </fieldset>
       <Field label="Kategoria" error={e.category_id}>
         <select name="category_id" defaultValue={v("category_id", habit?.category_id)} className={inputClass}>
           <option value="">Bez kategorii</option>

@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { HabitForm } from "@/components/habit-form";
-import { getHabit, listCategories } from "@/lib/queries";
+import { getHabit, listCategories, listHabits } from "@/lib/queries";
 
 async function Editor({ params }: { params: PageProps<"/habits/[id]/edit">["params"] }) {
   const { id } = await params;
-  const [habit, categories] = await Promise.all([getHabit(id), listCategories()]);
+  const [habit, categories, habits] = await Promise.all([getHabit(id), listCategories(), listHabits(true)]);
   if (!habit) notFound();
-  return <HabitForm habit={habit} categories={categories} defaultStart={habit.start_date} />;
+  return <HabitForm habit={habit} categories={categories} habits={habits} defaultStart={habit.start_date} />;
 }
 
 export default function EditHabitPage(props: PageProps<"/habits/[id]/edit">) {

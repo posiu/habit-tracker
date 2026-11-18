@@ -21,6 +21,10 @@ export async function saveHabit(id: string | null, _prev: FormState, fd: FormDat
     category_id: h.category_id ?? null,
     start_date: h.start_date,
     end_date: h.end_date ?? null,
+    identity: h.identity ?? null,
+    plan_text: h.plan_text ?? null,
+    minimum_text: h.minimum_text ?? null,
+    anchor_habit_id: h.anchor_habit_id && h.anchor_habit_id !== id ? h.anchor_habit_id : null,
     reminder_enabled: h.reminder_enabled,
     reminder_days: h.reminder_days,
   };

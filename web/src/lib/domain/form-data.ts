@@ -26,6 +26,10 @@ export function habitFromForm(fd: FormData): Record<keyof HabitInput, unknown> {
     category_id: text(fd, "category_id"),
     start_date: text(fd, "start_date"),
     end_date: text(fd, "end_date"),
+    identity: text(fd, "identity"),
+    plan_text: text(fd, "plan_text"),
+    minimum_text: text(fd, "minimum_text"),
+    anchor_habit_id: text(fd, "anchor_habit_id"),
     reminder_enabled: fd.get("reminder_enabled") === "on",
     reminder_days: fd.getAll("reminder_days").map((d) => Number(d)),
   };
