@@ -27,10 +27,10 @@
 |---|---|---|---|
 | HAB-1 | Tworzenie, edycja, archiwizacja, przywracanie i usuwanie nawyku | Archiwizacja ustawia datę końca na dziś i zachowuje historię. Usunięcie wymaga potwierdzenia i kasuje wpisy. | ✅ |
 | HAB-2 | Typy nawyku: tak/nie, wartość liczbowa, czas (minuty), licznik | Pole wpisu na ekranie dnia odpowiada typowi. Wartość musi być większa od zera. | ✅ |
-| HAB-3 | Harmonogram: codziennie albo wybrane dni tygodnia | Nawyk w dniu spoza harmonogramu nie jest „do zrobienia”, nie przerywa serii i nie wchodzi do mianownika procentów. Zmiana harmonogramu obowiązuje od dnia zmiany, a wcześniejsze dni oceniane są według harmonogramu z tamtego dnia. | ❌ brak harmonogramu i historii zmian |
+| HAB-3 | Harmonogram: codziennie albo wybrane dni tygodnia | 🟡 harmonogram z historią (habit_schedules), pulpit i serie respektują dni; wpis w dniu spoza harmonogramu jest bonusem; brak procentów w raportach (REP) |
 | HAB-4 | Nawyk liczbowy jest ukończony po osiągnięciu celu; bez celu wystarcza wartość większa od zera | Cel 2 l: wpis 1,5 l to jeszcze nieukończone, 2 l ukończone. Zmiana celu obowiązuje od dnia zmiany, historia zachowuje cel z dnia wpisu. | ❌ teraz ukończony przy każdej wartości > 0 |
-| HAB-5 | Seria: kolejne zaplanowane dni ukończone; żyje do końca dzisiejszego dnia; pokazujemy też rekord | Zob. reguły w `domain/stats`. Dni spoza harmonogramu są pomijane. Brak „dni wolnych”: każdy pominięty zaplanowany dzień przerywa serię. | 🟡 działa dla „codziennie” |
-| HAB-6 | Przypomnienia | Poza zakresem v1: pola przypomnień znikają z formularza nawyku i z modelu. | ❌ formularz ma pola przypomnień |
+| HAB-5 | Seria: kolejne zaplanowane dni ukończone; żyje do końca dzisiejszego dnia; pokazujemy też rekord | ✅ serie uwzględniają harmonogram (dni spoza są pomijane) |
+| HAB-6 | Przypomnienia | ✅ pola przypomnień usunięte z formularza i bazy |
 | HAB-7 | Plan wykonania (Atomic Habits): pola „kiedy” i „gdzie” oraz opcjonalne powiązanie z innym nawykiem („po tym, jak zrobię…”) | Pola widoczne na karcie i w szczegółach nawyku, niewymagane. Powiązany nawyk to ten sam użytkownik, bez cykli. | 🟡 pola i powiązanie są (migracja 20261118000001/2), kafelek pokazuje „kiedy i gdzie”, brak walidacji cykli |
 | HAB-8 | Wersja dwuminutowa: minimum, które też liczy się jako wykonanie | Nawyk ma opcjonalny opis minimum. Szybki zapis „minimum” oznacza nawyk jako ukończony i jest odróżnialny w historii. | 🟡 tekst wersji 2-minutowej zapisywany; brak szybkiego zapisu „minimum” |
 | HAB-9 | Tożsamość: nawyk przypisany do opisu „kim się staję” | Podsumowanie pokazuje liczbę „głosów” (ukończeń) na każdą tożsamość. Wiele nawyków może wspierać jedną tożsamość. | 🟡 tożsamość jako tekst nawyku; brak podsumowania głosów |

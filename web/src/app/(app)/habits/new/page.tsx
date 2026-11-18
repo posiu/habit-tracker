@@ -7,7 +7,7 @@ import { listCategories, listHabits } from "@/lib/queries";
 async function Form() {
   await connection();
   const [categories, habits] = await Promise.all([listCategories(), listHabits(true)]);
-  return <HabitForm categories={categories} habits={habits} defaultStart={today()} />;
+  return <HabitForm categories={categories} habits={habits} defaultStart={today()} scheduleDays={[0, 1, 2, 3, 4, 5, 6]} />;
 }
 
 export default function NewHabitPage() {

@@ -3,30 +3,23 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { saveHabit, type FormState } from "@/app/(app)/habits/actions";
+import { WEEKDAYS } from "@/lib/domain/schedule";
 import { HABIT_TYPES, HABIT_TYPE_LABELS } from "@/lib/domain/schemas";
 import type { Category, Habit } from "@/lib/queries";
 import { Field, SubmitButton, inputClass } from "./field";
-
-const DAYS = [
-  [1, "Pn"],
-  [2, "Wt"],
-  [3, "Śr"],
-  [4, "Cz"],
-  [5, "Pt"],
-  [6, "So"],
-  [0, "Nd"],
-] as const;
 
 export function HabitForm({
   habit,
   categories,
   habits,
   defaultStart,
+  scheduleDays,
 }: {
   habit?: Habit;
   categories: Category[];
   habits: { id: string; name: string }[];
   defaultStart: string;
+  scheduleDays: number[];
 }) {
   const [state, action, pending] = useActionState<FormState, FormData>(
     saveHabit.bind(null, habit?.id ?? null),
@@ -35,7 +28,7 @@ export function HabitForm({
   const e = state?.errors ?? {};
   const v = (key: string, fallback?: string | number | null) =>
     state?.values ? String(state.values[key] ?? "") : String(fallback ?? "");
-  const days = state?.values ? (state.values.reminder_days as string[] | undefined ?? []).map(Number) : (habit?.reminder_days ?? []);
+  const days = state?.values ? ((state.values.schedule_days as string[] | undefined) ?? []).map(Number) : scheduleDays;
 
   return (
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
@@ -94,19 +87,18 @@ export function HabitForm({
           <input name="end_date" type="date" defaultValue={v("end_date", habit?.end_date)} className={inputClass} />
         </Field>
       </div>
-      <fieldset className="space-y-2 text-sm">
-        <label className="flex items-center gap-2">
-          <input name="reminder_enabled" type="checkbox" defaultChecked={state?.values ? state.values.reminder_enabled === "on" : habit?.reminder_enabled} />
-          Przypomnienia
-        </label>
-        <div className="flex flex-wrap gap-3">
-          {DAYS.map(([value, label]) => (
-            <label key={value} className="flex items-center gap-1">
-              <input name="reminder_days" type="checkbox" value={value} defaultChecked={days.includes(value)} />
+      <fieldset className="space-y-2 rounded-3xl bg-surface p-4 text-sm">
+        <legend className="px-1 font-semibold">Harmonogram</legend>
+        <div className="flex flex-wrap gap-2">
+          {WEEKDAYS.map(([value, label]) => (
+            <label key={value} className="flex min-h-11 items-center gap-1.5 rounded-full bg-surface-2 px-3.5">
+              <input name="schedule_days" type="checkbox" value={value} defaultChecked={days.includes(value)} />
               {label}
             </label>
           ))}
         </div>
+        {e.schedule_days && <p role="alert" className="text-sm text-red-600">{e.schedule_days}</p>}
+        <p className="text-xs text-muted">Zmiana obowiązuje od dziś, wcześniejsze dni zostają ocenione wg dawnego harmonogramu.</p>
       </fieldset>
       <div className="flex items-center gap-4">
         <SubmitButton pending={pending}>Zapisz</SubmitButton>

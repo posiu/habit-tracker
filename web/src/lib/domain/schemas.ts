@@ -39,8 +39,9 @@ export const habitSchema = z
     plan_text: z.string().trim().max(300, "Maksymalnie 300 znaków").optional(),
     minimum_text: z.string().trim().max(200, "Maksymalnie 200 znaków").optional(),
     anchor_habit_id: z.uuid("Nieprawidłowy nawyk").optional(),
-    reminder_enabled: z.boolean(),
-    reminder_days: z.array(z.number().int().min(0).max(6)),
+    schedule_days: z
+      .array(z.number().int().min(0).max(6))
+      .min(1, "Wybierz co najmniej jeden dzień tygodnia"),
   })
   .refine((h) => !h.end_date || h.end_date >= h.start_date, {
     path: ["end_date"],
