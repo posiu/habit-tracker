@@ -31,6 +31,10 @@
 | HAB-4 | Nawyk liczbowy jest ukończony po osiągnięciu celu; bez celu wystarcza wartość większa od zera | Cel 2 l: wpis 1,5 l to jeszcze nieukończone, 2 l ukończone. Zmiana celu obowiązuje od dnia zmiany, historia zachowuje cel z dnia wpisu. | ❌ teraz ukończony przy każdej wartości > 0 |
 | HAB-5 | Seria: kolejne zaplanowane dni ukończone; żyje do końca dzisiejszego dnia; pokazujemy też rekord | Zob. reguły w `domain/stats`. Dni spoza harmonogramu są pomijane. Brak „dni wolnych”: każdy pominięty zaplanowany dzień przerywa serię. | 🟡 działa dla „codziennie” |
 | HAB-6 | Przypomnienia | Poza zakresem v1: pola przypomnień znikają z formularza nawyku i z modelu. | ❌ formularz ma pola przypomnień |
+| HAB-7 | Plan wykonania (Atomic Habits): pola „kiedy” i „gdzie” oraz opcjonalne powiązanie z innym nawykiem („po tym, jak zrobię…”) | Pola widoczne na karcie i w szczegółach nawyku, niewymagane. Powiązany nawyk to ten sam użytkownik, bez cykli. | ❌ |
+| HAB-8 | Wersja dwuminutowa: minimum, które też liczy się jako wykonanie | Nawyk ma opcjonalny opis minimum. Szybki zapis „minimum” oznacza nawyk jako ukończony i jest odróżnialny w historii. | ❌ |
+| HAB-9 | Tożsamość: nawyk przypisany do opisu „kim się staję” | Podsumowanie pokazuje liczbę „głosów” (ukończeń) na każdą tożsamość. Wiele nawyków może wspierać jedną tożsamość. | ❌ |
+| HAB-10 | „Nie przegap dwa razy”: podpowiedź na pulpicie | Nawyk pominięty wczoraj jest wyróżniony na pulpicie. Reguła serii z HAB-5 bez zmian, to tylko podpowiedź. | ❌ |
 
 ## 3. Wpisy dzienne
 
@@ -77,6 +81,16 @@
 | NFR-4 | Każde wymaganie funkcjonalne ma test automatyczny (jednostkowy, bazy albo e2e). |
 | NFR-5 | Koszt: wyłącznie istniejące plany Vercel i Supabase, bez dodatkowych usług. |
 | NFR-6 | Stabilność pierwszego ładowania: formularze działają od razu po wejściu na stronę, bez przeładowania (zob. ISSUE-1 w analizie luk). |
+
+## Rozstrzygnięcia (2026-11-18)
+
+- **GOAL-2 (Q13):** cel liczony z nawyku zlicza dni tylko od daty startu celu.
+- **GOAL-2 (Q14):** cel „X dni z rzędu” patrzy na najlepszą serię od startu celu.
+- **HAB-3 (Q15):** wpis w dniu spoza harmonogramu jest dozwolony jako bonus, nie przerywa serii i jej nie wydłuża.
+- **HAB-3/HAB-4 (Q16):** historię zmian mają tylko cel i harmonogram; nazwa i kategoria działają wstecz.
+- **AUTH-1 (Q17):** zaproszenie i reset hasła w prostym polskim szablonie e-mail.
+- **AUTH-1 (Q18):** po pierwszym wejściu pusty pulpit z podpowiedziami, bez kreatora.
+- **Legacy:** `legacy-rails/` usuwamy od razu, osobnym PR (historia git zachowuje całość).
 
 ## 8. Poza zakresem v1
 
