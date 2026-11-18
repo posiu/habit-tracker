@@ -82,6 +82,16 @@
 | NFR-5 | Koszt: wyłącznie istniejące plany Vercel i Supabase, bez dodatkowych usług. |
 | NFR-6 | Stabilność pierwszego ładowania: formularze działają od razu po wejściu na stronę, bez przeładowania (zob. ISSUE-1 w analizie luk). |
 
+## Rozstrzygnięcia (2026-11-18)
+
+- **GOAL-2 (Q13):** cel liczony z nawyku zlicza dni tylko od daty startu celu.
+- **GOAL-2 (Q14):** cel „X dni z rzędu” patrzy na najlepszą serię od startu celu.
+- **HAB-3 (Q15):** wpis w dniu spoza harmonogramu jest dozwolony jako bonus, nie przerywa serii i jej nie wydłuża.
+- **HAB-3/HAB-4 (Q16):** historię zmian mają tylko cel i harmonogram; nazwa i kategoria działają wstecz.
+- **AUTH-1 (Q17):** zaproszenie i reset hasła w prostym polskim szablonie e-mail.
+- **AUTH-1 (Q18):** po pierwszym wejściu pusty pulpit z podpowiedziami, bez kreatora.
+- **Legacy:** `legacy-rails/` usuwamy od razu, osobnym PR (historia git zachowuje całość).
+
 ## 8. Poza zakresem v1
 
 Przypomnienia e-mail i push, udostępnianie postępów, wspólne cele i nawyki, API JSON dla aplikacji iOS. Powrót któregokolwiek wymaga zmiany tego dokumentu.
