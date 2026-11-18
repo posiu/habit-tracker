@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Desktop: siatka miesiąca</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;font-family:'Inter',system-ui,sans-serif}button{font-family:inherit}</style>
+</helmet>
+<div style="width:1280px;height:800px;box-sizing:border-box;background:#000;color:#fff;font-family:'Inter',system-ui,sans-serif;display:flex;overflow:hidden">
+  <div style="width:240px;flex:none;box-sizing:border-box;padding:32px 16px;border-right:1px solid #1C1C20;display:flex;flex-direction:column;gap:4px">
+    <div style="padding:0 12px 24px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Nawyki</div>
+    <span style="padding:12px;border-radius:14px;background:#1C1C20;font-size:15px;font-weight:600">Dziś</span>
+    <span style="padding:12px;border-radius:14px;background:#2C2C32;font-size:15px;font-weight:600">Miesiąc</span>
+    <span style="padding:12px;font-size:15px;color:#A7A7B0">Analiza</span>
+    <span style="padding:12px;font-size:15px;color:#A7A7B0">Nawyki</span>
+    <span style="padding:12px;font-size:15px;color:#A7A7B0">Cele</span>
+    <span style="padding:12px;font-size:15px;color:#A7A7B0">Ustawienia</span>
+  </div>
+
+  <div style="flex:1;min-width:0;box-sizing:border-box;padding:32px 40px;display:flex;flex-direction:column;gap:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:14px;color:#A7A7B0">Kliknij dzień, aby zaznaczyć nawyk</div>
+        <h1 style="margin:2px 0 0;font-size:34px;font-weight:700;letter-spacing:-0.02em">Listopad 2026</h1>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button aria-label="Poprzedni miesiąc" style="width:44px;height:44px;border-radius:22px;border:0;background:#1C1C20;color:#fff;font-size:18px">‹</button>
+        <button aria-label="Następny miesiąc" style="width:44px;height:44px;border-radius:22px;border:0;background:#1C1C20;color:#fff;font-size:18px">›</button>
+      </div>
+    </div>
+
+    <div style="padding:20px 24px;border-radius:24px;background:#111114;display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:170px;flex:none"></div>
+        <div style="flex:1;display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:4px;font-size:11px;color:#A7A7B0;text-align:center">
+          <sc-for list="{{dayNums}}" as="n" hint-placeholder-count="30"><span>{{n.v}}</span></sc-for>
+        </div>
+        <div style="width:96px;flex:none;font-size:11px;color:#A7A7B0;display:flex;justify-content:space-between"><span>%</span><span>seria</span></div>
+      </div>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:170px;flex:none;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600"><span style="{{r.dot}}"></span>{{r.name}}</div>
+          <div style="flex:1;display:grid;grid-template-columns:repeat(30,minmax(0,1fr));gap:4px">
+            <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="30"><span style="{{c.style}}"></span></sc-for>
+          </div>
+          <div style="width:96px;flex:none;font-size:14px;display:flex;justify-content:space-between"><span style="color:#C8C8D0">{{r.pct}}</span><span style="font-weight:600">{{r.streak}}</span></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+      <div style="padding:18px;border-radius:20px;background:#111114"><div style="font-size:12px;color:#A7A7B0">Ukończone w tym miesiącu</div><div style="font-size:28px;font-weight:700;margin-top:4px">71%</div></div>
+      <div style="padding:18px;border-radius:20px;background:#111114"><div style="font-size:12px;color:#A7A7B0">Najlepsza seria</div><div style="font-size:28px;font-weight:700;margin-top:4px">12 dni</div></div>
+      <div style="padding:18px;border-radius:20px;background:#111114"><div style="font-size:12px;color:#A7A7B0">Średni nastrój</div><div style="font-size:28px;font-weight:700;margin-top:4px">7,1</div></div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const specs = [
+      ['Bieg poranny', '#FF8A1F', 3], ['Woda', '#5BB8E0', 5], ['Czytanie 20 min', '#A99CFF', 7],
+      ['Medytacja', '#FF6B8E', 2], ['Bez cukru', '#8CE563', 4], ['Rozciąganie', '#FFD23F', 6]
+    ];
+    const dayNums = []; for (let d = 1; d <= 30; d++) dayNums.push({ v: d });
+    const rows = specs.map(([name, c, seed]) => {
+      const cells = []; let done = 0;
+      for (let i = 0; i < 30; i++) {
+        const future = i > 17;
+        const on = !future && ((i * seed + i * i) % 7) > 1;
+        if (on) done++;
+        const bg = future ? 'transparent' : on ? c : 'rgba(255,255,255,0.12)';
+        const bd = future ? '1px dashed #3A3A42' : '0';
+        cells.push({ style: 'display:block;aspect-ratio:1;border-radius:5px;box-sizing:border-box;border:' + bd + ';background:' + bg });
+      }
+      return { name, cells, dot: 'width:12px;height:12px;border-radius:4px;background:' + c, pct: Math.round(done / 18 * 100) + '%', streak: (seed * 2) + ' dni' };
+    });
+    return { dayNums, rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -30,8 +30,8 @@ Paleta i tokeny, makiety ekranów (pulpit, dzień, szczegóły nawyku, formularz
 
 ## Makiety (2026-11-18)
 
-Pięć ekranów mobilnych (Dziś, Szczegóły nawyku, Nastrój, Nowy nawyk, Analiza/rok), źródła w [`docs/design/mockups/`](../design/mockups) (format `.dc.html` z kanwy Claude Design; kanwa: https://claude.ai/artifact/RwPx8t2hovqio6UgjhR1aV, prywatna).
+Osiem ekranów: mobilne (Dziś, Szczegóły nawyku, Nastrój, Nowy nawyk, Analiza/rok, Logowanie i zaproszenie, Ustawienia) oraz desktopowa siatka miesiąca, źródła w [`docs/design/mockups/`](../design/mockups) (format `.dc.html` z kanwy Claude Design; kanwa: https://claude.ai/artifact/RwPx8t2hovqio6UgjhR1aV, prywatna).
 
-Ustalenia po przeglądzie: kafelki o równej wysokości, historia jako małe kropki z odstępami (3 tygodnie), przycisk niewykonanego nawyku „Odhacz”, wykonanego „✓ Zrobione”. Brakuje: siatki miesiąca (desktop), ustawień, ekranu logowania i zaproszenia.
+Ustalenia po przeglądzie: kafelki o równej wysokości, historia jako małe kropki z odstępami (3 tygodnie), przycisk niewykonanego nawyku „Odhacz”, wykonanego „✓ Zrobione”. Brakuje: celów (lista i formularz), kategorii, panelu zapraszania dla administratora, stanów pustych i błędów.
 
 Paleta nawyków: #FF8A1F, #5BB8E0, #A99CFF, #FF6B8E, #8CE563, #FFD23F na czarnym tle; akcent akcji #FF8A1F; czcionka Inter.
