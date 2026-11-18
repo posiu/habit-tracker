@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Rok i analiza</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>body{margin:0;font-family:'Inter',system-ui,sans-serif}button{font-family:inherit}</style>
+</helmet>
+<div style="width:390px;height:844px;box-sizing:border-box;background:#000;color:#fff;font-family:'Inter',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative">
+  <div style="padding:56px 20px 8px;display:flex;align-items:center;justify-content:space-between">
+    <h1 style="margin:0;font-size:34px;font-weight:700;letter-spacing:-0.02em">Analiza</h1>
+    <div style="display:flex;gap:6px;padding:4px;border-radius:22px;background:#1C1C20;font-size:14px;font-weight:600">
+      <span style="padding:10px 14px;border-radius:18px;color:#A7A7B0">Tydzień</span>
+      <span style="padding:10px 14px;border-radius:18px;background:#E4E4EA;color:#000">Rok</span>
+    </div>
+  </div>
+
+  <div style="margin:12px 20px 0;padding:16px;border-radius:22px;background:#111114">
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:#A7A7B0"><span>Rok 2026, ukończone nawyki</span><span>1 stycznia – 31 grudnia</span></div>
+    <div style="margin-top:12px;display:grid;grid-template-columns:repeat(18,minmax(0,1fr));gap:3px">
+      <sc-for list="{{cells}}" as="c" hint-placeholder-count="360">
+        <div style="{{c.style}}"></div>
+      </sc-for>
+    </div>
+    <div style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:12px;color:#A7A7B0">
+      <span>mniej</span>
+      <span style="width:14px;height:14px;border-radius:4px;background:rgba(255,255,255,0.10)"></span>
+      <span style="width:14px;height:14px;border-radius:4px;background:#3E5B23"></span>
+      <span style="width:14px;height:14px;border-radius:4px;background:#5E9132"></span>
+      <span style="width:14px;height:14px;border-radius:4px;background:#8CE563"></span>
+      <span>więcej</span>
+    </div>
+  </div>
+
+  <div style="margin:12px 20px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+    <div style="padding:16px;border-radius:22px;background:#111114"><div style="font-size:12px;color:#A7A7B0">Średni nastrój</div><div style="font-size:30px;font-weight:700;margin-top:4px">7,1</div><div style="font-size:12px;color:#C8C8D0">poprzedni tydzień 6,6</div></div>
+    <div style="padding:16px;border-radius:22px;background:#111114"><div style="font-size:12px;color:#A7A7B0">Dni z wpisem</div><div style="font-size:30px;font-weight:700;margin-top:4px">311</div><div style="font-size:12px;color:#C8C8D0">z 322 dni roku</div></div>
+  </div>
+
+  <div style="margin:12px 20px 0;padding:16px;border-radius:22px;background:#111114">
+    <div style="font-size:13px;color:#A7A7B0">Głosy na tożsamość</div>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:12px">
+      <sc-for list="{{identities}}" as="i" hint-placeholder-count="3">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:15px"><span>{{i.name}}</span><span style="color:#C8C8D0">{{i.votes}}</span></div>
+          <div style="margin-top:6px;height:8px;border-radius:4px;background:#26262B"><div style="{{i.bar}}"></div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:16px;right:16px;bottom:24px;display:flex;gap:10px;align-items:center">
+    <div style="flex:1;height:64px;border-radius:32px;background:#1C1C20;display:flex;align-items:center;justify-content:space-around;padding:0 8px;font-size:12px;font-weight:500;color:#A7A7B0">
+      <span>Dziś</span>
+      <span style="padding:10px 14px;border-radius:24px;background:#2C2C32;color:#fff;font-weight:600">Analiza</span>
+      <span>Nawyki</span><span>Ustawienia</span>
+    </div>
+    <button aria-label="Dodaj nawyk" style="width:64px;height:64px;border-radius:32px;border:0;background:#FF8A1F;display:flex;align-items:center;justify-content:center">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const lv = ['rgba(255,255,255,0.10)', '#3E5B23', '#5E9132', '#8CE563'];
+    const cells = [];
+    for (let i = 0; i < 360; i++) {
+      const future = i > 321;
+      const l = future ? 0 : ((i * 7 + (i * i) % 11) % 5);
+      const bg = future ? 'rgba(255,255,255,0.05)' : lv[Math.min(3, l)];
+      cells.push({ style: 'aspect-ratio:1;border-radius:3px;background:' + bg });
+    }
+    const ids = [['Jestem czytelnikiem', 27, 0.45], ['Jestem sportowcem', 61, 1], ['Dbam o spokój', 38, 0.62]];
+    const identities = ids.map(([name, votes, w]) => ({
+      name, votes: votes + ' głosów',
+      bar: 'height:8px;border-radius:4px;background:#8CE563;width:' + Math.round(w * 100) + '%'
+    }));
+    return { cells, identities };
+  }
+}
+</script>
+</body>
+</html>
