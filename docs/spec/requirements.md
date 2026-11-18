@@ -31,6 +31,10 @@
 | HAB-4 | Nawyk liczbowy jest ukończony po osiągnięciu celu; bez celu wystarcza wartość większa od zera | Cel 2 l: wpis 1,5 l to jeszcze nieukończone, 2 l ukończone. Zmiana celu obowiązuje od dnia zmiany, historia zachowuje cel z dnia wpisu. | ❌ teraz ukończony przy każdej wartości > 0 |
 | HAB-5 | Seria: kolejne zaplanowane dni ukończone; żyje do końca dzisiejszego dnia; pokazujemy też rekord | Zob. reguły w `domain/stats`. Dni spoza harmonogramu są pomijane. Brak „dni wolnych”: każdy pominięty zaplanowany dzień przerywa serię. | 🟡 działa dla „codziennie” |
 | HAB-6 | Przypomnienia | Poza zakresem v1: pola przypomnień znikają z formularza nawyku i z modelu. | ❌ formularz ma pola przypomnień |
+| HAB-7 | Plan wykonania (Atomic Habits): pola „kiedy” i „gdzie” oraz opcjonalne powiązanie z innym nawykiem („po tym, jak zrobię…”) | Pola widoczne na karcie i w szczegółach nawyku, niewymagane. Powiązany nawyk to ten sam użytkownik, bez cykli. | ❌ |
+| HAB-8 | Wersja dwuminutowa: minimum, które też liczy się jako wykonanie | Nawyk ma opcjonalny opis minimum. Szybki zapis „minimum” oznacza nawyk jako ukończony i jest odróżnialny w historii. | ❌ |
+| HAB-9 | Tożsamość: nawyk przypisany do opisu „kim się staję” | Podsumowanie pokazuje liczbę „głosów” (ukończeń) na każdą tożsamość. Wiele nawyków może wspierać jedną tożsamość. | ❌ |
+| HAB-10 | „Nie przegap dwa razy”: podpowiedź na pulpicie | Nawyk pominięty wczoraj jest wyróżniony na pulpicie. Reguła serii z HAB-5 bez zmian, to tylko podpowiedź. | ❌ |
 
 ## 3. Wpisy dzienne
 
