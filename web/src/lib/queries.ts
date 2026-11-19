@@ -50,6 +50,14 @@ export async function getCategory(id: string): Promise<Category | null> {
   return data;
 }
 
+/** Every completed entry in one go, plus the habits carrying an identity (active and archived). */
+export async function listIdentityHabits(): Promise<{ id: string; name: string; identity: string | null }[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("habits").select("id,name,identity").not("identity", "is", null);
+  if (error) throw error;
+  return data;
+}
+
 const HABIT_COLUMNS =
   "id,name,habit_type,unit,target_value,is_active,start_date,end_date,identity,plan_text,minimum_text,anchor_habit_id,category_id,categories(name,color)";
 
