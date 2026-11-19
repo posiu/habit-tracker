@@ -8,7 +8,7 @@ export function DeleteButton({ action, confirmText, label = "Usuń" }: { action:
         if (!window.confirm(confirmText)) e.preventDefault();
       }}
     >
-      <button type="submit" className="text-sm text-red-600 underline">
+      <button type="submit" className="text-sm text-red-400 underline">
         {label}
       </button>
     </form>

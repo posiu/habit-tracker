@@ -6,7 +6,7 @@ import { saveHabit, type FormState } from "@/app/(app)/habits/actions";
 import { WEEKDAYS } from "@/lib/domain/schedule";
 import { HABIT_TYPES, HABIT_TYPE_LABELS } from "@/lib/domain/schemas";
 import type { Category, Habit } from "@/lib/queries";
-import { Field, SubmitButton, inputClass } from "./field";
+import { Field, SubmitButton, chipClass, inputClass } from "./field";
 
 export function HabitForm({
   habit,
@@ -32,7 +32,7 @@ export function HabitForm({
 
   return (
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
-      {e._form && <p role="alert" className="text-sm text-red-600">{e._form}</p>}
+      {e._form && <p role="alert" className="text-sm text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
         <input name="name" required maxLength={200} defaultValue={v("name", habit?.name)} className={inputClass} />
       </Field>
@@ -51,8 +51,8 @@ export function HabitForm({
           <input name="unit" maxLength={50} defaultValue={v("unit", habit?.unit)} className={inputClass} />
         </Field>
       </div>
-      <fieldset className="space-y-4 rounded-3xl bg-surface p-4">
-        <legend className="px-1 text-sm font-semibold">Plan (Atomic Habits)</legend>
+      <div role="group" aria-labelledby="plan-title" className="space-y-4 rounded-3xl bg-surface p-4">
+        <p id="plan-title" className="text-sm font-semibold">Plan (Atomic Habits)</p>
         <Field label="Kim się staję (tożsamość)" error={e.identity}>
           <input name="identity" maxLength={200} placeholder="np. Jestem czytelnikiem" defaultValue={v("identity", habit?.identity)} className={inputClass} />
         </Field>
@@ -70,7 +70,7 @@ export function HabitForm({
         <Field label="Wersja 2-minutowa" error={e.minimum_text}>
           <input name="minimum_text" maxLength={200} placeholder="np. przeczytać jedną stronę" defaultValue={v("minimum_text", habit?.minimum_text)} className={inputClass} />
         </Field>
-      </fieldset>
+      </div>
       <Field label="Kategoria" error={e.category_id}>
         <select name="category_id" defaultValue={v("category_id", habit?.category_id)} className={inputClass}>
           <option value="">Bez kategorii</option>
@@ -87,19 +87,19 @@ export function HabitForm({
           <input name="end_date" type="date" defaultValue={v("end_date", habit?.end_date)} className={inputClass} />
         </Field>
       </div>
-      <fieldset className="space-y-2 rounded-3xl bg-surface p-4 text-sm">
-        <legend className="px-1 font-semibold">Harmonogram</legend>
+      <div role="group" aria-labelledby="schedule-title" className="space-y-3 rounded-3xl bg-surface p-4 text-sm">
+        <p id="schedule-title" className="font-semibold">Harmonogram</p>
         <div className="flex flex-wrap gap-2">
           {WEEKDAYS.map(([value, label]) => (
-            <label key={value} className="flex min-h-11 items-center gap-1.5 rounded-full bg-surface-2 px-3.5">
-              <input name="schedule_days" type="checkbox" value={value} defaultChecked={days.includes(value)} />
+            <label key={value} className={chipClass}>
+              <input name="schedule_days" type="checkbox" value={value} className="sr-only" defaultChecked={days.includes(value)} />
               {label}
             </label>
           ))}
         </div>
-        {e.schedule_days && <p role="alert" className="text-sm text-red-600">{e.schedule_days}</p>}
+        {e.schedule_days && <p role="alert" className="text-sm text-red-400">{e.schedule_days}</p>}
         <p className="text-xs text-muted">Zmiana obowiązuje od dziś, wcześniejsze dni zostają ocenione wg dawnego harmonogramu.</p>
-      </fieldset>
+      </div>
       <div className="flex items-center gap-4">
         <SubmitButton pending={pending}>Zapisz</SubmitButton>
         <Link href="/habits" className="text-sm underline">Anuluj</Link>

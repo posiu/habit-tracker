@@ -31,7 +31,7 @@ test("log a day: habits, mood, notes; persists and validates", async ({ page }) 
   await ui().getByLabel("Medytacja").check();
   await ui().getByLabel("Woda").fill("0");
   await ui().getByLabel("Notatka").fill("Dobry dzień");
-  await ui().getByLabel("😊 Dobrze").check();
+  await ui().locator("label", { hasText: "😊 Dobrze" }).click();
   await page.getByRole("button", { name: "Zapisz dzień" }).click();
   await expect(ui().getByText("Wartość musi być większa od zera")).toBeVisible();
   await expect(ui().getByLabel("Medytacja")).toBeChecked();
@@ -53,7 +53,7 @@ test("log a day: habits, mood, notes; persists and validates", async ({ page }) 
   // clearing removes the entry
   await ui().getByLabel("Medytacja").uncheck();
   await ui().getByLabel("Woda").fill("");
-  await ui().getByLabel("Brak").check();
+  await ui().locator("label", { hasText: "Brak" }).click();
   await page.getByRole("button", { name: "Zapisz dzień" }).click();
   await expect(ui().getByText("Zapisano.")).toBeVisible();
   await page.reload();

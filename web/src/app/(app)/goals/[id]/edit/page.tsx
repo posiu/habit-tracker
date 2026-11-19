@@ -13,7 +13,7 @@ async function Editor({ params }: { params: PageProps<"/goals/[id]/edit">["param
 export default function EditGoalPage(props: PageProps<"/goals/[id]/edit">) {
   return (
     <main className="space-y-6">
-      <h1 className="text-2xl font-semibold">Edytuj cel</h1>
+      <h1 className="text-[34px] font-bold tracking-tight">Edytuj cel</h1>
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Editor params={props.params} />
       </Suspense>

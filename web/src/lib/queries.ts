@@ -121,16 +121,16 @@ export async function getDayEntry(date: string): Promise<DayEntry | null> {
 const PAGE = 1000; // PostgREST caps a response at 1000 rows by default
 
 /** All completed habit entries as { habit_id, date }, paginated. */
-export async function listCompletions(): Promise<{ habit_id: string; date: string }[]> {
+export async function listCompletions(habitId?: string): Promise<{ habit_id: string; date: string }[]> {
   const supabase = await createClient();
   const out: { habit_id: string; date: string }[] = [];
   for (let from = 0; ; from += PAGE) {
-    const { data, error } = await supabase
+    let query = supabase
       .from("habit_entries")
       .select("habit_id,daily_entries!inner(entry_date)")
-      .eq("completed", true)
-      .order("created_at")
-      .range(from, from + PAGE - 1);
+      .eq("completed", true);
+    if (habitId) query = query.eq("habit_id", habitId);
+    const { data, error } = await query.order("created_at").range(from, from + PAGE - 1);
     if (error) throw error;
     for (const row of data as unknown as { habit_id: string; daily_entries: { entry_date: string } }[]) {
       out.push({ habit_id: row.habit_id, date: row.daily_entries.entry_date });

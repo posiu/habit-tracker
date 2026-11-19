@@ -16,12 +16,12 @@ test("a habit not scheduled today stays off the dashboard, and a schedule can be
 
   await page.goto("/habits/new");
   await ui().getByLabel("Nazwa").fill("Nie dzisiaj");
-  for (const [, label] of WEEKDAYS) await ui().getByLabel(label, { exact: true }).uncheck();
+  for (const [, label] of WEEKDAYS) await ui().locator("label", { hasText: new RegExp(`^${label}$`) }).click();
   await page.getByRole("button", { name: "Zapisz" }).click();
   await expect(ui().getByText("Wybierz co najmniej jeden dzień tygodnia")).toBeVisible();
 
   for (const [, label] of WEEKDAYS) {
-    if (label !== todayLabel) await ui().getByLabel(label, { exact: true }).check();
+    if (label !== todayLabel) await ui().locator("label", { hasText: new RegExp(`^${label}$`) }).click();
   }
   await page.getByRole("button", { name: "Zapisz" }).click();
   await expect(ui().getByText("Nie dzisiaj")).toBeVisible();

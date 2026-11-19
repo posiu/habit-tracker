@@ -111,7 +111,7 @@ async function Dashboard() {
                   style={{ background: c.bg, borderColor: c.border }}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[15px] font-semibold leading-tight">{habit.name}</span>
+                    <Link href={`/habits/${habit.id}`} className="text-[15px] font-semibold leading-tight">{habit.name}</Link>
                     <span aria-hidden="true" className="size-3 flex-none rounded" style={{ background: c.dot }} />
                   </div>
                   <p className="min-h-8 text-xs leading-4 text-[#c8c8d0]">

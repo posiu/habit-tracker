@@ -16,12 +16,12 @@ export function CategoryForm({ category }: { category?: Category }) {
 
   return (
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
-      {e._form && <p role="alert" className="text-sm text-red-600">{e._form}</p>}
+      {e._form && <p role="alert" className="text-sm text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
         <input name="name" required maxLength={100} defaultValue={v("name", category?.name)} className={inputClass} />
       </Field>
       <Field label="Kolor" error={e.color}>
-        <input name="color" type="color" defaultValue={v("color", category?.color ?? "#10b981")} className="h-10 w-20 rounded-md border border-zinc-300 dark:border-zinc-700" />
+        <input name="color" type="color" defaultValue={v("color", category?.color ?? "#10b981")} className="h-11 w-20 rounded-2xl bg-surface-2" />
       </Field>
       <Field label="Ikona (np. emoji)" error={e.icon}>
         <input name="icon" maxLength={50} defaultValue={v("icon", category?.icon)} className={inputClass} />
