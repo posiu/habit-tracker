@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Suspense } from "react";
+import { AnalysisTabs } from "@/components/analysis-tabs";
 import { Heatmap } from "@/components/heatmap";
 import { todayIn } from "@/lib/domain/entries";
 import { buildHeatmap, heatmapStart } from "@/lib/domain/stats";
@@ -45,13 +45,7 @@ async function Year() {
 export default function AnalysisPage() {
   return (
     <main className="space-y-4">
-      <div className="flex items-end justify-between">
-        <h1 className="text-[34px] font-bold tracking-tight">Analiza</h1>
-        <div className="flex gap-1.5 rounded-full bg-surface-2 p-1 text-sm font-semibold">
-          <Link href="/analiza/miesiac" className="flex h-9 items-center rounded-full px-4 text-muted">Miesiąc</Link>
-          <span aria-current="page" className="flex h-9 items-center rounded-full bg-chip px-4 text-chip-text">Rok</span>
-        </div>
-      </div>
+      <AnalysisTabs active="year" />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Year />
       </Suspense>
