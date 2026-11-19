@@ -32,7 +32,7 @@ export function HabitForm({
 
   return (
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
-      {e._form && <p role="alert" className="text-sm text-red-400">{e._form}</p>}
+      {e._form && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
         <input name="name" required maxLength={200} defaultValue={v("name", habit?.name)} className={inputClass} />
       </Field>
@@ -97,7 +97,7 @@ export function HabitForm({
             </label>
           ))}
         </div>
-        {e.schedule_days && <p role="alert" className="text-sm text-red-400">{e.schedule_days}</p>}
+        {e.schedule_days && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e.schedule_days}</p>}
         <p className="text-xs text-muted">Zmiana obowiązuje od dziś, wcześniejsze dni zostają ocenione wg dawnego harmonogramu.</p>
       </div>
       <div className="flex items-center gap-4">

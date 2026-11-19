@@ -9,14 +9,7 @@ import { goalProgress } from "@/lib/domain/goals";
 import { isScheduledOn, type Schedule } from "@/lib/domain/schedule";
 import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate, listSchedules } from "@/lib/queries";
 
-const PALETTE = [
-  { dot: "#ff8a1f", bg: "#2b1707", border: "#6b3a0f" },
-  { dot: "#5bb8e0", bg: "#0a2029", border: "#1d5266" },
-  { dot: "#a99cff", bg: "#17152e", border: "#3f3a7a" },
-  { dot: "#ff6b8e", bg: "#2e0f18", border: "#7a2a40" },
-  { dot: "#8ce563", bg: "#12230a", border: "#3a6b22" },
-  { dot: "#ffd23f", bg: "#2a2205", border: "#6b5a12" },
-];
+const PALETTE = [1, 2, 3, 4, 5, 6].map((n) => ({ dot: `var(--h${n}-dot)`, bg: `var(--h${n}-bg)`, border: `var(--h${n}-border)` }));
 
 function Tile({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -114,16 +107,16 @@ async function Dashboard() {
                     <Link href={`/habits/${habit.id}`} className="text-[15px] font-semibold leading-tight">{habit.name}</Link>
                     <span aria-hidden="true" className="size-3 flex-none rounded" style={{ background: c.dot }} />
                   </div>
-                  <p className="min-h-8 text-xs leading-4 text-[#c8c8d0]">
+                  <p className="min-h-8 text-xs leading-4 text-soft">
                     seria <strong data-testid="streak">{streak}</strong> · rekord {best}
                   </p>
-                  {habit.plan_text && <p className="text-xs leading-4 text-[#c8c8d0]">{habit.plan_text}</p>}
+                  {habit.plan_text && <p className="text-xs leading-4 text-soft">{habit.plan_text}</p>}
                   {habit.habit_type === "boolean" ? (
                     <form action={checkIn.bind(null, habit.id, !done)} className="mt-auto">
                       <button
                         type="submit"
                         aria-label={`${habit.name}: ${done ? "ukończony dziś, kliknij aby cofnąć" : "nieukończony dziś, kliknij aby odhaczyć"}`}
-                        className={`h-11 w-full rounded-full text-[15px] font-semibold ${done ? "bg-white/15 text-white" : "border-[1.5px] bg-transparent text-white"}`}
+                        className={`h-11 w-full rounded-full text-[15px] font-semibold ${done ? "bg-foreground/15 text-foreground" : "border-[1.5px] bg-transparent text-foreground"}`}
                         style={done ? undefined : { borderColor: c.dot }}
                       >
                         {done ? "✓ Zrobione" : "Odhacz"}
@@ -133,7 +126,7 @@ async function Dashboard() {
                     <Link
                       href="/daily"
                       aria-label={`${habit.name}: ${done ? "ukończony dziś" : "uzupełnij wartość"}`}
-                      className={`mt-auto flex h-11 items-center justify-center rounded-full text-[15px] font-semibold ${done ? "bg-white/15 text-white" : "border-[1.5px] text-white"}`}
+                      className={`mt-auto flex h-11 items-center justify-center rounded-full text-[15px] font-semibold ${done ? "bg-foreground/15 text-foreground" : "border-[1.5px] text-foreground"}`}
                       style={done ? undefined : { borderColor: c.dot }}
                     >
                       {done ? "✓ Zrobione" : "Uzupełnij"}

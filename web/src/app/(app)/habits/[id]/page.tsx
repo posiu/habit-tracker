@@ -46,10 +46,10 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
     return { label, date, state };
   });
   const circle = {
-    done: "bg-[#8ce563] text-black",
+    done: "bg-ok text-black",
     missed: "bg-surface-2 text-muted",
-    off: "border border-dashed border-[#5a5a64] text-[#5a5a64]",
-    future: "border border-[#3a3a42] text-[#5a5a64]",
+    off: "border border-dashed border-faint text-faint",
+    future: "border border-line text-faint",
   } as const;
   const mark = { done: "✓", missed: "–", off: "", future: "" } as const;
 
@@ -92,7 +92,7 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
       )}
 
       <div className="flex gap-3 pt-2">
-        <Link href={`/habits/${habit.id}/edit`} className="flex h-14 flex-1 items-center justify-center rounded-full bg-[#e4e4ea] text-base font-semibold text-black">
+        <Link href={`/habits/${habit.id}/edit`} className="flex h-14 flex-1 items-center justify-center rounded-full bg-[#e4e4ea] text-base font-semibold text-chip-text">
           Edytuj
         </Link>
         <Link href="/habits" className="flex h-14 items-center rounded-full bg-surface-2 px-6 text-base font-semibold">

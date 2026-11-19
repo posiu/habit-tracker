@@ -21,7 +21,7 @@ export function GoalForm({ goal, categories, defaultStart }: { goal?: Goal; cate
   return (
     <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-4">
       {e._form && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {e._form}
         </p>
       )}

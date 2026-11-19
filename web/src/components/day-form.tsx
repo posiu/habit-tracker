@@ -50,12 +50,12 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
       </div>
 
       {e._form && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
           {e._form}
         </p>
       )}
       {state?.saved && (
-        <p role="status" className="text-sm text-[#8ce563]">
+        <p role="status" className="text-sm text-ok-text">
           Zapisano.
         </p>
       )}
@@ -76,7 +76,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                       <input
                         type="checkbox"
                         name={name}
-                        className="size-5 accent-[#ff8a1f]"
+                        className="size-5 accent-accent"
                         defaultChecked={sv ? sv[name] === "on" : (entryFor(h.id)?.completed ?? false)}
                       />
                       {h.name}
@@ -130,7 +130,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                         {g.unit && <span className="text-sm text-muted">{g.unit}</span>}
                       </div>
                       {e[name] && (
-                        <span role="alert" className="block text-red-400">
+                        <span role="alert" className="block text-red-600 dark:text-red-400">
                           {e[name]}
                         </span>
                       )}
@@ -177,7 +177,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
           ))}
         </div>
         {e.mood && (
-          <p role="alert" className="text-sm text-red-400">
+          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
             {e.mood}
           </p>
         )}

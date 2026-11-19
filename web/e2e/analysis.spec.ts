@@ -36,4 +36,13 @@ test("analysis year and month views, and settings", async ({ page }) => {
   await ui().getByLabel(/Strefa czasowa/).selectOption("Europe/London");
   await ui().getByRole("button", { name: "Zapisz strefę" }).click();
   await expect(ui().getByText("Zapisano.")).toBeVisible();
+
+  // theme: choice persists across reloads
+  await ui().locator("label", { hasText: "Jasny" }).click();
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await page.reload();
+  await expect(page.locator("html")).not.toHaveClass(/dark/);
+  await ui().locator("label", { hasText: "Ciemny" }).click();
+  await expect(page.locator("html")).toHaveClass(/dark/);
 });
+

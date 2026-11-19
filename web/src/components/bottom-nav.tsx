@@ -26,7 +26,7 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               aria-current={active ? "page" : undefined}
-              className={`flex min-h-11 items-center rounded-full px-3.5 ${active ? "bg-[#2c2c32] font-semibold text-white" : ""}`}
+              className={`flex min-h-11 items-center rounded-full px-3.5 ${active ? "bg-nav-active font-semibold text-foreground" : ""}`}
             >
               {item.label}
             </Link>

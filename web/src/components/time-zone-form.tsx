@@ -16,8 +16,8 @@ export function TimeZoneForm({ current, zones }: { current: string; zones: strin
           ))}
         </select>
       </label>
-      {state?.error && <p role="alert" className="text-sm text-red-400">{state.error}</p>}
-      {state?.saved && <p role="status" className="text-sm text-[#8ce563]">Zapisano.</p>}
+      {state?.error && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{state.error}</p>}
+      {state?.saved && <p role="status" className="text-sm text-ok-text">Zapisano.</p>}
       <div className="flex"><SubmitButton pending={pending}>Zapisz strefę</SubmitButton></div>
     </form>
   );
