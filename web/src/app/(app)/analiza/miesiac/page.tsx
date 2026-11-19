@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { AnalysisTabs } from "@/components/analysis-tabs";
 import { addDays, isValidDate, todayIn } from "@/lib/domain/entries";
 import { isScheduledOn, type Schedule } from "@/lib/domain/schedule";
 import { currentStreak } from "@/lib/domain/stats";
@@ -121,13 +122,7 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
 export default function MonthPage(props: PageProps<"/analiza/miesiac">) {
   return (
     <main className="space-y-4">
-      <div className="flex items-end justify-between">
-        <h1 className="text-[34px] font-bold tracking-tight">Analiza</h1>
-        <div className="flex gap-1.5 rounded-full bg-surface-2 p-1 text-sm font-semibold">
-          <span aria-current="page" className="flex h-9 items-center rounded-full bg-chip px-4 text-chip-text">Miesiąc</span>
-          <Link href="/analiza" className="flex h-9 items-center rounded-full px-4 text-muted">Rok</Link>
-        </div>
-      </div>
+      <AnalysisTabs active="month" />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Month searchParams={props.searchParams} />
       </Suspense>
