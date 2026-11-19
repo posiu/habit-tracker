@@ -69,5 +69,5 @@ test("log a day: habits, mood, notes; persists and validates", async ({ page }) 
   await page.goto("/daily/2999-01-01");
   await expect(page).toHaveURL(todayUrl);
   await page.goto("/daily/not-a-date");
-  await expect(page.getByText(/404|nie została znaleziona|could not be found/i).first()).toBeVisible();
+  await expect(page.getByText(/404|nie znaleziono strony|could not be found/i).first()).toBeVisible();
 });
