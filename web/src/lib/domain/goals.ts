@@ -227,3 +227,53 @@ export function goalLoggableOn(goal: { start_date: string; completed_at: string 
   if (goal.start_date > date) return false;
   return goal.completed_at === null || goal.completed_at.slice(0, 10) >= date;
 }
+
+// ---- progress over time (REP-2) --------------------------------------------
+
+export type GoalSeriesPoint = { date: string; value: number };
+
+/**
+ * Running progress of a goal as a step series: the start (0), every day on which the value changed,
+ * and today (or the closing day). Same units as `goalProgress().current`: days or the summed value.
+ * Goals without a tracked value (target_date, custom) have no series.
+ */
+export function goalSeries(goal: GoalCore, entries: GoalEntryLite[], today: string, habit?: HabitData): GoalSeriesPoint[] {
+  const end = goal.completed_at && goal.completed_at.slice(0, 10) < today ? goal.completed_at.slice(0, 10) : today;
+  if (goal.start_date > end) return [];
+  const points: GoalSeriesPoint[] = [{ date: goal.start_date, value: 0 }];
+  const push = (date: string, value: number) => {
+    const last = points[points.length - 1];
+    if (last.value === value && date !== end) return;
+    if (last.date === date) last.value = value;
+    else points.push({ date, value });
+  };
+
+  switch (goal.goal_type) {
+    case "days_doing":
+    case "days_without":
+    case "target_value": {
+      const own = entries.filter((e) => e.date >= goal.start_date && e.date <= end).sort((a, b) => a.date.localeCompare(b.date));
+      let running = 0;
+      for (const e of own) {
+        if (goal.goal_type === "target_value") running += effectiveValue(e);
+        else if (e.boolean_value === true) running += 1;
+        else continue;
+        push(e.date, running);
+      }
+      break;
+    }
+    case "habit_days":
+    case "habit_streak": {
+      const dates = [...new Set((habit?.dates ?? []).filter((d) => d >= goal.start_date && d <= end))].sort();
+      dates.forEach((d, i) => {
+        const upTo = dates.slice(0, i + 1);
+        push(d, goal.goal_type === "habit_days" ? upTo.length : longestStreak(upTo, habit?.scheduled));
+      });
+      break;
+    }
+    default:
+      return [];
+  }
+  push(end, points[points.length - 1].value);
+  return points;
+}

@@ -61,7 +61,7 @@
 |---|---|---|---|
 | DASH-1 | Pulpit: postęp dnia, serie i rekordy, cele, heatmapa roku | Dane zgodne z wpisami, heatmapa liczy aktywność wg progów 0/1–2/3–5/6–10/11+. | ✅ |
 | REP-1 | ✅ podsumowanie tygodnia (/analiza/tydzien: % ukończonych wg harmonogramu, seria, nastrój, cele w toku, nawyki) i miesiąca (siatka); rok w widoku Rok |
-| REP-2 | Wykresy w czasie | 🟡 wykres tygodnia (słupki % + linia nastroju); brak wykresów wartości celów |
+| REP-2 | Wykresy w czasie | ✅ wykres tygodnia (słupki % + linia nastroju) i wykres postępu celu w czasie na szczegółach celu (wartość, dni, nawyk, seria) |
 | REP-3 | Eksport danych do CSV | ✅ eksport CSV wpisów nawyków (Ustawienia → Eksport danych, /eksport) |
 
 ## 6. Profil i ustawienia

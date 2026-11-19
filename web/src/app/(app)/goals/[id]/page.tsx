@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { GoalChart } from "@/components/goal-chart";
 import { ProgressSummary, fmt } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
-import { GOAL_TYPE_LABELS, goalProgress, isHabitGoal, type GoalType } from "@/lib/domain/goals";
+import { GOAL_TYPE_LABELS, goalProgress, goalSeries, isHabitGoal, type GoalType } from "@/lib/domain/goals";
 import { getGoal, getHabit, getTimeZone, listGoalEntries, loadHabitGoalData, type GoalEntryRow } from "@/lib/queries";
 
 function entryLabel(type: GoalType, e: GoalEntryRow, unit: string | null): string {
@@ -20,20 +21,18 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
   const entries = await listGoalEntries([goal.id]);
   const habitData = await loadHabitGoalData(goal.habit_id ? [goal.habit_id] : []);
   const habit = goal.habit_id ? await getHabit(goal.habit_id) : null;
-  const progress = goalProgress(
-    {
-      goal_type: goal.goal_type,
-      start_date: goal.start_date,
-      target_date: goal.target_date,
-      completed_at: goal.completed_at,
-      target_value: goal.goal_metrics?.target_value ?? null,
-      days_doing_target: goal.goal_metrics?.days_doing_target ?? null,
-      days_without_target: goal.goal_metrics?.days_without_target ?? null,
-    },
-    entries,
-    today,
-    goal.habit_id ? habitData.get(goal.habit_id) : undefined,
-  );
+  const core = {
+    goal_type: goal.goal_type,
+    start_date: goal.start_date,
+    target_date: goal.target_date,
+    completed_at: goal.completed_at,
+    target_value: goal.goal_metrics?.target_value ?? null,
+    days_doing_target: goal.goal_metrics?.days_doing_target ?? null,
+    days_without_target: goal.goal_metrics?.days_without_target ?? null,
+  };
+  const habit_ = goal.habit_id ? habitData.get(goal.habit_id) : undefined;
+  const progress = goalProgress(core, entries, today, habit_);
+  const series = goalSeries(core, entries, today, habit_);
   const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
 
   return (
@@ -59,6 +58,7 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
         )}
       </div>
       <ProgressSummary progress={progress} unit={goal.unit} />
+      <GoalChart points={series} target={progress.target} unit={progress.kind === "value" ? goal.unit ?? "" : progress.kind === "days" ? "dni" : ""} />
       <div className="flex gap-4 text-sm">
         <Link href={`/goals/${goal.id}/edit`} className="underline">
           Edytuj
