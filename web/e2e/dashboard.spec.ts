@@ -63,3 +63,37 @@ test("dashboard shows today's progress, streaks and heatmap", async ({ page }) =
   await expect(tile.getByRole("button", { name: /Czytanie/ })).toHaveText("Odhacz");
   await expect(ui().getByText("0/1")).toBeVisible();
 });
+
+test("quick two-minute check-in counts as done and is marked as minimum", async ({ page }) => {
+  const ui = () => page.locator("main:visible");
+  const today = todayIn("Europe/Warsaw");
+
+  await page.goto("/signup");
+  await page.getByLabel("E-mail").fill(`e2e-min-${Date.now()}@rls-test.local`);
+  await page.getByLabel("Hasło").fill("correct-horse-9");
+  await page.getByRole("button", { name: "Zarejestruj" }).click();
+  await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
+
+  await page.goto("/habits/new");
+  await ui().getByLabel("Nazwa").fill("Czytanie");
+  await ui().getByLabel("Wersja 2-minutowa").fill("1 strona");
+  await ui().getByLabel("Start").fill(addDays(today, -3));
+  await page.getByRole("button", { name: "Zapisz" }).click();
+  await expect(ui().getByText("Czytanie")).toBeVisible();
+
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  const row = ui().getByTestId("habit-row").filter({ hasText: "Czytanie" });
+  await row.getByRole("button", { name: /Tylko 2 min/ }).click();
+  await expect(row.getByRole("button", { name: /\(minimum\)/ })).toBeVisible();
+  await expect(row.getByTestId("streak")).toHaveText("1");
+  await expect(ui().getByText("1/1")).toBeVisible();
+
+  // the full day form saves a regular completion
+  await page.goto(`/daily/${today}`);
+  await ui().getByLabel("Czytanie").check();
+  await page.getByRole("button", { name: "Zapisz dzień" }).click();
+  await expect(ui().getByText("Zapisano.")).toBeVisible();
+  await page.goto("/");
+  await expect(ui().getByTestId("habit-row").filter({ hasText: "Czytanie" }).getByRole("button", { name: /ukończony dziś, kliknij/ })).toBeVisible();
+});

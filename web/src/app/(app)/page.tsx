@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { checkIn } from "./actions";
+import { checkIn, checkInMinimum } from "./actions";
 import { Heatmap } from "@/components/heatmap";
 import { ProgressSummary } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
 import { buildHeatmap, currentStreak, heatmapStart, longestStreak } from "@/lib/domain/stats";
 import { goalProgress } from "@/lib/domain/goals";
 import { isScheduledOn, type Schedule } from "@/lib/domain/schedule";
-import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate, listSchedules, loadHabitGoalData } from "@/lib/queries";
+import { getHeatmapCounts, getTimeZone, listCompletions, listMinimumHabitIds, listGoalEntries, listGoals, listHabitsForDate, listSchedules, loadHabitGoalData } from "@/lib/queries";
 
 const PALETTE = [1, 2, 3, 4, 5, 6].map((n) => ({ dot: `var(--h${n}-dot)`, bg: `var(--h${n}-bg)`, border: `var(--h${n}-border)` }));
 
@@ -23,12 +23,13 @@ function Tile({ label, value, hint }: { label: string; value: string; hint?: str
 
 async function Dashboard() {
   const today = todayIn(await getTimeZone());
-  const [allHabits, completions, counts, goals, allSchedules] = await Promise.all([
+  const [allHabits, completions, counts, goals, allSchedules, minimumToday] = await Promise.all([
     listHabitsForDate(today),
     listCompletions(),
     getHeatmapCounts(heatmapStart(today), today),
     listGoals(false),
     listSchedules(),
+    listMinimumHabitIds(today),
   ]);
   const schedulesByHabit = new Map<string, Schedule[]>();
   for (const s of allSchedules) schedulesByHabit.set(s.habit_id, [...(schedulesByHabit.get(s.habit_id) ?? []), s]);
@@ -114,15 +115,24 @@ async function Dashboard() {
                   </p>
                   {habit.plan_text && <p className="text-xs leading-4 text-soft">{habit.plan_text}</p>}
                   {habit.habit_type === "boolean" ? (
-                    <form action={checkIn.bind(null, habit.id, !done)} className="mt-auto">
+                    <form action={checkIn.bind(null, habit.id, !done)} className="mt-auto flex flex-col gap-1.5">
                       <button
                         type="submit"
-                        aria-label={`${habit.name}: ${done ? "ukończony dziś, kliknij aby cofnąć" : "nieukończony dziś, kliknij aby odhaczyć"}`}
+                        aria-label={`${habit.name}: ${done ? (minimumToday.has(habit.id) ? "ukończony dziś (minimum), kliknij aby cofnąć" : "ukończony dziś, kliknij aby cofnąć") : "nieukończony dziś, kliknij aby odhaczyć"}`}
                         className={`h-11 w-full rounded-full text-[15px] font-semibold ${done ? "bg-foreground/15 text-foreground" : "border-[1.5px] bg-transparent text-foreground"}`}
                         style={done ? undefined : { borderColor: c.dot }}
                       >
-                        {done ? "✓ Zrobione" : "Odhacz"}
+                        {done ? (minimumToday.has(habit.id) ? "✓ Minimum" : "✓ Zrobione") : "Odhacz"}
                       </button>
+                      {!done && habit.minimum_text && (
+                        <button
+                          type="submit"
+                          formAction={checkInMinimum.bind(null, habit.id)}
+                          className="rounded-full px-2 py-1 text-xs text-soft underline"
+                        >
+                          Tylko 2 min: {habit.minimum_text}
+                        </button>
+                      )}
                     </form>
                   ) : (
                     <Link
