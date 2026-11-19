@@ -86,6 +86,9 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                         <input name={name} inputMode="decimal" defaultValue={defaultFor(h)} className={inputClass} />
                         {unit && <span className="text-sm text-zinc-500">{unit}</span>}
                       </div>
+                      {!sv && h.target_value != null && entryFor(h.id) && (
+                        <p className="mt-1 text-xs text-muted">{entryFor(h.id)?.completed ? "✓ Cel osiągnięty" : "Poniżej celu"}</p>
+                      )}
                     </Field>
                   )}
                 </li>

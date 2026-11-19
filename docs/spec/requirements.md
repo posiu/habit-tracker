@@ -28,7 +28,7 @@
 | HAB-1 | Tworzenie, edycja, archiwizacja, przywracanie i usuwanie nawyku | Archiwizacja ustawia datę końca na dziś i zachowuje historię. Usunięcie wymaga potwierdzenia i kasuje wpisy. | ✅ |
 | HAB-2 | Typy nawyku: tak/nie, wartość liczbowa, czas (minuty), licznik | Pole wpisu na ekranie dnia odpowiada typowi. Wartość musi być większa od zera. | ✅ |
 | HAB-3 | Harmonogram: codziennie albo wybrane dni tygodnia | 🟡 harmonogram z historią (habit_schedules), pulpit i serie respektują dni; wpis w dniu spoza harmonogramu jest bonusem; brak procentów w raportach (REP) |
-| HAB-4 | Nawyk liczbowy jest ukończony po osiągnięciu celu; bez celu wystarcza wartość większa od zera | Cel 2 l: wpis 1,5 l to jeszcze nieukończone, 2 l ukończone. Zmiana celu obowiązuje od dnia zmiany, historia zachowuje cel z dnia wpisu. | ❌ teraz ukończony przy każdej wartości > 0 |
+| HAB-4 | Nawyk liczbowy jest ukończony po osiągnięciu celu; bez celu wystarcza wartość większa od zera | ✅ ukończenie = wartość ≥ cel (bez celu: > 0); `completed` zapisywane przy wpisie, więc zmiana celu nie zmienia historii (edycja starego dnia używa bieżącego celu) |
 | HAB-5 | Seria: kolejne zaplanowane dni ukończone; żyje do końca dzisiejszego dnia; pokazujemy też rekord | ✅ serie uwzględniają harmonogram (dni spoza są pomijane) |
 | HAB-6 | Przypomnienia | ✅ pola przypomnień usunięte z formularza i bazy |
 | HAB-7 | Plan wykonania (Atomic Habits): pola „kiedy” i „gdzie” oraz opcjonalne powiązanie z innym nawykiem („po tym, jak zrobię…”) | Pola widoczne na karcie i w szczegółach nawyku, niewymagane. Powiązany nawyk to ten sam użytkownik, bez cykli. | 🟡 pola i powiązanie są (migracja 20261118000001/2), kafelek pokazuje „kiedy i gdzie”, brak walidacji cykli |

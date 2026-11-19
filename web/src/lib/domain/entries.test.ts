@@ -15,6 +15,14 @@ describe("buildHabitEntry", () => {
     expect(buildHabitEntry("count", "3")).toMatchObject({ kind: "set", values: { numeric_value: 3 } });
   });
 
+  it("below the target the value is stored but not completed; at or above it is", () => {
+    expect(buildHabitEntry("numeric", "1,5", 2)).toMatchObject({ kind: "set", values: { numeric_value: 1.5, completed: false } });
+    expect(buildHabitEntry("numeric", "2", 2)).toMatchObject({ kind: "set", values: { completed: true } });
+    expect(buildHabitEntry("count", "3", 2)).toMatchObject({ kind: "set", values: { completed: true } });
+    expect(buildHabitEntry("time", "20", 30)).toMatchObject({ kind: "set", values: { time_value: 20, completed: false } });
+    expect(buildHabitEntry("numeric", "1", null)).toMatchObject({ kind: "set", values: { completed: true } });
+  });
+
   it("time stores whole minutes in time_value", () => {
     expect(buildHabitEntry("time", "45")).toMatchObject({ kind: "set", values: { time_value: 45, numeric_value: null } });
     expect(buildHabitEntry("time", "1.5").kind).toBe("error");
