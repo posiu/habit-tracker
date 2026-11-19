@@ -10,10 +10,12 @@ async function CategoryList() {
   return (
     <ul className="space-y-2">
       {categories.map((c) => (
-        <li key={c.id} className="flex items-center gap-3 py-3">
-          <span className="size-3 rounded-full" style={{ background: c.color ?? "#a1a1aa" }} />
-          <span className="font-medium">{c.icon} {c.name}</span>
-          {c.description && <span className="truncate text-sm text-muted">{c.description}</span>}
+        <li key={c.id} className="flex items-center gap-3 rounded-3xl bg-surface p-4">
+          <span aria-hidden="true" className="size-3 flex-none rounded-full" style={{ background: c.color ?? "#a1a1aa" }} />
+          <div className="min-w-0">
+            <p className="text-[17px] font-semibold">{c.icon} {c.name}</p>
+            {c.description && <p className="truncate text-sm text-muted">{c.description}</p>}
+          </div>
           <Link href={`/categories/${c.id}/edit`} className="ml-auto text-sm underline">Edytuj</Link>
         </li>
       ))}

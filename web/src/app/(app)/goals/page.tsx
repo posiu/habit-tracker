@@ -17,18 +17,14 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
 
   return (
     <>
-      <div className="flex gap-4 text-sm">
-        <Link href="/goals" className={closed ? "text-muted" : "font-semibold underline"}>
-          Aktywne
-        </Link>
-        <Link href="/goals?view=closed" className={closed ? "font-semibold underline" : "text-muted"}>
-          Zamknięte
-        </Link>
+      <div className="flex gap-2 text-sm font-semibold">
+        <Link href="/goals" className={`flex h-11 items-center rounded-full px-4 ${closed ? "bg-surface-2 text-muted" : "bg-chip text-chip-text"}`}>Aktywne</Link>
+        <Link href="/goals?view=closed" className={`flex h-11 items-center rounded-full px-4 ${closed ? "bg-chip text-chip-text" : "bg-surface-2 text-muted"}`}>Zamknięte</Link>
       </div>
       {goals.length === 0 ? (
         <p className="text-sm text-muted">{closed ? "Brak zamkniętych celów." : "Brak celów. Dodaj pierwszy."}</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-2">
           {goals.map((g) => {
             const progress = goalProgress(
               {
@@ -46,16 +42,16 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
             );
             const left = goalDaysRemaining(g, today);
             return (
-              <li key={g.id} className="space-y-2 rounded-3xl bg-surface p-4" data-testid="goal-card">
-                <div className="flex flex-wrap items-baseline gap-x-3">
-                  <Link href={`/goals/${g.id}`} className="font-medium underline">
+              <li key={g.id} className="space-y-3 rounded-3xl bg-surface p-4" data-testid="goal-card">
+                <div>
+                  <Link href={`/goals/${g.id}`} className="text-[17px] font-semibold">
                     {g.name}
                   </Link>
-                  <span className="text-xs text-muted">
+                  <p className="text-sm text-muted">
                     {GOAL_TYPE_LABELS[g.goal_type]}
                     {g.categories && ` · ${g.categories.name}`}
                     {left !== null && !g.completed_at && ` · ${left >= 0 ? `zostało ${left} dni` : `${-left} dni po terminie`}`}
-                  </span>
+                  </p>
                 </div>
                 <ProgressSummary progress={progress} unit={g.unit} />
                 <div className="flex items-center gap-4 text-sm">
