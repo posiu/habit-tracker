@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 
 const ITEMS = [
   { href: "/", label: "Dziś" },
+  { href: "/analiza", label: "Analiza" },
   { href: "/habits", label: "Nawyki" },
-  { href: "/goals", label: "Cele" },
-  { href: "/categories", label: "Kategorie" },
+  { href: "/ustawienia", label: "Ustawienia" },
 ];
 
 function isActive(pathname: string, href: string) {

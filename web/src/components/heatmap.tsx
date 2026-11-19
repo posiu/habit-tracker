@@ -18,8 +18,9 @@ function activityLabel(n: number): string {
 export function Heatmap({ weeks, total }: { weeks: HeatCell[][]; total: number }) {
   return (
     <figure className="space-y-2">
-      <div className="overflow-x-auto pb-2">
-        <div role="img" aria-label={`Mapa aktywności z ostatniego roku, łącznie ${total}`} className="flex gap-1">
+      {/* rtl scroll container starts at the right edge, so the newest weeks are visible on narrow screens */}
+      <div className="overflow-x-auto pb-2 [direction:rtl]">
+        <div role="img" aria-label={`Mapa aktywności z ostatniego roku, łącznie ${total}`} className="flex w-max gap-1 [direction:ltr]">
           <div className="flex flex-col gap-1 pr-1 text-[10px] leading-3 text-muted" aria-hidden>
             {DAY_LABELS.map((label, i) => (
               <span key={i} className="h-3">

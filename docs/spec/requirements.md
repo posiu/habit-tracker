@@ -60,7 +60,7 @@
 | ID | Wymaganie | Kryteria akceptacji | Stan |
 |---|---|---|---|
 | DASH-1 | Pulpit: postęp dnia, serie i rekordy, cele, heatmapa roku | Dane zgodne z wpisami, heatmapa liczy aktywność wg progów 0/1–2/3–5/6–10/11+. | ✅ |
-| REP-1 | Podsumowanie tygodnia i miesiąca (bez raportu kwartalnego) | Odsetek ukończonych nawyków, najlepsze serie, średni nastrój, cele w toku, dla wybranego okresu. | ❌ |
+| REP-1 | Podsumowanie tygodnia i miesiąca (bez raportu kwartalnego) | 🟡 widok miesiąca (siatka, %, seria) i roku (średni nastrój, dni aktywne); brak tygodnia i najlepszych serii |
 | REP-2 | Wykresy w czasie | Trend nawyków, nastroju i wartości celów. | ❌ |
 | REP-3 | Eksport danych do CSV | Pobranie wszystkich własnych wpisów w formacie CSV. | ❌ |
 
@@ -68,7 +68,7 @@
 
 | ID | Wymaganie | Kryteria akceptacji | Stan |
 |---|---|---|---|
-| SET-1 | Ustawienia profilu: imię, strefa czasowa | Zmiana strefy od razu zmienia, co jest „dziś”. | ❌ |
+| SET-1 | Ustawienia profilu: imię, strefa czasowa | 🟡 strefa czasowa edytowalna w Ustawieniach; brak edycji profilu |
 | SET-2 | Zarządzanie danymi | Użytkownik sam eksportuje dane do CSV (REP-3). Konto usuwa właściciel na prośbę (ADM-1). | ❌ |
 
 ## 7. Wymagania niefunkcjonalne
