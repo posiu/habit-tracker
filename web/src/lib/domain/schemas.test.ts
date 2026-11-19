@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { categorySchema, habitSchema, fieldErrors } from "./schemas";
+import { categorySchema, habitSchema, fieldErrors, profileSchema } from "./schemas";
 import { habitFromForm, categoryFromForm } from "./form-data";
 
 const validHabit = {
@@ -93,5 +93,16 @@ describe("rawValues", () => {
     fd.append("schedule_days", "1");
     fd.append("schedule_days", "5");
     expect(rawValues(fd)).toEqual({ name: "Woda", schedule_days: ["1", "5"] });
+  });
+});
+
+describe("profileSchema", () => {
+  it("trims names and allows them to be empty", () => {
+    expect(profileSchema.parse({ first_name: "  Michał ", last_name: "" })).toEqual({ first_name: "Michał", last_name: "" });
+  });
+
+  it("rejects names longer than 100 characters", () => {
+    const r = profileSchema.safeParse({ first_name: "a".repeat(101), last_name: "" });
+    expect(r.success).toBe(false);
   });
 });

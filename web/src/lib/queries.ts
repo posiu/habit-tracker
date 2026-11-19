@@ -303,6 +303,12 @@ export async function getUserEmail(): Promise<string> {
   return String(data?.claims.email ?? "");
 }
 
+export async function getProfileNames(): Promise<{ first_name: string; last_name: string }> {
+  const supabase = await createClient();
+  const { data } = await supabase.from("profiles").select("first_name,last_name").maybeSingle();
+  return { first_name: data?.first_name ?? "", last_name: data?.last_name ?? "" };
+}
+
 export type HabitGoalData = { dates: string[]; scheduled: (date: string) => boolean };
 
 /** Completion data for the habits behind habit goals, keyed by habit id. */

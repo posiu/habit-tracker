@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { logout } from "@/app/(auth)/actions";
+import { ProfileForm } from "@/components/profile-form";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { TimeZoneForm } from "@/components/time-zone-form";
 import { getSessionUser } from "@/lib/admin";
-import { getTimeZone, getUserEmail } from "@/lib/queries";
+import { getProfileNames, getTimeZone, getUserEmail } from "@/lib/queries";
 
 async function Settings() {
-  const [email, tz, me] = await Promise.all([getUserEmail(), getTimeZone(), getSessionUser()]);
+  const [email, tz, me, names] = await Promise.all([getUserEmail(), getTimeZone(), getSessionUser(), getProfileNames()]);
+  const fullName = `${names.first_name} ${names.last_name}`.trim();
   const zones = Intl.supportedValuesOf("timeZone");
   if (!zones.includes(tz)) zones.push(tz);
   const row = "flex min-h-14 items-center justify-between px-4 text-[15px]";
@@ -16,9 +18,16 @@ async function Settings() {
     <div className="space-y-3">
       <div className="flex items-center gap-4 rounded-3xl bg-surface p-4">
         <span aria-hidden="true" className="flex size-13 items-center justify-center rounded-full bg-accent-soft text-xl font-bold text-accent-ink">
-          {email.slice(0, 1).toUpperCase()}
+          {(fullName || email).slice(0, 1).toUpperCase()}
         </span>
-        <p className="text-[17px] font-semibold">{email}</p>
+        <div className="min-w-0">
+          <p className="truncate text-[17px] font-semibold">{fullName || email}</p>
+          {fullName && <p className="truncate text-sm text-muted">{email}</p>}
+        </div>
+      </div>
+
+      <div className="rounded-3xl bg-surface p-4">
+        <ProfileForm firstName={names.first_name} lastName={names.last_name} />
       </div>
 
       <div className="rounded-3xl bg-surface p-4">

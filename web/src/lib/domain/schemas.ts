@@ -49,6 +49,11 @@ export const habitSchema = z
   });
 export type HabitInput = z.infer<typeof habitSchema>;
 
+export const profileSchema = z.object({
+  first_name: z.string().trim().max(100, "Maksymalnie 100 znaków"),
+  last_name: z.string().trim().max(100, "Maksymalnie 100 znaków"),
+});
+
 export type FieldErrors = Record<string, string>;
 
 export function fieldErrors(error: z.ZodError): FieldErrors {
