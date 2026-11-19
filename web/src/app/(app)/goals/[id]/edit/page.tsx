@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { GoalForm } from "@/components/goal-form";
-import { getGoal, listCategories } from "@/lib/queries";
+import { getGoal, listCategories, listHabits } from "@/lib/queries";
 
 async function Editor({ params }: { params: PageProps<"/goals/[id]/edit">["params"] }) {
   const { id } = await params;
-  const [goal, categories] = await Promise.all([getGoal(id), listCategories()]);
+  const [goal, categories, habits] = await Promise.all([getGoal(id), listCategories(), listHabits(true)]);
   if (!goal) notFound();
-  return <GoalForm goal={goal} categories={categories} defaultStart={goal.start_date} />;
+  return <GoalForm goal={goal} categories={categories} habits={habits} defaultStart={goal.start_date} />;
 }
 
 export default function EditGoalPage(props: PageProps<"/goals/[id]/edit">) {

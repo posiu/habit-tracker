@@ -132,3 +132,42 @@ describe("goalLoggableOn", () => {
     expect(goalLoggableOn({ ...g, completed_at: null }, "2030-01-01")).toBe(true);
   });
 });
+
+describe("habit goals (GOAL-2)", () => {
+  const core = (type: "habit_days" | "habit_streak", days: number) => ({
+    goal_type: type,
+    start_date: "2026-11-10",
+    target_date: null,
+    completed_at: null,
+    target_value: null,
+    days_doing_target: days,
+    days_without_target: null,
+  });
+  const always = () => true;
+
+  it("habit_days counts completed days since the goal's start only", () => {
+    const habit = { dates: ["2026-11-05", "2026-11-09", "2026-11-10", "2026-11-12", "2026-11-13"], scheduled: always };
+    const p = goalProgress(core("habit_days", 6), [], "2026-11-15", habit);
+    expect(p.current).toBe(3);
+    expect(p.target).toBe(6);
+    expect(p.percentage).toBe(50);
+    expect(p.status).toBe("in_progress");
+  });
+
+  it("habit_streak uses the best streak since the start, not the current one", () => {
+    const habit = { dates: ["2026-11-10", "2026-11-11", "2026-11-12", "2026-11-14"], scheduled: always };
+    const p = goalProgress(core("habit_streak", 3), [], "2026-11-15", habit);
+    expect(p.current).toBe(3);
+    expect(p.percentage).toBe(100);
+    expect(p.status).toBe("reached");
+  });
+
+  it("a streak before the start date does not count", () => {
+    const habit = { dates: ["2026-11-05", "2026-11-06", "2026-11-07", "2026-11-11"], scheduled: always };
+    expect(goalProgress(core("habit_streak", 3), [], "2026-11-15", habit).current).toBe(1);
+  });
+
+  it("without habit data progress is zero", () => {
+    expect(goalProgress(core("habit_days", 5), [], "2026-11-15").current).toBe(0);
+  });
+});

@@ -1,10 +1,13 @@
 import { z } from "zod";
 import { isValidDate } from "./entries";
+import { longestStreak } from "./stats";
 
-export const GOAL_TYPES = ["days_doing", "days_without", "target_value", "target_date", "custom"] as const;
+export const GOAL_TYPES = ["habit_days", "habit_streak", "days_doing", "days_without", "target_value", "target_date", "custom"] as const;
 export type GoalType = (typeof GOAL_TYPES)[number];
 
 export const GOAL_TYPE_LABELS: Record<GoalType, string> = {
+  habit_days: "Dni z nawyku",
+  habit_streak: "Seria z nawyku",
   days_doing: "Dni z działaniem",
   days_without: "Dni bez czegoś",
   target_value: "Wartość docelowa",
@@ -13,6 +16,8 @@ export const GOAL_TYPE_LABELS: Record<GoalType, string> = {
 };
 
 export const GOAL_TYPE_HINTS: Record<GoalType, string> = {
+  habit_days: "Liczą się ukończone dni wybranego nawyku od startu celu. Nic nie odhaczasz osobno.",
+  habit_streak: "Cel to najdłuższa seria wybranego nawyku od startu celu (aktualna seria może się zerować).",
   days_doing: "Odhaczasz dni, w których coś zrobiłeś. Cel to liczba takich dni.",
   days_without: "Odhaczasz dni, w których wytrwałeś bez czegoś. Cel to liczba takich dni.",
   target_value: "Dodajesz i odejmujesz wartości, aż suma osiągnie cel (np. 10 000 zł, 500 km).",
@@ -22,6 +27,8 @@ export const GOAL_TYPE_HINTS: Record<GoalType, string> = {
 
 /** Goal types you log in the daily screen. */
 export const TRACKED_GOAL_TYPES: readonly GoalType[] = ["days_doing", "days_without", "target_value"];
+export const HABIT_GOAL_TYPES: readonly GoalType[] = ["habit_days", "habit_streak"];
+export const isHabitGoal = (t: GoalType) => HABIT_GOAL_TYPES.includes(t);
 export const isTracked = (t: GoalType) => TRACKED_GOAL_TYPES.includes(t);
 
 const isoDate = z.string().refine(isValidDate, "Podaj datę w formacie RRRR-MM-DD");
@@ -35,6 +42,7 @@ export const goalSchema = z
     start_date: isoDate,
     target_date: isoDate.optional(),
     target_value: z.number({ error: "Podaj liczbę" }).positive("Cel musi być większy od zera").optional(),
+    habit_id: z.uuid("Nieprawidłowy nawyk").optional(),
     days_target: z
       .number({ error: "Podaj liczbę" })
       .int("Podaj całkowitą liczbę dni")
@@ -47,6 +55,12 @@ export const goalSchema = z
     }
     if (g.goal_type === "target_date" && !g.target_date) {
       ctx.addIssue({ code: "custom", path: ["target_date"], message: "Termin jest wymagany dla tego typu celu" });
+    }
+    if (isHabitGoal(g.goal_type) && !g.habit_id) {
+      ctx.addIssue({ code: "custom", path: ["habit_id"], message: "Wybierz nawyk" });
+    }
+    if (isHabitGoal(g.goal_type) && g.days_target === undefined) {
+      ctx.addIssue({ code: "custom", path: ["days_target"], message: "Podaj liczbę dni" });
     }
     if (g.goal_type === "target_value" && g.target_value === undefined) {
       ctx.addIssue({ code: "custom", path: ["target_value"], message: "Podaj wartość docelową" });
@@ -95,6 +109,9 @@ export type GoalCore = {
   days_without_target: number | null;
 };
 
+/** Completed days of the habit behind a habit goal, and which days it was scheduled. */
+export type HabitData = { dates: string[]; scheduled: (date: string) => boolean };
+
 export type GoalEntryLite = {
   date: string;
   value: number | null;
@@ -141,7 +158,7 @@ function daysTarget(goal: GoalCore, explicit: number | null): number {
   return 30;
 }
 
-export function goalProgress(goal: GoalCore, entries: GoalEntryLite[], today: string): GoalProgress {
+export function goalProgress(goal: GoalCore, entries: GoalEntryLite[], today: string, habit?: HabitData): GoalProgress {
   const own = entries.filter((e) => e.date >= goal.start_date);
   let percentage: number | null = null;
   let current = 0;
@@ -149,6 +166,16 @@ export function goalProgress(goal: GoalCore, entries: GoalEntryLite[], today: st
   let kind: GoalProgress["kind"] = null;
 
   switch (goal.goal_type) {
+    case "habit_days":
+    case "habit_streak": {
+      // Only days from the goal's start count (Q13); the streak is the best one since then (Q14).
+      const since = (habit?.dates ?? []).filter((d) => d >= goal.start_date && d <= today);
+      current = goal.goal_type === "habit_days" ? new Set(since).size : longestStreak(since, habit?.scheduled);
+      target = daysTarget(goal, goal.days_doing_target);
+      percentage = cap((current / target) * 100);
+      kind = "days";
+      break;
+    }
     case "days_doing":
     case "days_without": {
       const explicit = goal.goal_type === "days_doing" ? goal.days_doing_target : goal.days_without_target;

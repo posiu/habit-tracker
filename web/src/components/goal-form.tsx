@@ -3,11 +3,21 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { saveGoal, type FormState } from "@/app/(app)/goals/actions";
-import { GOAL_TYPES, GOAL_TYPE_HINTS, GOAL_TYPE_LABELS, type GoalType } from "@/lib/domain/goals";
+import { GOAL_TYPES, GOAL_TYPE_HINTS, GOAL_TYPE_LABELS, isHabitGoal, type GoalType } from "@/lib/domain/goals";
 import type { Category, Goal } from "@/lib/queries";
 import { Field, SubmitButton, inputClass } from "./field";
 
-export function GoalForm({ goal, categories, defaultStart }: { goal?: Goal; categories: Category[]; defaultStart: string }) {
+export function GoalForm({
+  goal,
+  categories,
+  habits,
+  defaultStart,
+}: {
+  goal?: Goal;
+  categories: Category[];
+  habits: { id: string; name: string }[];
+  defaultStart: string;
+}) {
   const [state, action, pending] = useActionState<FormState, FormData>(saveGoal.bind(null, goal?.id ?? null), undefined);
   const e = state?.errors ?? {};
   const sv = state?.values;
@@ -16,7 +26,7 @@ export function GoalForm({ goal, categories, defaultStart }: { goal?: Goal; cate
   const initialType = (sv ? v("goal_type") : (goal?.goal_type ?? "target_value")) as GoalType;
   const [type, setType] = useState<GoalType>(initialType);
   const m = goal?.goal_metrics;
-  const daysTarget = goal?.goal_type === "days_doing" ? m?.days_doing_target : goal?.goal_type === "days_without" ? m?.days_without_target : null;
+  const daysTarget = goal?.goal_type === "days_doing" || (goal && isHabitGoal(goal.goal_type)) ? m?.days_doing_target : goal?.goal_type === "days_without" ? m?.days_without_target : null;
 
   return (
     <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-4">
@@ -49,8 +59,18 @@ export function GoalForm({ goal, categories, defaultStart }: { goal?: Goal; cate
           </Field>
         </div>
       )}
-      {(type === "days_doing" || type === "days_without") && (
-        <Field label="Liczba dni do osiągnięcia (puste = do terminu albo 30)" error={e.days_target}>
+      {isHabitGoal(type) && (
+        <Field label="Nawyk" error={e.habit_id}>
+          <select name="habit_id" defaultValue={v("habit_id", goal?.habit_id)} className={inputClass}>
+            <option value="">Wybierz nawyk</option>
+            {habits.map((h) => (
+              <option key={h.id} value={h.id}>{h.name}</option>
+            ))}
+          </select>
+        </Field>
+      )}
+      {(type === "days_doing" || type === "days_without" || isHabitGoal(type)) && (
+        <Field label={isHabitGoal(type) ? (type === "habit_streak" ? "Docelowa długość serii (dni)" : "Liczba ukończonych dni") : "Liczba dni do osiągnięcia (puste = do terminu albo 30)"} error={e.days_target}>
           <input name="days_target" inputMode="numeric" defaultValue={v("days_target", daysTarget)} className={inputClass} />
         </Field>
       )}

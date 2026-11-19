@@ -50,7 +50,7 @@
 | ID | Wymaganie | Kryteria akceptacji | Stan |
 |---|---|---|---|
 | GOAL-1 | Typy celów: dni z działaniem, dni bez, wartość docelowa, termin, własny | Postęp i status liczone z wpisów, wartości ujemne odejmują. | ✅ |
-| GOAL-2 | Cel może się liczyć automatycznie z nawyku | Dwa tryby powiązania: (a) liczba ukończonych dni nawyku, (b) długość serii nawyku. Postęp liczy się bez osobnych wpisów celu, a zmiana wpisu nawyku zmienia postęp. Suma wartości nawyku nie jest w v1. Cele ręczne (GOAL-1) zostają. | ❌ |
+| GOAL-2 | Cel może się liczyć automatycznie z nawyku | ✅ typy „Dni z nawyku” i „Seria z nawyku”; liczy się od startu celu (Q13), seria = najlepsza od startu (Q14); cele ręczne bez zmian |
 | GOAL-3 | Zamykanie, wznawianie i usuwanie celu | Zamknięty cel znika z aktywnych i da się go wznowić. | ✅ |
 
 | CAT-1 | Kategorie służą do filtrowania i raportów | Listę nawyków i celów można zawęzić do kategorii, a raporty pokazują podsumowanie także per kategoria. | 🟡 kategorie są tylko etykietą |

@@ -94,6 +94,16 @@ describe("row level security", () => {
     expect(empty.error).not.toBeNull();
   });
 
+  it("cannot point a goal at another user's habit", async () => {
+    const goal = (client: SupabaseClient, habit: string) =>
+      client.rpc("save_goal", {
+        p_id: null, p_name: "Seria", p_goal_type: "habit_streak", p_unit: null, p_category_id: null,
+        p_start_date: "2026-11-01", p_target_date: null, p_target_value: null, p_days_target: 7, p_habit_id: habit,
+      });
+    expect((await goal(b.client, habitA)).error).not.toBeNull();
+    expect((await goal(a.client, habitA)).error).toBeNull();
+  });
+
   it("cannot log an entry for another user's habit", async () => {
     const day = await b.client.from("daily_entries").insert({ entry_date: "2026-01-01" }).select("id").single();
     const r = await b.client.from("habit_entries").insert({ daily_entry_id: day.data!.id, habit_id: habitA });
