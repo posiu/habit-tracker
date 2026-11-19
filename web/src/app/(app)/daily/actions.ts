@@ -30,7 +30,7 @@ export async function saveDay(date: string, _prev: DayState, fd: FormData): Prom
   const clear: string[] = [];
   for (const habit of habits) {
     const raw = fd.get(`habit_${habit.id}`);
-    const result = buildHabitEntry(habit.habit_type, typeof raw === "string" ? raw : null);
+    const result = buildHabitEntry(habit.habit_type, typeof raw === "string" ? raw : null, habit.target_value);
     if (result.kind === "error") errors[`habit_${habit.id}`] = result.message;
     else if (result.kind === "clear") clear.push(habit.id);
     else entries.push({ habit_id: habit.id, ...result.values });

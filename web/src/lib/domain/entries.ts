@@ -29,9 +29,15 @@ export type HabitEntryResult =
 /**
  * Turns one raw form value into a stored habit entry (port of Rails HabitEntryForm).
  * Boolean habits: checked = completed, unchecked = no entry.
- * Other habits: empty = no entry, otherwise the value must be > 0 and counts as completed.
+ * Other habits: empty = no entry, otherwise the value must be > 0. It counts as completed when it reaches
+ * the habit's target (any positive value when there is no target); below the target the value is
+ * stored but not completed. `completed` is stored, so changing the target later never rewrites history.
  */
-export function buildHabitEntry(type: HabitType, raw: string | null | undefined): HabitEntryResult {
+export function buildHabitEntry(
+  type: HabitType,
+  raw: string | null | undefined,
+  target?: number | null,
+): HabitEntryResult {
   if (type === "boolean") {
     return raw === "on"
       ? { kind: "set", values: { completed: true, boolean_value: true, numeric_value: null, time_value: null } }
@@ -47,9 +53,13 @@ export function buildHabitEntry(type: HabitType, raw: string | null | undefined)
 
   if (type === "time") {
     if (!Number.isInteger(n)) return { kind: "error", message: "Podaj całkowitą liczbę minut" };
-    return { kind: "set", values: { completed: true, boolean_value: null, numeric_value: null, time_value: n } };
+    return { kind: "set", values: { completed: reachesTarget(n, target), boolean_value: null, numeric_value: null, time_value: n } };
   }
-  return { kind: "set", values: { completed: true, boolean_value: null, numeric_value: n, time_value: null } };
+  return { kind: "set", values: { completed: reachesTarget(n, target), boolean_value: null, numeric_value: n, time_value: null } };
+}
+
+export function reachesTarget(value: number, target?: number | null): boolean {
+  return target == null ? value > 0 : value >= target;
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
