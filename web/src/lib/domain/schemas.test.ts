@@ -6,13 +6,16 @@ const validHabit = {
   name: "Bieganie",
   habit_type: "numeric",
   start_date: "2026-01-10",
-  reminder_enabled: false,
-  reminder_days: [],
+  schedule_days: [0, 1, 2, 3, 4, 5, 6],
 };
 
 describe("habitSchema", () => {
   it("accepts a minimal valid habit", () => {
     expect(habitSchema.safeParse(validHabit).success).toBe(true);
+  });
+
+  it("requires at least one scheduled weekday", () => {
+    expect(habitSchema.safeParse({ ...validHabit, schedule_days: [] }).success).toBe(false);
   });
 
   it("rejects empty and too long names", () => {
@@ -33,9 +36,9 @@ describe("habitSchema", () => {
     expect(habitSchema.safeParse({ ...validHabit, end_date: "2026-01-10" }).success).toBe(true);
   });
 
-  it("rejects unknown habit types and bad reminder days", () => {
+  it("rejects unknown habit types, bad weekdays and an empty schedule", () => {
     expect(habitSchema.safeParse({ ...validHabit, habit_type: "weird" }).success).toBe(false);
-    expect(habitSchema.safeParse({ ...validHabit, reminder_days: [7] }).success).toBe(false);
+    expect(habitSchema.safeParse({ ...validHabit, schedule_days: [7] }).success).toBe(false);
   });
 });
 
@@ -55,14 +58,12 @@ describe("form parsing", () => {
     fd.set("unit", "");
     fd.set("target_value", "2,5");
     fd.set("start_date", "2026-03-01");
-    fd.set("reminder_enabled", "on");
-    fd.append("reminder_days", "1");
-    fd.append("reminder_days", "3");
+    fd.append("schedule_days", "1");
+    fd.append("schedule_days", "3");
     const parsed = habitSchema.parse(habitFromForm(fd));
     expect(parsed.unit).toBeUndefined();
     expect(parsed.target_value).toBe(2.5);
-    expect(parsed.reminder_enabled).toBe(true);
-    expect(parsed.reminder_days).toEqual([1, 3]);
+    expect(parsed.schedule_days).toEqual([1, 3]);
   });
 
   it("flags a non-numeric target value", () => {
@@ -85,12 +86,12 @@ describe("form parsing", () => {
 import { rawValues } from "./form-data";
 
 describe("rawValues", () => {
-  it("echoes submitted fields, keeping reminder_days as an array", () => {
+  it("echoes submitted fields, keeping schedule_days as an array", () => {
     const fd = new FormData();
     fd.set("name", "Woda");
     fd.set("$ACTION_ID_abc", "x");
-    fd.append("reminder_days", "1");
-    fd.append("reminder_days", "5");
-    expect(rawValues(fd)).toEqual({ name: "Woda", reminder_days: ["1", "5"] });
+    fd.append("schedule_days", "1");
+    fd.append("schedule_days", "5");
+    expect(rawValues(fd)).toEqual({ name: "Woda", schedule_days: ["1", "5"] });
   });
 });

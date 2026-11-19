@@ -6,7 +6,8 @@ import { ProgressSummary } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
 import { buildHeatmap, currentStreak, heatmapStart, longestStreak } from "@/lib/domain/stats";
 import { goalProgress } from "@/lib/domain/goals";
-import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate } from "@/lib/queries";
+import { isScheduledOn, type Schedule } from "@/lib/domain/schedule";
+import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate, listSchedules } from "@/lib/queries";
 
 const PALETTE = [
   { dot: "#ff8a1f", bg: "#2b1707", border: "#6b3a0f" },
@@ -29,12 +30,17 @@ function Tile({ label, value, hint }: { label: string; value: string; hint?: str
 
 async function Dashboard() {
   const today = todayIn(await getTimeZone());
-  const [habits, completions, counts, goals] = await Promise.all([
+  const [allHabits, completions, counts, goals, allSchedules] = await Promise.all([
     listHabitsForDate(today),
     listCompletions(),
     getHeatmapCounts(heatmapStart(today), today),
     listGoals(false),
+    listSchedules(),
   ]);
+  const schedulesByHabit = new Map<string, Schedule[]>();
+  for (const s of allSchedules) schedulesByHabit.set(s.habit_id, [...(schedulesByHabit.get(s.habit_id) ?? []), s]);
+  // Habits that are not due today stay off the dashboard (they can still be logged as a bonus).
+  const habits = allHabits.filter((h) => isScheduledOn(schedulesByHabit.get(h.id) ?? [], today));
   const goalEntries = await listGoalEntries(goals.map((g) => g.id));
   const goalRows = goals.map((g) => ({
     goal: g,
@@ -62,11 +68,12 @@ async function Dashboard() {
 
   const rows = habits.map((h) => {
     const dates = datesByHabit.get(h.id) ?? [];
+    const scheduled = (d: string) => isScheduledOn(schedulesByHabit.get(h.id) ?? [], d);
     return {
       habit: h,
       doneToday: dates.includes(today),
-      streak: currentStreak(dates, today),
-      best: longestStreak(dates),
+      streak: currentStreak(dates, today, scheduled),
+      best: longestStreak(dates, scheduled),
     };
   });
 

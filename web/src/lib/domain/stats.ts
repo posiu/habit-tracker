@@ -1,30 +1,42 @@
 import { addDays } from "./entries";
 
-/**
- * Current streak (port of Rails Habits::CalculateStreakService): consecutive completed days
- * ending at the latest completed day. 0 when nothing is completed or the latest completed
- * day is older than yesterday (a streak is still alive until the end of "today").
- */
-export function currentStreak(completedDates: Iterable<string>, today: string): number {
-  const days = new Set(completedDates);
-  if (days.size === 0) return 0;
-  const latest = [...days].sort().at(-1)!;
-  if (latest < addDays(today, -1)) return 0;
+export type ScheduledOn = (date: string) => boolean;
+const always: ScheduledOn = () => true;
 
+/**
+ * Current streak: consecutive scheduled days completed, counted back from today. A scheduled
+ * day that is not done yet does not break it (it is alive until the end of "today"). Days
+ * outside the schedule are skipped, and a bonus entry on such a day neither extends nor breaks it.
+ */
+export function currentStreak(completedDates: Iterable<string>, today: string, scheduled: ScheduledOn = always): number {
+  const done = new Set(completedDates);
+  if (done.size === 0) return 0;
+  const earliest = [...done].sort()[0];
+
+  let d = today;
+  if (scheduled(d) && !done.has(d)) d = addDays(d, -1);
   let streak = 0;
-  for (let d = latest; days.has(d); d = addDays(d, -1)) streak++;
+  while (d >= earliest) {
+    if (scheduled(d)) {
+      if (!done.has(d)) break;
+      streak++;
+    }
+    d = addDays(d, -1);
+  }
   return streak;
 }
 
-export function longestStreak(completedDates: Iterable<string>): number {
-  const sorted = [...new Set(completedDates)].sort();
+export function longestStreak(completedDates: Iterable<string>, scheduled: ScheduledOn = always): number {
+  const done = new Set(completedDates);
+  if (done.size === 0) return 0;
+  const sorted = [...done].sort();
+  const last = sorted.at(-1)!;
   let best = 0;
   let run = 0;
-  let prev: string | null = null;
-  for (const d of sorted) {
-    run = prev !== null && addDays(prev, 1) === d ? run + 1 : 1;
+  for (let d = sorted[0]; d <= last; d = addDays(d, 1)) {
+    if (!scheduled(d)) continue;
+    run = done.has(d) ? run + 1 : 0;
     best = Math.max(best, run);
-    prev = d;
   }
   return best;
 }

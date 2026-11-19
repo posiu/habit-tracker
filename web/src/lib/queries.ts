@@ -18,8 +18,6 @@ export type Habit = {
   is_active: boolean;
   start_date: string;
   end_date: string | null;
-  reminder_enabled: boolean;
-  reminder_days: number[];
   identity: string | null;
   plan_text: string | null;
   minimum_text: string | null;
@@ -52,7 +50,7 @@ export async function getCategory(id: string): Promise<Category | null> {
 }
 
 const HABIT_COLUMNS =
-  "id,name,habit_type,unit,target_value,is_active,start_date,end_date,reminder_enabled,reminder_days,identity,plan_text,minimum_text,anchor_habit_id,category_id,categories(name,color)";
+  "id,name,habit_type,unit,target_value,is_active,start_date,end_date,identity,plan_text,minimum_text,anchor_habit_id,category_id,categories(name,color)";
 
 export async function listHabits(activeOnly: boolean): Promise<Habit[]> {
   const supabase = await createClient();
@@ -250,4 +248,16 @@ export async function getDayGoalEntries(date: string): Promise<DayGoalEntry[]> {
     .eq("daily_entries.entry_date", date);
   if (error) throw error;
   return data as unknown as DayGoalEntry[];
+}
+
+export type HabitSchedule = { habit_id: string; effective_from: string; days: number[] };
+
+export async function listSchedules(habitIds?: string[]): Promise<HabitSchedule[]> {
+  if (habitIds && habitIds.length === 0) return [];
+  const supabase = await createClient();
+  let q = supabase.from("habit_schedules").select("habit_id,effective_from,days").order("effective_from");
+  if (habitIds) q = q.in("habit_id", habitIds);
+  const { data, error } = await q;
+  if (error) throw error;
+  return data;
 }

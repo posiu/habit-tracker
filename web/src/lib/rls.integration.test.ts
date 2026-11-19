@@ -82,6 +82,18 @@ describe("row level security", () => {
     expect(ok.error).toBeNull();
   });
 
+  it("keeps schedules private and validates days", async () => {
+    const mine = await a.client.from("habit_schedules").insert({ habit_id: habitA, effective_from: "2026-01-01", days: [1, 3] });
+    expect(mine.error).toBeNull();
+    expect((await b.client.from("habit_schedules").select("id")).data).toEqual([]);
+    const sneaky = await b.client.from("habit_schedules").insert({ habit_id: habitA, effective_from: "2026-02-01", days: [1] });
+    expect(sneaky.error).not.toBeNull();
+    const bad = await a.client.from("habit_schedules").insert({ habit_id: habitA, effective_from: "2026-03-01", days: [7] });
+    expect(bad.error).not.toBeNull();
+    const empty = await a.client.from("habit_schedules").insert({ habit_id: habitA, effective_from: "2026-04-01", days: [] });
+    expect(empty.error).not.toBeNull();
+  });
+
   it("cannot log an entry for another user's habit", async () => {
     const day = await b.client.from("daily_entries").insert({ entry_date: "2026-01-01" }).select("id").single();
     const r = await b.client.from("habit_entries").insert({ daily_entry_id: day.data!.id, habit_id: habitA });
