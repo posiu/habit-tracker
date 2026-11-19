@@ -14,7 +14,7 @@ async function Settings() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-4 rounded-3xl bg-surface p-4">
-        <span aria-hidden="true" className="flex size-13 items-center justify-center rounded-full bg-warn-bg text-xl font-bold text-warn">
+        <span aria-hidden="true" className="flex size-13 items-center justify-center rounded-full bg-accent-soft text-xl font-bold text-accent-ink">
           {email.slice(0, 1).toUpperCase()}
         </span>
         <p className="text-[17px] font-semibold">{email}</p>

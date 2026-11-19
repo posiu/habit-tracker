@@ -53,7 +53,7 @@ export function AuthForm({ title, submitLabel, action, alt, passwordAutoComplete
         <button
           type="submit"
           disabled={pending}
-          className="h-14 w-full rounded-full bg-accent text-base font-semibold text-black disabled:opacity-60"
+          className="h-14 w-full rounded-full bg-accent text-base font-semibold text-accent-text disabled:opacity-60"
         >
           {pending ? "Chwileczkę…" : submitLabel}
         </button>

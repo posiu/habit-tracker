@@ -36,7 +36,7 @@ export function BottomNav() {
       <Link
         href="/habits/new"
         aria-label="Dodaj nawyk"
-        className="flex size-16 items-center justify-center rounded-full bg-accent text-black"
+        className="flex size-16 items-center justify-center rounded-full bg-accent text-accent-text"
       >
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
