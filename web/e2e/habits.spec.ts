@@ -77,6 +77,7 @@ test("sign up, manage categories and habits", async ({ page }) => {
   await expect(ui().getByText("Brak kategorii. Dodaj pierwszą.")).toBeVisible();
 
   // logout
+  await page.goto("/ustawienia");
   await page.getByRole("button", { name: "Wyloguj" }).click();
   await expect(page).toHaveURL(/\/login/);
 });

@@ -261,3 +261,22 @@ export async function listSchedules(habitIds?: string[]): Promise<HabitSchedule[
   if (error) throw error;
   return data;
 }
+
+/** Daily entries (date + mood) in a range; a year is well under PostgREST's 1000-row cap. */
+export async function listDailyEntries(from: string, to: string): Promise<{ entry_date: string; mood: number | null }[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("daily_entries")
+    .select("entry_date,mood")
+    .gte("entry_date", from)
+    .lte("entry_date", to)
+    .order("entry_date");
+  if (error) throw error;
+  return data;
+}
+
+export async function getUserEmail(): Promise<string> {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  return String(data?.claims.email ?? "");
+}
