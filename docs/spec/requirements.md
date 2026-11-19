@@ -14,12 +14,12 @@
 
 | ID | Wymaganie | Kryteria akceptacji | Stan |
 |---|---|---|---|
-| AUTH-1 | Rejestracja tylko na zaproszenie: link w e-mailu | Właściciel wpisuje e-mail w aplikacji (ADM-1), osoba dostaje link i sama ustawia hasło. Publiczna rejestracja jest wyłączona, a wejście na `/signup` bez zaproszenia nie tworzy konta. | ❌ rejestracja jest otwarta |
+| AUTH-1 | Rejestracja tylko na zaproszenie: link w e-mailu | ✅ zaproszenie e-mailem (polski szablon, link ustawia hasło); /signup wyłączony poza ALLOW_PUBLIC_SIGNUP; w produkcji wyłączyć też rejestrację w Supabase |
 | AUTH-2 | Logowanie i wylogowanie e-mailem i hasłem | Poprawne dane logują, błędne dają ogólny komunikat, wylogowanie kończy sesję. | ✅ |
-| AUTH-3 | Reset hasła przez e-mail | Użytkownik prosi o link, ustawia nowe hasło, stare przestaje działać. | ❌ |
+| AUTH-3 | Reset hasła przez e-mail | ✅ reset hasła linkiem z e-maila (/reset → /haslo) |
 | AUTH-4 | Prywatność danych | Użytkownik nie widzi, nie zmienia i nie usuwa cudzych danych (także przez powiązania typu nawyk → kategoria). | ✅ polityki RLS + testy |
 
-| ADM-1 | Administrator (właściciel): zaproszenia i usuwanie kont | Tylko właściciel widzi ekran administratora. Może zaprosić e-mail i usunąć konto na prośbę użytkownika (razem z danymi). Klucz serwisowy Supabase żyje wyłącznie po stronie serwera. | ❌ |
+| ADM-1 | Administrator (właściciel): zaproszenia i usuwanie kont | ✅ panel Ustawienia → Zaproszenia: lista, zaproszenie, usunięcie konta; admin = ADMIN_EMAILS, klucz serwisowy tylko po stronie serwera |
 
 ## 2. Nawyki
 

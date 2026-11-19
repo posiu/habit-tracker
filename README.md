@@ -51,6 +51,9 @@ Skopiuj `web/.env.example` do `web/.env.local` i uzupełnij dwie zmienne wartoś
 ```
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:57321
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<Publishable key z supabase status>
+SUPABASE_SECRET_KEY=<SECRET_KEY z `npx supabase status -o env`, tylko serwer>
+ADMIN_EMAILS=twoj@email.pl   # kto może zapraszać i usuwać konta
+# ALLOW_PUBLIC_SIGNUP=true   # opcjonalnie: otwiera /signup (rozwój lokalny, testy)
 ```
 
 ```bash
@@ -89,8 +92,8 @@ Migracje SQL (`web/supabase/migrations`) są jedynym źródłem prawdy o schemac
 ## Deploy (plan)
 
 1. Utworzyć projekt Supabase i zastosować migracje (`npx supabase link`, `npx supabase db push`).
-2. W Supabase Auth włączyć potwierdzanie e-mail i ustawić adresy przekierowań na domenę Vercel.
-3. W Vercel zaimportować repozytorium z **Root Directory = `web`** i ustawić zmienne `NEXT_PUBLIC_SUPABASE_URL` oraz `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+2. W Supabase Auth: **wyłączyć rejestrację** (Sign In / Providers → „Allow new users to sign up” off), włączyć potwierdzanie e-mail, ustawić Site URL na domenę Vercel i wkleić polskie szablony e-mail z `web/supabase/templates/` (Invite user, Reset password).
+3. W Vercel zaimportować repozytorium z **Root Directory = `web`** i ustawić zmienne `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` oraz (tylko serwer) `SUPABASE_SECRET_KEY` i `ADMIN_EMAILS`.
 
 ## Legacy
 

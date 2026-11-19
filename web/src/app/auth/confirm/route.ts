@@ -2,7 +2,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse, type NextRequest } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
-// Target of the confirmation link in e-mails (needed once confirmations are on).
+// Target of the links in invitation, confirmation and password-reset e-mails (token-hash flow).
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const tokenHash = searchParams.get("token_hash");
@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
     const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
     if (!error) {
-      redirectTo.pathname = "/";
+      const next = searchParams.get("next");
+      // only same-site relative paths
+      redirectTo.pathname = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
       return NextResponse.redirect(redirectTo);
     }
   }

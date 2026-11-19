@@ -8,11 +8,12 @@ type Props = {
   title: string;
   submitLabel: string;
   action: (prev: AuthState, formData: FormData) => Promise<AuthState>;
-  alt: { text: string; href: string; label: string };
+  alt?: { text: string; href: string; label: string };
+  extra?: { href: string; label: string };
   passwordAutoComplete: "current-password" | "new-password";
 };
 
-export function AuthForm({ title, submitLabel, action, alt, passwordAutoComplete }: Props) {
+export function AuthForm({ title, submitLabel, action, alt, extra, passwordAutoComplete }: Props) {
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
@@ -58,12 +59,21 @@ export function AuthForm({ title, submitLabel, action, alt, passwordAutoComplete
           {pending ? "Chwileczkę…" : submitLabel}
         </button>
 
-        <p className="text-sm text-muted">
-          {alt.text}{" "}
-          <Link href={alt.href} className="underline">
-            {alt.label}
-          </Link>
-        </p>
+        {alt && (
+          <p className="text-sm text-muted">
+            {alt.text}{" "}
+            <Link href={alt.href} className="underline">
+              {alt.label}
+            </Link>
+          </p>
+        )}
+        {extra && (
+          <p className="text-sm text-muted">
+            <Link href={extra.href} className="underline">
+              {extra.label}
+            </Link>
+          </p>
+        )}
       </form>
     </main>
   );
