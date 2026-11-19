@@ -32,7 +32,7 @@
 | HAB-5 | Seria: kolejne zaplanowane dni ukończone; żyje do końca dzisiejszego dnia; pokazujemy też rekord | ✅ serie uwzględniają harmonogram (dni spoza są pomijane) |
 | HAB-6 | Przypomnienia | ✅ pola przypomnień usunięte z formularza i bazy |
 | HAB-7 | Plan wykonania (Atomic Habits): pola „kiedy” i „gdzie” oraz opcjonalne powiązanie z innym nawykiem („po tym, jak zrobię…”) | Pola widoczne na karcie i w szczegółach nawyku, niewymagane. Powiązany nawyk to ten sam użytkownik, bez cykli. | 🟡 pola i powiązanie są (migracja 20261118000001/2), kafelek pokazuje „kiedy i gdzie”, brak walidacji cykli |
-| HAB-8 | Wersja dwuminutowa: minimum, które też liczy się jako wykonanie | Nawyk ma opcjonalny opis minimum. Szybki zapis „minimum” oznacza nawyk jako ukończony i jest odróżnialny w historii. | 🟡 tekst wersji 2-minutowej zapisywany; brak szybkiego zapisu „minimum” |
+| HAB-8 | Wersja dwuminutowa: minimum, które też liczy się jako wykonanie | Nawyk ma opcjonalny opis minimum. Szybki zapis „minimum” oznacza nawyk jako ukończony i jest odróżnialny w historii. | ✅ przycisk „Tylko 2 min” na kafelku Dziś (`habit_entries.is_minimum`), stan „✓ Minimum”; zapis pełnego dnia zeruje flagę |
 | HAB-9 | Tożsamość: nawyk przypisany do opisu „kim się staję” | Podsumowanie pokazuje liczbę „głosów” (ukończeń) na każdą tożsamość. Wiele nawyków może wspierać jedną tożsamość. | 🟡 tożsamość jako tekst nawyku; brak podsumowania głosów |
 | HAB-10 | „Nie przegap dwa razy”: podpowiedź na pulpicie | Nawyk pominięty wczoraj jest wyróżniony na pulpicie. Reguła serii z HAB-5 bez zmian, to tylko podpowiedź. | ❌ |
 

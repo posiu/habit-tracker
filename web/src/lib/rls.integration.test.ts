@@ -151,6 +151,17 @@ describe("row level security", () => {
       expect(days.data![0].habit_entries).toEqual([]);
     });
 
+    it("clears the minimum flag when the full day form is saved", async () => {
+      const day = await a.client.from("daily_entries").select("id").eq("entry_date", date).single();
+      await a.client
+        .from("habit_entries")
+        .insert({ daily_entry_id: day.data!.id, habit_id: numericHabit, completed: true, is_minimum: true });
+      const full = { habit_id: numericHabit, completed: true, boolean_value: null, numeric_value: 4, time_value: null };
+      expect((await save(a.client, { entries: [full] })).error).toBeNull();
+      const row = await a.client.from("habit_entries").select("is_minimum,numeric_value").eq("daily_entry_id", day.data!.id).single();
+      expect(row.data).toEqual({ is_minimum: false, numeric_value: 4 });
+    });
+
     it("rolls back everything when an entry is invalid", async () => {
       const bad = { habit_id: habitA, completed: true, boolean_value: null, numeric_value: 1, time_value: null };
       const r = await save(b.client, { entries: [bad], mood: 3 }); // habitA belongs to user A

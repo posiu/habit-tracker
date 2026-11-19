@@ -74,7 +74,7 @@ export async function getHabit(id: string): Promise<Habit | null> {
   return data;
 }
 
-export type DayHabit = Pick<Habit, "id" | "name" | "habit_type" | "unit" | "target_value" | "start_date" | "end_date" | "plan_text">;
+export type DayHabit = Pick<Habit, "id" | "name" | "habit_type" | "unit" | "target_value" | "start_date" | "end_date" | "plan_text" | "minimum_text">;
 
 export type DayEntry = {
   id: string;
@@ -99,7 +99,7 @@ export async function listHabitsForDate(date: string): Promise<DayHabit[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("habits")
-    .select("id,name,habit_type,unit,target_value,start_date,end_date,plan_text")
+    .select("id,name,habit_type,unit,target_value,start_date,end_date,plan_text,minimum_text")
     .lte("start_date", date)
     .or(`end_date.is.null,end_date.gte.${date}`)
     .order("position")
@@ -138,6 +138,18 @@ export async function listCompletions(habitId?: string): Promise<{ habit_id: str
     }
     if (data.length < PAGE) return out;
   }
+}
+
+/** Habits whose entry on the given day was a quick "minimum" check-in. */
+export async function listMinimumHabitIds(date: string): Promise<Set<string>> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("habit_entries")
+    .select("habit_id,daily_entries!inner(entry_date)")
+    .eq("is_minimum", true)
+    .eq("daily_entries.entry_date", date);
+  if (error) throw error;
+  return new Set(data.map((r) => r.habit_id));
 }
 
 /** Days with activity for the heatmap (days without any are omitted). */
