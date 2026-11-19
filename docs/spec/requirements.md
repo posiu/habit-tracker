@@ -68,7 +68,7 @@
 
 | ID | Wymaganie | Kryteria akceptacji | Stan |
 |---|---|---|---|
-| SET-1 | Ustawienia profilu: imię, strefa czasowa | 🟡 strefa czasowa edytowalna w Ustawieniach; brak edycji profilu |
+| SET-1 | Ustawienia profilu: imię, strefa czasowa | ✅ imię, nazwisko i strefa czasowa edytowalne w Ustawieniach; imię widoczne w nagłówku |
 | SET-2 | Zarządzanie danymi | Użytkownik sam eksportuje dane do CSV (REP-3). Konto usuwa właściciel na prośbę (ADM-1). | ❌ |
 
 ## 7. Wymagania niefunkcjonalne
