@@ -13,7 +13,7 @@ async function Form() {
 export default function NewGoalPage() {
   return (
     <main className="space-y-6">
-      <h1 className="text-2xl font-semibold">Nowy cel</h1>
+      <h1 className="text-[34px] font-bold tracking-tight">Nowy cel</h1>
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Form />
       </Suspense>

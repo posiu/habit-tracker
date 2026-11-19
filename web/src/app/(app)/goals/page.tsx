@@ -17,15 +17,15 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
   return (
     <>
       <div className="flex gap-4 text-sm">
-        <Link href="/goals" className={closed ? "text-zinc-500" : "font-semibold underline"}>
+        <Link href="/goals" className={closed ? "text-muted" : "font-semibold underline"}>
           Aktywne
         </Link>
-        <Link href="/goals?view=closed" className={closed ? "font-semibold underline" : "text-zinc-500"}>
+        <Link href="/goals?view=closed" className={closed ? "font-semibold underline" : "text-muted"}>
           Zamknięte
         </Link>
       </div>
       {goals.length === 0 ? (
-        <p className="text-sm text-zinc-500">{closed ? "Brak zamkniętych celów." : "Brak celów. Dodaj pierwszy."}</p>
+        <p className="text-sm text-muted">{closed ? "Brak zamkniętych celów." : "Brak celów. Dodaj pierwszy."}</p>
       ) : (
         <ul className="space-y-4">
           {goals.map((g) => {
@@ -44,12 +44,12 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
             );
             const left = goalDaysRemaining(g, today);
             return (
-              <li key={g.id} className="space-y-2 rounded-lg border border-zinc-200 p-4 dark:border-zinc-800" data-testid="goal-card">
+              <li key={g.id} className="space-y-2 rounded-3xl bg-surface p-4" data-testid="goal-card">
                 <div className="flex flex-wrap items-baseline gap-x-3">
                   <Link href={`/goals/${g.id}`} className="font-medium underline">
                     {g.name}
                   </Link>
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-muted">
                     {GOAL_TYPE_LABELS[g.goal_type]}
                     {g.categories && ` · ${g.categories.name}`}
                     {left !== null && !g.completed_at && ` · ${left >= 0 ? `zostało ${left} dni` : `${-left} dni po terminie`}`}
@@ -91,8 +91,8 @@ export default function GoalsPage(props: PageProps<"/goals">) {
   return (
     <main className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Cele</h1>
-        <Link href="/goals/new" className="rounded-md bg-zinc-900 px-3 py-1.5 text-sm text-white dark:bg-zinc-100 dark:text-zinc-900">
+        <h1 className="text-[34px] font-bold tracking-tight">Cele</h1>
+        <Link href="/goals/new" className="flex h-11 items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold">
           Nowy cel
         </Link>
       </div>

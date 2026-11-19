@@ -25,7 +25,7 @@ async function Editor({ params }: { params: PageProps<"/habits/[id]/edit">["para
 export default function EditHabitPage(props: PageProps<"/habits/[id]/edit">) {
   return (
     <main className="space-y-6">
-      <h1 className="text-2xl font-semibold">Edytuj nawyk</h1>
+      <h1 className="text-[34px] font-bold tracking-tight">Edytuj nawyk</h1>
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Editor params={props.params} />
       </Suspense>

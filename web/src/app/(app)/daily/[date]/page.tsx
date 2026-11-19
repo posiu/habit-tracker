@@ -35,7 +35,7 @@ async function Day({ params }: { params: PageProps<"/daily/[date]">["params"] })
 export default function DayPage(props: PageProps<"/daily/[date]">) {
   return (
     <main className="space-y-6">
-      <h1 className="text-2xl font-semibold">Dzień</h1>
+      <h1 className="text-[34px] font-bold tracking-tight">Dzień</h1>
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Day params={props.params} />
       </Suspense>

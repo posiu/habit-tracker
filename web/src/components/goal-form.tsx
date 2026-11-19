@@ -21,7 +21,7 @@ export function GoalForm({ goal, categories, defaultStart }: { goal?: Goal; cate
   return (
     <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-4">
       {e._form && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {e._form}
         </p>
       )}
@@ -37,7 +37,7 @@ export function GoalForm({ goal, categories, defaultStart }: { goal?: Goal; cate
           ))}
         </select>
       </Field>
-      <p className="text-xs text-zinc-500">{GOAL_TYPE_HINTS[type]}</p>
+      <p className="text-xs text-muted">{GOAL_TYPE_HINTS[type]}</p>
 
       {type === "target_value" && (
         <div className="grid grid-cols-2 gap-4">

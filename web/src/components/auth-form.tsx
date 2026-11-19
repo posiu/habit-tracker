@@ -16,49 +16,49 @@ export function AuthForm({ title, submitLabel, action, alt, passwordAutoComplete
   const [state, formAction, pending] = useActionState(action, undefined);
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
-      <form action={formAction} className="w-full max-w-sm space-y-4">
-        <h1 className="text-2xl font-semibold">{title}</h1>
+    <main className="flex min-h-screen items-center justify-center px-6 py-10">
+      <form action={formAction} className="w-full max-w-sm space-y-5">
+        <h1 className="text-[34px] font-bold leading-tight tracking-tight">{title}</h1>
 
-        <label className="block space-y-1 text-sm">
-          <span>E-mail</span>
+        <label className="block space-y-1.5 text-sm">
+          <span className="block text-xs text-muted">E-mail</span>
           <input
             name="email"
             type="email"
             required
             autoComplete="email"
-            className="w-full rounded-md border border-zinc-300 bg-transparent px-3 py-2 dark:border-zinc-700"
+            className="w-full rounded-2xl border-0 bg-surface px-4 py-3 text-base outline-none focus:ring-2 focus:ring-accent"
           />
         </label>
 
-        <label className="block space-y-1 text-sm">
-          <span>Hasło</span>
+        <label className="block space-y-1.5 text-sm">
+          <span className="block text-xs text-muted">Hasło</span>
           <input
             name="password"
             type="password"
             required
             minLength={8}
             autoComplete={passwordAutoComplete}
-            className="w-full rounded-md border border-zinc-300 bg-transparent px-3 py-2 dark:border-zinc-700"
+            className="w-full rounded-2xl border-0 bg-surface px-4 py-3 text-base outline-none focus:ring-2 focus:ring-accent"
           />
         </label>
 
         {state?.error && (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="text-sm text-red-400">
             {state.error}
           </p>
         )}
-        {state?.message && <p className="text-sm text-green-700 dark:text-green-400">{state.message}</p>}
+        {state?.message && <p className="text-sm text-[#8ce563]">{state.message}</p>}
 
         <button
           type="submit"
           disabled={pending}
-          className="w-full rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
+          className="h-14 w-full rounded-full bg-accent text-base font-semibold text-black disabled:opacity-60"
         >
           {pending ? "Chwileczkę…" : submitLabel}
         </button>
 
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        <p className="text-sm text-muted">
           {alt.text}{" "}
           <Link href={alt.href} className="underline">
             {alt.label}

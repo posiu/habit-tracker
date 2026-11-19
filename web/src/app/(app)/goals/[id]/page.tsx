@@ -36,8 +36,8 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
   return (
     <>
       <div className="space-y-1">
-        <h1 className="text-2xl font-semibold">{goal.name}</h1>
-        <p className="text-sm text-zinc-500">
+        <h1 className="text-[34px] font-bold tracking-tight">{goal.name}</h1>
+        <p className="text-sm text-muted">
           {GOAL_TYPE_LABELS[goal.goal_type]} · od {goal.start_date}
           {goal.target_date && ` do ${goal.target_date}`}
           {goal.categories && ` · ${goal.categories.name}`}
@@ -56,13 +56,13 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
       <section className="space-y-2">
         <h2 className="text-sm font-semibold">Wpisy</h2>
         {sorted.length === 0 ? (
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-muted">
             {goal.goal_type === "target_date" || goal.goal_type === "custom"
               ? "Ten typ celu nie ma wpisów dziennych."
               : "Brak wpisów. Dodaj je na ekranie dnia."}
           </p>
         ) : (
-          <ul className="divide-y divide-zinc-200 text-sm dark:divide-zinc-800">
+          <ul className="space-y-2 text-sm">
             {sorted.slice(0, 50).map((e) => (
               <li key={e.date} className="flex justify-between py-2">
                 <Link href={`/daily/${e.date}`} className="underline">

@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { saveDay, type DayState } from "@/app/(app)/daily/actions";
 import { MOODS, formatDayPl } from "@/lib/domain/entries";
 import type { DayEntry, DayGoal, DayGoalEntry, DayHabit } from "@/lib/queries";
-import { Field, SubmitButton, inputClass } from "./field";
+import { Field, SubmitButton, chipClass, inputClass } from "./field";
 
 type Props = {
   date: string;
@@ -34,8 +34,8 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
   };
 
   return (
-    <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-6">
-      <div className="flex items-center justify-between text-sm">
+    <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-6 pb-4">
+      <div className="flex items-center justify-between gap-3 text-sm">
         <Link href={`/daily/${prevDate}`} className="underline" aria-label="Poprzedni dzień">
           ← Wcześniej
         </Link>
@@ -50,12 +50,12 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
       </div>
 
       {e._form && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role="alert" className="text-sm text-red-400">
           {e._form}
         </p>
       )}
       {state?.saved && (
-        <p role="status" className="text-sm text-green-700 dark:text-green-400">
+        <p role="status" className="text-sm text-[#8ce563]">
           Zapisano.
         </p>
       )}
@@ -63,7 +63,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
       <section className="space-y-3">
         <h3 className="text-sm font-semibold">Nawyki</h3>
         {habits.length === 0 ? (
-          <p className="text-sm text-zinc-500">Brak nawyków w tym dniu. Dodaj je w zakładce Nawyki.</p>
+          <p className="text-sm text-muted">Brak nawyków w tym dniu. Dodaj je w zakładce Nawyki.</p>
         ) : (
           <ul className="space-y-3">
             {habits.map((h) => {
@@ -72,10 +72,11 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
               return (
                 <li key={h.id}>
                   {h.habit_type === "boolean" ? (
-                    <label className="flex items-center gap-3 text-sm">
+                    <label className="flex min-h-12 items-center gap-3 rounded-2xl bg-surface px-4 text-sm">
                       <input
                         type="checkbox"
                         name={name}
+                        className="size-5 accent-[#ff8a1f]"
                         defaultChecked={sv ? sv[name] === "on" : (entryFor(h.id)?.completed ?? false)}
                       />
                       {h.name}
@@ -84,7 +85,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                     <Field label={h.target_value != null ? `${h.name} (cel ${h.target_value}${unit ? ` ${unit}` : ""})` : h.name} error={e[name]}>
                       <div className="flex items-center gap-2">
                         <input name={name} inputMode="decimal" defaultValue={defaultFor(h)} className={inputClass} />
-                        {unit && <span className="text-sm text-zinc-500">{unit}</span>}
+                        {unit && <span className="text-sm text-muted">{unit}</span>}
                       </div>
                       {!sv && h.target_value != null && entryFor(h.id) && (
                         <p className="mt-1 text-xs text-muted">{entryFor(h.id)?.completed ? "✓ Cel osiągnięty" : "Poniżej celu"}</p>
@@ -115,7 +116,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                         {g.name}
                       </label>
                       <div className="flex items-center gap-2">
-                        <select name={`${name}_dir`} defaultValue={dir} aria-label={`Kierunek zmiany: ${g.name}`} className="rounded-md border border-zinc-300 bg-transparent px-2 py-2 text-sm dark:border-zinc-700">
+                        <select name={`${name}_dir`} defaultValue={dir} aria-label={`Kierunek zmiany: ${g.name}`} className="rounded-2xl border-0 bg-surface-2 px-3 py-3 text-base">
                           <option value="inc">+</option>
                           <option value="dec">−</option>
                         </select>
@@ -126,10 +127,10 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                           defaultValue={sv ? String(sv[name] ?? "") : String(entry?.value ?? "")}
                           className={inputClass}
                         />
-                        {g.unit && <span className="text-sm text-zinc-500">{g.unit}</span>}
+                        {g.unit && <span className="text-sm text-muted">{g.unit}</span>}
                       </div>
                       {e[name] && (
-                        <span role="alert" className="block text-red-600">
+                        <span role="alert" className="block text-red-400">
                           {e[name]}
                         </span>
                       )}
@@ -146,7 +147,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
                       defaultChecked={sv ? sv[name] === "on" : entry?.boolean_value === true}
                     />
                     {g.name}
-                    <span className="text-xs text-zinc-500">{g.goal_type === "days_without" ? "(dzień bez)" : "(dzień z działaniem)"}</span>
+                    <span className="text-xs text-muted">{g.goal_type === "days_without" ? "(dzień bez)" : "(dzień z działaniem)"}</span>
                   </label>
                 </li>
               );
@@ -156,16 +157,17 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
       )}
 
       <fieldset className="space-y-2">
-        <legend className="text-sm font-semibold">Nastrój</legend>
+        <legend className="mb-2 text-sm font-semibold">Nastrój</legend>
         <div className="flex flex-wrap gap-3 text-sm">
-          <label className="flex items-center gap-1">
-            <input type="radio" name="mood" value="" defaultChecked={sv ? !sv.mood : day?.mood == null} />
+          <label className={chipClass}>
+            <input type="radio" name="mood" value="" className="sr-only" defaultChecked={sv ? !sv.mood : day?.mood == null} />
             Brak
           </label>
           {MOODS.map((m) => (
-            <label key={m.value} className="flex items-center gap-1">
+            <label key={m.value} className={chipClass}>
               <input
                 type="radio"
+                className="sr-only"
                 name="mood"
                 value={m.value}
                 defaultChecked={sv ? sv.mood === String(m.value) : day?.mood === m.value}
@@ -175,7 +177,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
           ))}
         </div>
         {e.mood && (
-          <p role="alert" className="text-sm text-red-600">
+          <p role="alert" className="text-sm text-red-400">
             {e.mood}
           </p>
         )}

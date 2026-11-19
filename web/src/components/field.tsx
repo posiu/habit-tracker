@@ -1,17 +1,21 @@
 import type { ReactNode } from "react";
 
 export const inputClass =
-  "w-full rounded-md border border-zinc-300 bg-transparent px-3 py-2 text-sm dark:border-zinc-700";
+  "w-full rounded-2xl border-0 bg-surface-2 px-4 py-3 text-base text-foreground outline-none placeholder:text-[#8a8a94] focus:ring-2 focus:ring-accent";
+
+/** Pill used for single/multi choices (weekdays, moods): style via the hidden input's :checked state. */
+export const chipClass =
+  "flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-surface-2 px-4 text-sm font-semibold text-[#c8c8d0] has-[:checked]:bg-[#e4e4ea] has-[:checked]:text-black has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent";
 
 export function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
     <div className="space-y-1 text-sm">
-      <label className="block space-y-1">
-        <span className="font-medium">{label}</span>
+      <label className="block space-y-1.5">
+        <span className="block text-xs text-muted">{label}</span>
         {children}
       </label>
       {error && (
-        <span role="alert" className="block text-red-600">
+        <span role="alert" className="block text-red-400">
           {error}
         </span>
       )}
@@ -24,7 +28,7 @@ export function SubmitButton({ pending, children }: { pending: boolean; children
     <button
       type="submit"
       disabled={pending}
-      className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
+      className="h-14 flex-1 rounded-full bg-accent px-6 text-base font-semibold text-black disabled:opacity-60"
     >
       {pending ? "Zapisywanie…" : children}
     </button>
