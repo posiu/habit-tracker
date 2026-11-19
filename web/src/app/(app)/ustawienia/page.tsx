@@ -3,10 +3,11 @@ import { Suspense } from "react";
 import { logout } from "@/app/(auth)/actions";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { TimeZoneForm } from "@/components/time-zone-form";
+import { getSessionUser } from "@/lib/admin";
 import { getTimeZone, getUserEmail } from "@/lib/queries";
 
 async function Settings() {
-  const [email, tz] = await Promise.all([getUserEmail(), getTimeZone()]);
+  const [email, tz, me] = await Promise.all([getUserEmail(), getTimeZone(), getSessionUser()]);
   const zones = Intl.supportedValuesOf("timeZone");
   if (!zones.includes(tz)) zones.push(tz);
   const row = "flex min-h-14 items-center justify-between px-4 text-[15px]";
@@ -33,10 +34,16 @@ async function Settings() {
           <span>Kategorie</span>
           <span className="text-muted">›</span>
         </Link>
-        <Link href="/goals" className={row}>
+        <Link href="/goals" className={me?.isAdmin ? `${row} border-b border-surface-2` : row}>
           <span>Cele</span>
           <span className="text-muted">›</span>
         </Link>
+        {me?.isAdmin && (
+          <Link href="/ustawienia/zaproszenia" className={row}>
+            <span>Zaproszenia i użytkownicy</span>
+            <span className="text-muted">›</span>
+          </Link>
+        )}
       </nav>
 
       <div className="overflow-hidden rounded-3xl bg-surface">
