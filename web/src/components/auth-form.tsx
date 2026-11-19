@@ -44,11 +44,11 @@ export function AuthForm({ title, submitLabel, action, alt, passwordAutoComplete
         </label>
 
         {state?.error && (
-          <p role="alert" className="text-sm text-red-400">
+          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
             {state.error}
           </p>
         )}
-        {state?.message && <p className="text-sm text-[#8ce563]">{state.message}</p>}
+        {state?.message && <p className="text-sm text-ok-text">{state.message}</p>}
 
         <button
           type="submit"

@@ -16,7 +16,7 @@ export function CategoryForm({ category }: { category?: Category }) {
 
   return (
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
-      {e._form && <p role="alert" className="text-sm text-red-400">{e._form}</p>}
+      {e._form && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
         <input name="name" required maxLength={100} defaultValue={v("name", category?.name)} className={inputClass} />
       </Field>

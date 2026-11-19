@@ -4,7 +4,7 @@ const STATUS_CLASS: Record<GoalProgress["status"], string> = {
   not_started: "text-muted",
   in_progress: "text-blue-700 dark:text-blue-400",
   reached: "text-emerald-700 dark:text-emerald-400",
-  overdue: "text-red-700 dark:text-red-400",
+  overdue: "text-red-700 dark:text-red-600 dark:text-red-400",
   completed: "text-muted",
 };
 
@@ -34,7 +34,7 @@ export function ProgressSummary({ progress, unit }: { progress: GoalProgress; un
           aria-label="Postęp celu"
           className="h-2 overflow-hidden rounded-full bg-surface-2"
         >
-          <div className="h-full rounded-full bg-[#8ce563]" style={{ width: `${percentage}%` }} />
+          <div className="h-full rounded-full bg-ok" style={{ width: `${percentage}%` }} />
         </div>
       )}
       <p className="flex justify-between text-xs">

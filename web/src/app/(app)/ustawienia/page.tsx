@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { logout } from "@/app/(auth)/actions";
+import { ThemeSwitch } from "@/components/theme-switch";
 import { TimeZoneForm } from "@/components/time-zone-form";
 import { getTimeZone, getUserEmail } from "@/lib/queries";
 
@@ -13,10 +14,14 @@ async function Settings() {
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-4 rounded-3xl bg-surface p-4">
-        <span aria-hidden="true" className="flex size-13 items-center justify-center rounded-full bg-[#2a1f0e] text-xl font-bold text-[#ffb454]">
+        <span aria-hidden="true" className="flex size-13 items-center justify-center rounded-full bg-warn-bg text-xl font-bold text-warn">
           {email.slice(0, 1).toUpperCase()}
         </span>
         <p className="text-[17px] font-semibold">{email}</p>
+      </div>
+
+      <div className="rounded-3xl bg-surface p-4">
+        <ThemeSwitch />
       </div>
 
       <div className="rounded-3xl bg-surface p-4">
@@ -36,12 +41,12 @@ async function Settings() {
 
       <div className="overflow-hidden rounded-3xl bg-surface">
         <form action={logout}>
-          <button type="submit" className={`${row} w-full text-left text-red-400`}>
+          <button type="submit" className={`${row} w-full text-left text-red-600 dark:text-red-400`}>
             Wyloguj
           </button>
         </form>
       </div>
-      <p className="px-2 text-xs leading-5 text-[#8a8a94]">Rejestracja jest tylko na zaproszenie. Usunięcie konta: napisz do administratora.</p>
+      <p className="px-2 text-xs leading-5 text-faint">Rejestracja jest tylko na zaproszenie. Usunięcie konta: napisz do administratora.</p>
     </div>
   );
 }

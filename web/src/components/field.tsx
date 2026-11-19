@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 
 export const inputClass =
-  "w-full rounded-2xl border-0 bg-surface-2 px-4 py-3 text-base text-foreground outline-none placeholder:text-[#8a8a94] focus:ring-2 focus:ring-accent";
+  "w-full rounded-2xl border-0 bg-surface-2 px-4 py-3 text-base text-foreground outline-none placeholder:text-faint focus:ring-2 focus:ring-accent";
 
 /** Pill used for single/multi choices (weekdays, moods): style via the hidden input's :checked state. */
 export const chipClass =
-  "flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-surface-2 px-4 text-sm font-semibold text-[#c8c8d0] has-[:checked]:bg-[#e4e4ea] has-[:checked]:text-black has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent";
+  "flex min-h-11 cursor-pointer items-center gap-1.5 rounded-full bg-surface-2 px-4 text-sm font-semibold text-soft has-[:checked]:bg-chip has-[:checked]:text-chip-text has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent";
 
 export function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
@@ -15,7 +15,7 @@ export function Field({ label, error, children }: { label: string; error?: strin
         {children}
       </label>
       {error && (
-        <span role="alert" className="block text-red-400">
+        <span role="alert" className="block text-red-600 dark:text-red-400">
           {error}
         </span>
       )}

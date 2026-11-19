@@ -59,10 +59,10 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
   });
 
   const cellClass = {
-    done: "bg-[#8ce563]",
-    missed: "bg-white/12",
-    off: "border border-dashed border-[#3a3a42]",
-    future: "border border-[#2a2a30]",
+    done: "bg-ok",
+    missed: "bg-foreground/10",
+    off: "border border-dashed border-line",
+    future: "border border-line",
   } as const;
   const label = { done: "wykonane", missed: "niewykonane", off: "poza harmonogramem", future: "poza zakresem lub w przyszłości" } as const;
   const title = `${MONTHS[Number(month.slice(5)) - 1]} ${month.slice(0, 4)}`;
@@ -106,7 +106,7 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
                       />
                     </td>
                   ))}
-                  <td className="pl-3 text-right text-[#c8c8d0]">{pct === null ? "–" : `${pct}%`}</td>
+                  <td className="pl-3 text-right text-soft">{pct === null ? "–" : `${pct}%`}</td>
                   <td className="pl-3 text-right font-semibold">{streak}</td>
                 </tr>
               ))}
@@ -124,7 +124,7 @@ export default function MonthPage(props: PageProps<"/analiza/miesiac">) {
       <div className="flex items-end justify-between">
         <h1 className="text-[34px] font-bold tracking-tight">Analiza</h1>
         <div className="flex gap-1.5 rounded-full bg-surface-2 p-1 text-sm font-semibold">
-          <span aria-current="page" className="flex h-9 items-center rounded-full bg-[#e4e4ea] px-4 text-black">Miesiąc</span>
+          <span aria-current="page" className="flex h-9 items-center rounded-full bg-chip px-4 text-chip-text">Miesiąc</span>
           <Link href="/analiza" className="flex h-9 items-center rounded-full px-4 text-muted">Rok</Link>
         </div>
       </div>

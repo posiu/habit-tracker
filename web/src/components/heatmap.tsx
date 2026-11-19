@@ -1,11 +1,11 @@
 import type { HeatCell } from "@/lib/domain/stats";
 
 const LEVEL_CLASS = [
-  "bg-white/10",
-  "bg-[#3e5b23]",
-  "bg-[#5e9132]",
-  "bg-[#8ce563]",
-  "bg-[#b9f595]",
+  "bg-foreground/10",
+  "bg-heat-1",
+  "bg-heat-2",
+  "bg-heat-3",
+  "bg-heat-4",
 ] as const;
 
 const DAY_LABELS = ["Pn", "", "Śr", "", "Pt", "", "Nd"];

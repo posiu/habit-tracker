@@ -13,8 +13,8 @@ async function HabitList({ searchParams }: { searchParams: PageProps<"/habits">[
   return (
     <>
       <div className="flex gap-2 text-sm font-semibold">
-        <Link href="/habits" className={`flex h-11 items-center rounded-full px-4 ${archived ? "bg-surface-2 text-muted" : "bg-[#e4e4ea] text-black"}`}>Aktywne</Link>
-        <Link href="/habits?view=archived" className={`flex h-11 items-center rounded-full px-4 ${archived ? "bg-[#e4e4ea] text-black" : "bg-surface-2 text-muted"}`}>Zarchiwizowane</Link>
+        <Link href="/habits" className={`flex h-11 items-center rounded-full px-4 ${archived ? "bg-surface-2 text-muted" : "bg-chip text-chip-text"}`}>Aktywne</Link>
+        <Link href="/habits?view=archived" className={`flex h-11 items-center rounded-full px-4 ${archived ? "bg-chip text-chip-text" : "bg-surface-2 text-muted"}`}>Zarchiwizowane</Link>
       </div>
       {habits.length === 0 ? (
         <p className="text-sm text-muted">{archived ? "Brak zarchiwizowanych nawyków." : "Brak nawyków. Dodaj pierwszy."}</p>

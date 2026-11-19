@@ -10,7 +10,7 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
     <div className="rounded-3xl bg-surface p-4">
       <p className="text-xs text-muted">{label}</p>
       <p className="mt-1 text-3xl font-bold">{value}</p>
-      {hint && <p className="text-xs text-[#c8c8d0]">{hint}</p>}
+      {hint && <p className="text-xs text-soft">{hint}</p>}
     </div>
   );
 }
@@ -49,7 +49,7 @@ export default function AnalysisPage() {
         <h1 className="text-[34px] font-bold tracking-tight">Analiza</h1>
         <div className="flex gap-1.5 rounded-full bg-surface-2 p-1 text-sm font-semibold">
           <Link href="/analiza/miesiac" className="flex h-9 items-center rounded-full px-4 text-muted">Miesiąc</Link>
-          <span aria-current="page" className="flex h-9 items-center rounded-full bg-[#e4e4ea] px-4 text-black">Rok</span>
+          <span aria-current="page" className="flex h-9 items-center rounded-full bg-chip px-4 text-chip-text">Rok</span>
         </div>
       </div>
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>

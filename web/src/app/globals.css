@@ -1,15 +1,67 @@
 @import "tailwindcss";
 
-/* Aplikacja jest ciemna (patrz docs/spec/ui-direction.md). */
+/* Motyw: klasa .dark na <html> (ustawiana skryptem w layout.tsx i przełącznikiem w Ustawieniach). */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  color-scheme: light;
+  --background: #f5f5f7;
+  --foreground: #111114;
+  --surface: #ffffff;
+  --surface-2: #e9e9ee;
+  --muted: #5f5f6b;
+  --soft: #44444e;
+  --faint: #8a8a94;
+  --line: #d4d4dc;
+  --accent: #ff8a1f;
+  --chip: #111114;
+  --chip-text: #ffffff;
+  --nav-active: #ffffff;
+  --ok: #6cc24a;
+  --ok-text: #2c7d19;
+  --warn: #8a4f00;
+  --warn-bg: #fff0d9;
+  --heat-1: #c9e8b8;
+  --heat-2: #97d476;
+  --heat-3: #5fba3a;
+  --heat-4: #2f8f1c;
+
+  --h1-dot: #ff8a1f; --h1-bg: #fff1e0; --h1-border: #f5c68f;
+  --h2-dot: #2a9fd0; --h2-bg: #e3f4fb; --h2-border: #9bd3ea;
+  --h3-dot: #7b6df0; --h3-bg: #eeebff; --h3-border: #c3bbfa;
+  --h4-dot: #e84a72; --h4-bg: #ffe8ee; --h4-border: #f5a9bc;
+  --h5-dot: #4fae2a; --h5-bg: #e9f7e1; --h5-border: #aedb96;
+  --h6-dot: #e0b000; --h6-bg: #fff6d1; --h6-border: #ecd57a;
+}
+
+.dark {
+  color-scheme: dark;
   --background: #000000;
   --foreground: #ffffff;
   --surface: #111114;
   --surface-2: #1c1c20;
   --muted: #a7a7b0;
-  --accent: #ff8a1f;
+  --soft: #c8c8d0;
+  --faint: #8a8a94;
+  --line: #3a3a42;
+  --chip: #e4e4ea;
+  --chip-text: #000000;
+  --nav-active: #2c2c32;
+  --ok: #8ce563;
+  --ok-text: #8ce563;
+  --warn: #ffb454;
+  --warn-bg: #2a1f0e;
+  --heat-1: #3e5b23;
+  --heat-2: #5e9132;
+  --heat-3: #8ce563;
+  --heat-4: #b9f595;
+
+  --h1-dot: #ff8a1f; --h1-bg: #2b1707; --h1-border: #6b3a0f;
+  --h2-dot: #5bb8e0; --h2-bg: #0a2029; --h2-border: #1d5266;
+  --h3-dot: #a99cff; --h3-bg: #17152e; --h3-border: #3f3a7a;
+  --h4-dot: #ff6b8e; --h4-bg: #2e0f18; --h4-border: #7a2a40;
+  --h5-dot: #8ce563; --h5-bg: #12230a; --h5-border: #3a6b22;
+  --h6-dot: #ffd23f; --h6-bg: #2a2205; --h6-border: #6b5a12;
 }
 
 @theme inline {
@@ -18,7 +70,21 @@
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-muted: var(--muted);
+  --color-soft: var(--soft);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
   --color-accent: var(--accent);
+  --color-chip: var(--chip);
+  --color-chip-text: var(--chip-text);
+  --color-nav-active: var(--nav-active);
+  --color-ok: var(--ok);
+  --color-ok-text: var(--ok-text);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-heat-1: var(--heat-1);
+  --color-heat-2: var(--heat-2);
+  --color-heat-3: var(--heat-3);
+  --color-heat-4: var(--heat-4);
   --font-sans: var(--font-inter);
 }
 
@@ -26,5 +92,4 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, sans-serif;
-  color-scheme: dark;
 }
