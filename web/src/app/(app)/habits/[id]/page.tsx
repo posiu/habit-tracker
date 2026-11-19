@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { addDays, todayIn } from "@/lib/domain/entries";
 import { isScheduledOn, weekday, WEEKDAYS } from "@/lib/domain/schedule";
+import { identityVotes } from "@/lib/domain/identity";
 import { currentStreak, longestStreak } from "@/lib/domain/stats";
-import { getHabit, getTimeZone, listCompletions, listSchedules } from "@/lib/queries";
+import { getHabit, getTimeZone, listCompletions, listIdentityHabits, listSchedules } from "@/lib/queries";
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
@@ -30,11 +31,16 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
   if (!habit) notFound();
 
   const today = todayIn(await getTimeZone());
-  const [completions, schedules, anchor] = await Promise.all([
+  const [completions, schedules, anchor, identityHabits, allCompletions] = await Promise.all([
     listCompletions(id),
     listSchedules([id]),
     habit.anchor_habit_id ? getHabit(habit.anchor_habit_id) : Promise.resolve(null),
+    habit.identity ? listIdentityHabits() : Promise.resolve([]),
+    habit.identity ? listCompletions() : Promise.resolve([]),
   ]);
+  const votes = habit.identity
+    ? identityVotes(identityHabits, allCompletions, addDays(today, -29)).find((i) => i.identity.trim().toLocaleLowerCase("pl") === habit.identity!.trim().toLocaleLowerCase("pl"))
+    : undefined;
   const done = new Set(completions.map((c) => c.date));
   const scheduled = (d: string) => isScheduledOn(schedules, d);
 
@@ -65,6 +71,16 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
         <Stat label="rekord serii" value={longestStreak(done, scheduled)} />
         <Stat label="ukończeń" value={done.size} />
       </div>
+
+      {votes && (
+        <section className="rounded-3xl bg-surface p-4" aria-label="Głosy na tożsamość" data-testid="identity-votes">
+          <p className="text-xs text-muted">Głosy na tożsamość „{votes.identity}”</p>
+          <p className="mt-1 text-[26px] font-bold leading-none">{votes.votes}</p>
+          <p className="mt-1.5 text-xs text-muted">
+            {votes.recent} w ostatnich 30 dniach{votes.habits.length > 1 ? ` · z ${votes.habits.length} nawyków` : ""}
+          </p>
+        </section>
+      )}
 
       <section className="rounded-3xl bg-surface p-4" aria-label="Ten tydzień">
         <p className="mb-3 text-xs text-muted">Ten tydzień</p>

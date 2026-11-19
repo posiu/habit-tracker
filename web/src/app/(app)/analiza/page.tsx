@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import { AnalysisTabs } from "@/components/analysis-tabs";
 import { Heatmap } from "@/components/heatmap";
-import { todayIn } from "@/lib/domain/entries";
+import { addDays, todayIn } from "@/lib/domain/entries";
 import { buildHeatmap, heatmapStart } from "@/lib/domain/stats";
-import { getHeatmapCounts, getTimeZone, listDailyEntries } from "@/lib/queries";
+import { identityVotes } from "@/lib/domain/identity";
+import { getHeatmapCounts, getTimeZone, listCompletions, listDailyEntries, listIdentityHabits } from "@/lib/queries";
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -18,7 +19,13 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
 async function Year() {
   const today = todayIn(await getTimeZone());
   const start = heatmapStart(today);
-  const [counts, entries] = await Promise.all([getHeatmapCounts(start, today), listDailyEntries(start, today)]);
+  const [counts, entries, identityHabits, completions] = await Promise.all([
+    getHeatmapCounts(start, today),
+    listDailyEntries(start, today),
+    listIdentityHabits(),
+    listCompletions(),
+  ]);
+  const identities = identityVotes(identityHabits, completions, addDays(today, -29));
   const total = Object.values(counts).reduce((a, b) => a + b, 0);
   const activeDays = Object.values(counts).filter((c) => c > 0).length;
   const moods = entries.map((e) => e.mood).filter((m): m is number => m != null);
@@ -38,6 +45,24 @@ async function Year() {
         <p className="text-xs text-muted">Ukończone nawyki w ostatnim roku</p>
         <p className="mt-1 text-3xl font-bold">{total}</p>
       </div>
+      {identities.length > 0 && (
+        <section className="space-y-3 rounded-3xl bg-surface p-4" aria-label="Głosy na tożsamość">
+          <p className="text-xs text-muted">Głosy na tożsamość (każde ukończenie to głos)</p>
+          <ul className="space-y-3">
+            {identities.map((i) => (
+              <li key={i.identity} data-testid="identity-votes">
+                <p className="flex items-baseline justify-between gap-3">
+                  <span className="text-[15px] font-semibold">{i.identity}</span>
+                  <span className="text-sm"><strong>{i.votes}</strong> <span className="text-muted">głosów</span></span>
+                </p>
+                <p className="text-xs text-muted">
+                  {i.recent} w ostatnich 30 dniach · {i.habits.map((h) => h.name).join(", ")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </>
   );
 }
