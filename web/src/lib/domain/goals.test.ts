@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildGoalEntry, effectiveValue, goalLoggableOn, goalProgress, goalSchema, type GoalCore, type GoalEntryLite } from "./goals";
+import { buildGoalEntry, effectiveValue, goalLoggableOn, goalProgress, goalSchema, goalSeries, type GoalCore, type GoalEntryLite } from "./goals";
 
 const TODAY = "2026-11-17";
 const base: GoalCore = {
@@ -169,5 +169,52 @@ describe("habit goals (GOAL-2)", () => {
 
   it("without habit data progress is zero", () => {
     expect(goalProgress(core("habit_days", 5), [], "2026-11-15").current).toBe(0);
+  });
+});
+
+describe("goalSeries", () => {
+  const core = (over: Partial<Parameters<typeof goalSeries>[0]> = {}) => ({
+    goal_type: "target_value" as const,
+    start_date: "2026-11-01",
+    target_date: null,
+    completed_at: null,
+    target_value: 100,
+    days_doing_target: null,
+    days_without_target: null,
+    ...over,
+  });
+  const e = (date: string, value: number, is_increment = true) => ({ date, value, boolean_value: null, is_increment });
+
+  it("sums signed values as a step series from the start to today", () => {
+    const s = goalSeries(core(), [e("2026-11-03", 50), e("2026-11-05", 20, false), e("2026-10-01", 999)], "2026-11-07");
+    expect(s).toEqual([
+      { date: "2026-11-01", value: 0 },
+      { date: "2026-11-03", value: 50 },
+      { date: "2026-11-05", value: 30 },
+      { date: "2026-11-07", value: 30 },
+    ]);
+  });
+
+  it("ends at the closing day for a closed goal", () => {
+    const s = goalSeries(core({ completed_at: "2026-11-04T10:00:00Z" }), [e("2026-11-03", 10), e("2026-11-06", 5)], "2026-11-07");
+    expect(s.at(-1)).toEqual({ date: "2026-11-04", value: 10 });
+  });
+
+  it("counts yes-days for days goals", () => {
+    const yes = (date: string) => ({ date, value: null, boolean_value: true, is_increment: null });
+    const no = (date: string) => ({ date, value: null, boolean_value: false, is_increment: null });
+    const s = goalSeries(core({ goal_type: "days_doing" }), [yes("2026-11-02"), no("2026-11-03"), yes("2026-11-04")], "2026-11-04");
+    expect(s.map((p) => p.value)).toEqual([0, 1, 2]);
+  });
+
+  it("follows completed habit days, and the best streak for streak goals", () => {
+    const habit = { dates: ["2026-11-02", "2026-11-03", "2026-11-05", "2026-10-20"], scheduled: () => true };
+    expect(goalSeries(core({ goal_type: "habit_days" }), [], "2026-11-06", habit).map((p) => p.value)).toEqual([0, 1, 2, 3, 3]);
+    expect(goalSeries(core({ goal_type: "habit_streak" }), [], "2026-11-06", habit).map((p) => p.value)).toEqual([0, 1, 2, 2]); // 11-05 does not raise the best streak
+  });
+
+  it("has no series for goals without a tracked value or not started yet", () => {
+    expect(goalSeries(core({ goal_type: "custom" }), [], "2026-11-07")).toEqual([]);
+    expect(goalSeries(core(), [], "2026-10-01")).toEqual([]);
   });
 });
