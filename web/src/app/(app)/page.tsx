@@ -7,7 +7,7 @@ import { todayIn } from "@/lib/domain/entries";
 import { buildHeatmap, currentStreak, heatmapStart, longestStreak } from "@/lib/domain/stats";
 import { goalProgress } from "@/lib/domain/goals";
 import { isScheduledOn, type Schedule } from "@/lib/domain/schedule";
-import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate, listSchedules } from "@/lib/queries";
+import { getHeatmapCounts, getTimeZone, listCompletions, listGoalEntries, listGoals, listHabitsForDate, listSchedules, loadHabitGoalData } from "@/lib/queries";
 
 const PALETTE = [1, 2, 3, 4, 5, 6].map((n) => ({ dot: `var(--h${n}-dot)`, bg: `var(--h${n}-bg)`, border: `var(--h${n}-border)` }));
 
@@ -35,6 +35,7 @@ async function Dashboard() {
   // Habits that are not due today stay off the dashboard (they can still be logged as a bonus).
   const habits = allHabits.filter((h) => isScheduledOn(schedulesByHabit.get(h.id) ?? [], today));
   const goalEntries = await listGoalEntries(goals.map((g) => g.id));
+  const habitData = await loadHabitGoalData(goals.flatMap((g) => (g.habit_id ? [g.habit_id] : [])));
   const goalRows = goals.map((g) => ({
     goal: g,
     progress: goalProgress(
@@ -49,6 +50,7 @@ async function Dashboard() {
       },
       goalEntries.filter((e) => e.goal_id === g.id),
       today,
+      g.habit_id ? habitData.get(g.habit_id) : undefined,
     ),
   }));
 

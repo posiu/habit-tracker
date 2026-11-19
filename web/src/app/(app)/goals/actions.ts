@@ -24,6 +24,7 @@ export async function saveGoal(id: string | null, _prev: FormState, fd: FormData
     p_target_date: g.target_date ?? null,
     p_target_value: g.target_value ?? null,
     p_days_target: g.days_target ?? null,
+    p_habit_id: g.habit_id ?? null,
   });
   if (error) {
     return { errors: { _form: "Nie udało się zapisać celu. Spróbuj ponownie." }, values: rawValues(fd) };

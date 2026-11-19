@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { isScheduledOn } from "@/lib/domain/schedule";
 
 export type Category = {
   id: string;
@@ -159,6 +160,7 @@ export type Goal = {
   is_active: boolean;
   completed_at: string | null;
   category_id: string | null;
+  habit_id: string | null;
   categories: { name: string; color: string | null } | null;
   goal_metrics: {
     target_value: number | null;
@@ -168,7 +170,7 @@ export type Goal = {
 };
 
 const GOAL_COLUMNS =
-  "id,name,goal_type,unit,start_date,target_date,is_active,completed_at,category_id,categories(name,color),goal_metrics(target_value,days_doing_target,days_without_target)";
+  "id,name,goal_type,unit,start_date,target_date,is_active,completed_at,category_id,habit_id,categories(name,color),goal_metrics(target_value,days_doing_target,days_without_target)";
 
 export async function listGoals(closed: boolean): Promise<Goal[]> {
   const supabase = await createClient();
@@ -279,4 +281,22 @@ export async function getUserEmail(): Promise<string> {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   return String(data?.claims.email ?? "");
+}
+
+export type HabitGoalData = { dates: string[]; scheduled: (date: string) => boolean };
+
+/** Completion data for the habits behind habit goals, keyed by habit id. */
+export async function loadHabitGoalData(habitIds: string[]): Promise<Map<string, HabitGoalData>> {
+  const out = new Map<string, HabitGoalData>();
+  const ids = [...new Set(habitIds)];
+  if (ids.length === 0) return out;
+  const [completions, schedules] = await Promise.all([listCompletions(), listSchedules(ids)]);
+  for (const id of ids) {
+    const own = schedules.filter((s) => s.habit_id === id);
+    out.set(id, {
+      dates: completions.filter((c) => c.habit_id === id).map((c) => c.date),
+      scheduled: (d) => isScheduledOn(own, d),
+    });
+  }
+  return out;
 }

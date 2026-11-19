@@ -2,12 +2,12 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { GoalForm } from "@/components/goal-form";
 import { todayIn } from "@/lib/domain/entries";
-import { getTimeZone, listCategories } from "@/lib/queries";
+import { getTimeZone, listCategories, listHabits } from "@/lib/queries";
 
 async function Form() {
   await connection();
-  const [categories, tz] = await Promise.all([listCategories(), getTimeZone()]);
-  return <GoalForm categories={categories} defaultStart={todayIn(tz)} />;
+  const [categories, tz, habits] = await Promise.all([listCategories(), getTimeZone(), listHabits(true)]);
+  return <GoalForm categories={categories} habits={habits} defaultStart={todayIn(tz)} />;
 }
 
 export default function NewGoalPage() {

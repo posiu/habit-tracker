@@ -67,5 +67,6 @@ export function goalFromForm(fd: FormData): Record<string, unknown> {
     target_date: str("target_date"),
     target_value: num(fd, "target_value"),
     days_target: num(fd, "days_target"),
+    habit_id: str("habit_id"),
   };
 }

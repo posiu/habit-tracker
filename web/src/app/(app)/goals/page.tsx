@@ -5,7 +5,7 @@ import { DeleteButton } from "@/components/delete-button";
 import { ProgressSummary } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
 import { GOAL_TYPE_LABELS, goalDaysRemaining, goalProgress } from "@/lib/domain/goals";
-import { getTimeZone, listGoalEntries, listGoals } from "@/lib/queries";
+import { getTimeZone, listGoalEntries, listGoals, loadHabitGoalData } from "@/lib/queries";
 
 async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["searchParams"] }) {
   const { view } = await searchParams;
@@ -13,6 +13,7 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
   const today = todayIn(await getTimeZone());
   const goals = await listGoals(closed);
   const entries = await listGoalEntries(goals.map((g) => g.id));
+  const habitData = await loadHabitGoalData(goals.flatMap((g) => (g.habit_id ? [g.habit_id] : [])));
 
   return (
     <>
@@ -41,6 +42,7 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
               },
               entries.filter((e) => e.goal_id === g.id),
               today,
+              g.habit_id ? habitData.get(g.habit_id) : undefined,
             );
             const left = goalDaysRemaining(g, today);
             return (

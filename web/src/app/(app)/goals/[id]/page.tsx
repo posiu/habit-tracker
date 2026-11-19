@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ProgressSummary, fmt } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
-import { GOAL_TYPE_LABELS, goalProgress, type GoalType } from "@/lib/domain/goals";
-import { getGoal, getTimeZone, listGoalEntries, type GoalEntryRow } from "@/lib/queries";
+import { GOAL_TYPE_LABELS, goalProgress, isHabitGoal, type GoalType } from "@/lib/domain/goals";
+import { getGoal, getHabit, getTimeZone, listGoalEntries, loadHabitGoalData, type GoalEntryRow } from "@/lib/queries";
 
 function entryLabel(type: GoalType, e: GoalEntryRow, unit: string | null): string {
   if (type === "target_value") return `${e.is_increment === false ? "−" : "+"}${fmt(e.value ?? 0)}${unit ? ` ${unit}` : ""}`;
@@ -18,6 +18,8 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
 
   const today = todayIn(await getTimeZone());
   const entries = await listGoalEntries([goal.id]);
+  const habitData = await loadHabitGoalData(goal.habit_id ? [goal.habit_id] : []);
+  const habit = goal.habit_id ? await getHabit(goal.habit_id) : null;
   const progress = goalProgress(
     {
       goal_type: goal.goal_type,
@@ -30,6 +32,7 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
     },
     entries,
     today,
+    goal.habit_id ? habitData.get(goal.habit_id) : undefined,
   );
   const sorted = [...entries].sort((a, b) => b.date.localeCompare(a.date));
 
@@ -42,6 +45,18 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
           {goal.target_date && ` do ${goal.target_date}`}
           {goal.categories && ` · ${goal.categories.name}`}
         </p>
+        {isHabitGoal(goal.goal_type) && (
+          <p className="text-sm text-muted">
+            Liczony z nawyku:{" "}
+            {habit ? (
+              <Link href={`/habits/${habit.id}`} className="underline">
+                {habit.name}
+              </Link>
+            ) : (
+              "nawyk został usunięty"
+            )}
+          </p>
+        )}
       </div>
       <ProgressSummary progress={progress} unit={goal.unit} />
       <div className="flex gap-4 text-sm">
@@ -57,7 +72,9 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
         <h2 className="text-sm font-semibold">Wpisy</h2>
         {sorted.length === 0 ? (
           <p className="text-sm text-muted">
-            {goal.goal_type === "target_date" || goal.goal_type === "custom"
+            {isHabitGoal(goal.goal_type)
+              ? "Postęp liczy się z ukończeń nawyku, ten cel nie ma własnych wpisów."
+              : goal.goal_type === "target_date" || goal.goal_type === "custom"
               ? "Ten typ celu nie ma wpisów dziennych."
               : "Brak wpisów. Dodaj je na ekranie dnia."}
           </p>
