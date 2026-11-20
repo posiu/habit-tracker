@@ -28,11 +28,18 @@ test("admin invites a user by e-mail; they set a password and sign in", async ({
   await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
 
   await page.goto("/ustawienia");
-  await page.getByRole("link", { name: /Zaproszenia i użytkownicy/ }).click();
+  await page.getByRole("link", { name: /Konta i zaproszenia/ }).click();
   await page.locator("main:visible").getByLabel(/Adres e-mail/).fill(invitee);
   await page.getByRole("button", { name: "Wyślij zaproszenie" }).click();
   await expect(page.locator("main:visible").getByText(`Zaproszenie wysłane na ${invitee}.`)).toBeVisible();
   await expect(page.getByTestId("user-list").getByText(invitee)).toBeVisible();
+
+  // activity: the admin just signed in (active), the invitee never did (inactive)
+  const rowOf = (email: string) => page.getByTestId("user-list").locator("li", { hasText: email });
+  await expect(rowOf(admin)).toHaveAttribute("data-status", "active");
+  await expect(rowOf(invitee)).toHaveAttribute("data-status", "inactive");
+  await expect(rowOf(invitee)).toContainText("jeszcze się nie zalogował");
+  await expect(page.getByTestId("user-counts")).toContainText("Nieaktywne");
 
   // the invitee follows the link from the e-mail (Polish template) in a fresh browser
   const link = new URL(await inviteLink(invitee));
@@ -47,7 +54,7 @@ test("admin invites a user by e-mail; they set a password and sign in", async ({
 
   // a regular user sees no admin panel
   await guest.goto("/ustawienia/zaproszenia");
-  await expect(guest.getByText("Zaproszenia", { exact: true })).toHaveCount(0);
+  await expect(guest.getByText("Konta", { exact: true })).toHaveCount(0);
   await ctx.close();
 
   // the admin deletes the invited account on request

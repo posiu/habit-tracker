@@ -20,6 +20,7 @@
 | AUTH-4 | Prywatność danych | Użytkownik nie widzi, nie zmienia i nie usuwa cudzych danych (także przez powiązania typu nawyk → kategoria). | ✅ polityki RLS + testy |
 
 | ADM-1 | Administrator (właściciel): zaproszenia i usuwanie kont | ✅ panel Ustawienia → Zaproszenia: lista, zaproszenie, usunięcie konta; admin = ADMIN_EMAILS, klucz serwisowy tylko po stronie serwera |
+| ADM-2 | Administrator widzi listę wszystkich kont i ich aktywność | Aktywne: jakikolwiek ruch (zapis danych albo logowanie) w ostatnich 7 dniach; mało aktywne: 8–14 dni; nieaktywne: nic od ponad 14 dni lub nigdy. Panel pokazuje liczniki, ostatni ruch i liczbę zapisów z 7 dni. | ✅ Ustawienia → Konta i zaproszenia; funkcja `user_activity()` tylko dla service_role |
 
 ## 2. Nawyki
 

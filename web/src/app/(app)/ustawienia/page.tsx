@@ -53,7 +53,7 @@ async function Settings() {
         </Link>
         {me?.isAdmin && (
           <Link href="/ustawienia/zaproszenia" className={row}>
-            <span>Zaproszenia i użytkownicy</span>
+            <span>Konta i zaproszenia</span>
             <span className="text-muted">›</span>
           </Link>
         )}
