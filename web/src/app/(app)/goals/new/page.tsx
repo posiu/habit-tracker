@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { GoalForm } from "@/components/goal-form";
 import { todayIn } from "@/lib/domain/entries";
 import { getTimeZone, listCategories, listHabits } from "@/lib/queries";
+import { PageHeader } from "@/components/page-header";
 
 async function Form() {
   await connection();
@@ -13,7 +14,7 @@ async function Form() {
 export default function NewGoalPage() {
   return (
     <main className="space-y-6">
-      <h1 className="text-[34px] font-bold tracking-tight">Nowy cel</h1>
+      <PageHeader title="Nowy cel" back={{ href: "/goals", label: "Cele" }} />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Form />
       </Suspense>

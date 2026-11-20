@@ -6,6 +6,7 @@ import { ProgressSummary, fmt } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
 import { GOAL_TYPE_LABELS, goalProgress, goalSeries, isHabitGoal, type GoalType } from "@/lib/domain/goals";
 import { getGoal, getHabit, getTimeZone, listGoalEntries, loadHabitGoalData, type GoalEntryRow } from "@/lib/queries";
+import { BackLink } from "@/components/page-header";
 
 function entryLabel(type: GoalType, e: GoalEntryRow, unit: string | null): string {
   if (type === "target_value") return `${e.is_increment === false ? "−" : "+"}${fmt(e.value ?? 0)}${unit ? ` ${unit}` : ""}`;
@@ -38,6 +39,7 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
   return (
     <>
       <div className="space-y-1">
+        <BackLink href="/goals" label="Cele" />
         <h1 className="text-[34px] font-bold tracking-tight">{goal.name}</h1>
         <p className="text-sm text-muted">
           {GOAL_TYPE_LABELS[goal.goal_type]} · od {goal.start_date}

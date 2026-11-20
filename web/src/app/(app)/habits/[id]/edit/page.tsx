@@ -4,6 +4,7 @@ import { HabitForm } from "@/components/habit-form";
 import { todayIn } from "@/lib/domain/entries";
 import { scheduleOn } from "@/lib/domain/schedule";
 import { getHabit, getTimeZone, listCategories, listHabits, listSchedules } from "@/lib/queries";
+import { PageHeader } from "@/components/page-header";
 
 async function Editor({ params }: { params: PageProps<"/habits/[id]/edit">["params"] }) {
   const { id } = await params;
@@ -25,7 +26,7 @@ async function Editor({ params }: { params: PageProps<"/habits/[id]/edit">["para
 export default function EditHabitPage(props: PageProps<"/habits/[id]/edit">) {
   return (
     <main className="space-y-6">
-      <h1 className="text-[34px] font-bold tracking-tight">Edytuj nawyk</h1>
+      <PageHeader title="Edytuj nawyk" back={{ href: "/habits", label: "Nawyki" }} />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Editor params={props.params} />
       </Suspense>

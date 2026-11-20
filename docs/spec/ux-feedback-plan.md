@@ -24,3 +24,4 @@ Kolejność: 1 → 2 → (3, 4, 5 niezależnie, po jednym) → 6. 1 i 2 są najt
 ## Status
 
 - PR 1: zrobiony (fix/ux-batch-1). Przyczyna „błędu dni tygodnia”: nie dane, tylko widok: dni tygodnia przed datą startu nowego nawyku były rysowane jako „niewykonane”, a przyszłe jako puste obrysy. Teraz dni przed startem mają osobny stan „przed startem nawyku”.
+- PR 2: zrobiony (fix/ux-batch-2): wspólny nagłówek `PageHeader`/`BackLink` z „‹ Etykieta” na Ustawieniach → Kategorie/Cele/Konta, formularzach i szczegółach; formularze nawyku, celu i kategorii szersze na desktopie (nawyk w dwóch kolumnach), przycisk Zapisz nie rozciąga się na całą szerokość.

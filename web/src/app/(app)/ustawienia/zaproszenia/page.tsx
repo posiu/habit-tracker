@@ -1,5 +1,4 @@
 import type { User } from "@supabase/supabase-js";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { deleteUser } from "./actions";
@@ -8,6 +7,7 @@ import { InviteForm } from "@/components/invite-form";
 import { ACTIVITY_LABELS, activityStatus, daysAgo, lastMovement, type ActivityStatus } from "@/lib/domain/activity";
 import { getSessionUser } from "@/lib/admin";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { PageHeader } from "@/components/page-header";
 
 async function Panel() {
   const me = await getSessionUser();
@@ -90,10 +90,7 @@ async function Panel() {
 export default function InvitesPage() {
   return (
     <main className="space-y-4">
-      <div className="flex items-end justify-between">
-        <h1 className="text-[34px] font-bold tracking-tight">Konta</h1>
-        <Link href="/ustawienia" className="flex h-11 items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold">Wróć</Link>
-      </div>
+      <PageHeader title="Konta" back={{ href: "/ustawienia", label: "Ustawienia" }} />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Panel />
       </Suspense>

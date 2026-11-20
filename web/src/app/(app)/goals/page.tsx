@@ -6,6 +6,7 @@ import { ProgressSummary } from "@/components/progress-bar";
 import { todayIn } from "@/lib/domain/entries";
 import { GOAL_TYPE_LABELS, goalDaysRemaining, goalProgress } from "@/lib/domain/goals";
 import { getTimeZone, listGoalEntries, listGoals, loadHabitGoalData } from "@/lib/queries";
+import { PageHeader } from "@/components/page-header";
 
 async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["searchParams"] }) {
   const { view } = await searchParams;
@@ -88,12 +89,11 @@ async function GoalList({ searchParams }: { searchParams: PageProps<"/goals">["s
 export default function GoalsPage(props: PageProps<"/goals">) {
   return (
     <main className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-[34px] font-bold tracking-tight">Cele</h1>
+      <PageHeader title="Cele" back={{ href: "/ustawienia", label: "Ustawienia" }}>
         <Link href="/goals/new" className="flex h-11 items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold">
           Nowy cel
         </Link>
-      </div>
+      </PageHeader>
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <GoalList searchParams={props.searchParams} />
       </Suspense>

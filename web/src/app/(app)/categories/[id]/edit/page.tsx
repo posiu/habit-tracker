@@ -4,6 +4,7 @@ import { deleteCategory } from "../../actions";
 import { CategoryForm } from "@/components/category-form";
 import { DeleteButton } from "@/components/delete-button";
 import { getCategory } from "@/lib/queries";
+import { PageHeader } from "@/components/page-header";
 
 async function Editor({ params }: { params: PageProps<"/categories/[id]/edit">["params"] }) {
   const { id } = await params;
@@ -26,7 +27,7 @@ async function Editor({ params }: { params: PageProps<"/categories/[id]/edit">["
 export default function EditCategoryPage(props: PageProps<"/categories/[id]/edit">) {
   return (
     <main className="space-y-6">
-      <h1 className="text-[34px] font-bold tracking-tight">Edytuj kategorię</h1>
+      <PageHeader title="Edytuj kategorię" back={{ href: "/categories", label: "Kategorie" }} />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Editor params={props.params} />
       </Suspense>

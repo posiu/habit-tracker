@@ -29,9 +29,9 @@ export function GoalForm({
   const daysTarget = goal?.goal_type === "days_doing" || (goal && isHabitGoal(goal.goal_type)) ? m?.days_doing_target : goal?.goal_type === "days_without" ? m?.days_without_target : null;
 
   return (
-    <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-4">
+    <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="grid max-w-md gap-4 md:max-w-3xl md:grid-cols-2 md:items-start md:gap-x-6">
       {e._form && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="md:col-span-2 text-sm text-red-600 dark:text-red-400">
           {e._form}
         </p>
       )}
@@ -47,7 +47,7 @@ export function GoalForm({
           ))}
         </select>
       </Field>
-      <p className="text-xs text-muted">{GOAL_TYPE_HINTS[type]}</p>
+      <p className="text-xs text-muted md:col-span-2 md:-mt-2">{GOAL_TYPE_HINTS[type]}</p>
 
       {type === "target_value" && (
         <div className="grid grid-cols-2 gap-4">
@@ -94,7 +94,7 @@ export function GoalForm({
           <input name="target_date" type="date" required={type === "target_date"} defaultValue={v("target_date", goal?.target_date)} className={inputClass} />
         </Field>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 md:col-span-2">
         <SubmitButton pending={pending}>Zapisz</SubmitButton>
         <Link href="/goals" className="text-sm underline">
           Anuluj

@@ -31,8 +31,10 @@ export function HabitForm({
   const days = state?.values ? ((state.values.schedule_days as string[] | undefined) ?? []).map(Number) : scheduleDays;
 
   return (
-    <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
+    <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4 md:max-w-3xl">
       {e._form && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e._form}</p>}
+      <div className="grid gap-4 md:grid-cols-2 md:items-start md:gap-6">
+        <div className="space-y-4">
       <Field label="Nazwa" error={e.name}>
         <input name="name" placeholder="np. Czytanie przed snem" required maxLength={200} defaultValue={v("name", habit?.name)} className={inputClass} />
       </Field>
@@ -51,6 +53,24 @@ export function HabitForm({
           <input name="unit" placeholder="np. min, km, stron" maxLength={50} defaultValue={v("unit", habit?.unit)} className={inputClass} />
         </Field>
       </div>
+      <Field label="Kategoria" error={e.category_id}>
+        <select name="category_id" defaultValue={v("category_id", habit?.category_id)} className={inputClass}>
+          <option value="">Bez kategorii</option>
+          {categories.map((c) => (
+            <option key={c.id} value={c.id}>{c.icon ? `${c.icon} ` : ""}{c.name}</option>
+          ))}
+        </select>
+      </Field>
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Start" error={e.start_date}>
+          <input name="start_date" type="date" required defaultValue={v("start_date", habit?.start_date ?? defaultStart)} className={inputClass} />
+        </Field>
+        <Field label="Koniec (opcjonalnie)" error={e.end_date}>
+          <input name="end_date" type="date" defaultValue={v("end_date", habit?.end_date)} className={inputClass} />
+        </Field>
+      </div>
+        </div>
+        <div className="space-y-4">
       <div role="group" aria-labelledby="plan-title" className="space-y-4 rounded-3xl bg-surface p-4">
         <p id="plan-title" className="text-sm font-semibold">Plan (Atomic Habits)</p>
         <Field label="Kim się staję (tożsamość)" error={e.identity}>
@@ -71,22 +91,6 @@ export function HabitForm({
           <input name="minimum_text" maxLength={200} placeholder="np. przeczytać jedną stronę" defaultValue={v("minimum_text", habit?.minimum_text)} className={inputClass} />
         </Field>
       </div>
-      <Field label="Kategoria" error={e.category_id}>
-        <select name="category_id" defaultValue={v("category_id", habit?.category_id)} className={inputClass}>
-          <option value="">Bez kategorii</option>
-          {categories.map((c) => (
-            <option key={c.id} value={c.id}>{c.icon ? `${c.icon} ` : ""}{c.name}</option>
-          ))}
-        </select>
-      </Field>
-      <div className="grid grid-cols-2 gap-4">
-        <Field label="Start" error={e.start_date}>
-          <input name="start_date" type="date" required defaultValue={v("start_date", habit?.start_date ?? defaultStart)} className={inputClass} />
-        </Field>
-        <Field label="Koniec (opcjonalnie)" error={e.end_date}>
-          <input name="end_date" type="date" defaultValue={v("end_date", habit?.end_date)} className={inputClass} />
-        </Field>
-      </div>
       <div role="group" aria-labelledby="schedule-title" className="space-y-3 rounded-3xl bg-surface p-4 text-sm">
         <p id="schedule-title" className="font-semibold">Harmonogram</p>
         <div className="flex flex-wrap gap-2">
@@ -99,6 +103,8 @@ export function HabitForm({
         </div>
         {e.schedule_days && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e.schedule_days}</p>}
         <p className="text-xs text-muted">Zmiana obowiązuje od dziś, wcześniejsze dni zostają ocenione wg dawnego harmonogramu.</p>
+      </div>
+        </div>
       </div>
       <div className="flex items-center gap-4">
         <SubmitButton pending={pending}>Zapisz</SubmitButton>
