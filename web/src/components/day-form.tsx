@@ -4,8 +4,16 @@ import Link from "next/link";
 import { useActionState, useEffect, useRef } from "react";
 import { saveDay, type DayState } from "@/app/(app)/daily/actions";
 import { MOODS, formatDayPl } from "@/lib/domain/entries";
+import { habitTone } from "@/lib/domain/habit-colors";
 import type { DayEntry, DayGoal, DayGoalEntry, DayHabit } from "@/lib/queries";
 import { Field, SubmitButton, chipClass, inputClass } from "./field";
+
+const HOW = {
+  boolean: "Zaznacz, jeśli zrobiony tego dnia",
+  numeric: "Wpisz wartość",
+  time: "Wpisz czas w minutach",
+  count: "Wpisz, ile razy lub sztuk",
+} as const;
 
 type Props = {
   date: string;
@@ -23,6 +31,7 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
   useEffect(() => {
     if (state) feedback.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }, [state]);
+  const isPast = nextDate !== null;
   const e = state?.errors ?? {};
   const sv = state?.values;
   const entryFor = (id: string) => day?.habit_entries.find((h) => h.habit_id === id);
@@ -38,14 +47,14 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
   };
 
   return (
-    <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-6 pb-4">
+    <form key={sv ? JSON.stringify(sv) : "initial"} action={action} className="max-w-md space-y-6 pb-4 md:max-w-3xl">
       <div className="flex items-center justify-between gap-3 text-sm">
-        <Link href={`/daily/${prevDate}`} className="underline" aria-label="Poprzedni dzień">
+        <Link href={`/daily/${prevDate}`} className="whitespace-nowrap underline" aria-label="Poprzedni dzień">
           ← Wcześniej
         </Link>
-        <h2 className="text-center font-medium capitalize">{formatDayPl(date)}</h2>
+        <h2 className="min-w-0 text-center text-xs font-medium capitalize sm:text-sm">{formatDayPl(date)}</h2>
         {nextDate ? (
-          <Link href={`/daily/${nextDate}`} className="underline" aria-label="Następny dzień">
+          <Link href={`/daily/${nextDate}`} className="whitespace-nowrap underline" aria-label="Następny dzień">
             Później →
           </Link>
         ) : (
@@ -55,36 +64,58 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
 
 
       <section className="space-y-3">
-        <h3 className="text-sm font-semibold">Nawyki</h3>
+        <div>
+          <h3 className="text-sm font-semibold">Nawyki</h3>
+          <p className="text-xs text-muted">
+            {isPast ? "Uzupełniasz dzień wstecz. " : ""}Przy każdym nawyku widać, co zrobić: zaznaczyć albo wpisać wartość. Puste pole oznacza brak wpisu.
+          </p>
+        </div>
         {habits.length === 0 ? (
           <p className="text-sm text-muted">Brak nawyków w tym dniu. Dodaj je w zakładce Nawyki.</p>
         ) : (
-          <ul className="space-y-3">
+          <ul className="grid gap-3 md:grid-cols-2">
             {habits.map((h) => {
               const name = `habit_${h.id}`;
               const unit = h.habit_type === "time" ? "min" : h.unit;
+              const tone = habitTone(h.color);
+              const entry = entryFor(h.id);
+              const how = HOW[h.habit_type];
+              const target = h.target_value != null ? ` Cel: ${h.target_value}${unit ? ` ${unit}` : ""}.` : "";
               return (
-                <li key={h.id}>
+                <li key={h.id} data-testid="day-habit" className="space-y-2 rounded-3xl border p-4" style={{ background: tone.bg, borderColor: tone.border }}>
+                  <div className="flex items-center justify-between gap-2">
+                    {h.habit_type === "boolean" ? (
+                      <span className="text-[15px] font-semibold">{h.name}</span>
+                    ) : (
+                      <label htmlFor={name} className="text-[15px] font-semibold">{h.name}</label>
+                    )}
+                    <span aria-hidden="true" className="size-3 flex-none rounded" style={{ background: tone.dot }} />
+                  </div>
+                  <p id={`${name}_how`} className="text-xs text-soft">
+                    {how}.{target}
+                  </p>
                   {h.habit_type === "boolean" ? (
-                    <label className="flex min-h-12 items-center gap-3 rounded-2xl bg-surface px-4 text-sm">
+                    <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-2xl bg-surface px-4 text-sm font-medium">
                       <input
                         type="checkbox"
                         name={name}
+                        aria-label={h.name}
                         className="size-5 accent-accent"
-                        defaultChecked={sv ? sv[name] === "on" : (entryFor(h.id)?.completed ?? false)}
+                        defaultChecked={sv ? sv[name] === "on" : (entry?.completed ?? false)}
                       />
-                      {h.name}
+                      Zrobione
                     </label>
                   ) : (
-                    <Field label={h.target_value != null ? `${h.name} (cel ${h.target_value}${unit ? ` ${unit}` : ""})` : h.name} error={e[name]}>
+                    <>
                       <div className="flex items-center gap-2">
-                        <input name={name} inputMode="decimal" defaultValue={defaultFor(h)} className={inputClass} />
+                        <input id={name} name={name} inputMode="decimal" aria-describedby={`${name}_how`} defaultValue={defaultFor(h)} className={inputClass} />
                         {unit && <span className="text-sm text-muted">{unit}</span>}
                       </div>
-                      {!sv && h.target_value != null && entryFor(h.id) && (
-                        <p className="mt-1 text-xs text-muted">{entryFor(h.id)?.completed ? "✓ Cel osiągnięty" : "Poniżej celu"}</p>
+                      {e[name] && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e[name]}</p>}
+                      {!sv && h.target_value != null && entry && (
+                        <p className="text-xs text-muted">{entry.completed ? "✓ Cel osiągnięty" : "Poniżej celu"}</p>
                       )}
-                    </Field>
+                    </>
                   )}
                 </li>
               );
