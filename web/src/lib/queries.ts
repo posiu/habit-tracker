@@ -23,6 +23,7 @@ export type Habit = {
   plan_text: string | null;
   minimum_text: string | null;
   anchor_habit_id: string | null;
+  color: string | null;
   category_id: string | null;
   categories: { name: string; color: string | null } | null;
 };
@@ -59,7 +60,7 @@ export async function listIdentityHabits(): Promise<{ id: string; name: string; 
 }
 
 const HABIT_COLUMNS =
-  "id,name,habit_type,unit,target_value,is_active,start_date,end_date,identity,plan_text,minimum_text,anchor_habit_id,category_id,categories(name,color)";
+  "id,name,habit_type,unit,target_value,is_active,start_date,end_date,identity,plan_text,minimum_text,anchor_habit_id,color,category_id,categories(name,color)";
 
 export async function listHabits(activeOnly: boolean): Promise<Habit[]> {
   const supabase = await createClient();
@@ -82,7 +83,7 @@ export async function getHabit(id: string): Promise<Habit | null> {
   return data;
 }
 
-export type DayHabit = Pick<Habit, "id" | "name" | "habit_type" | "unit" | "target_value" | "start_date" | "end_date" | "plan_text" | "minimum_text">;
+export type DayHabit = Pick<Habit, "id" | "name" | "habit_type" | "unit" | "target_value" | "start_date" | "end_date" | "plan_text" | "minimum_text" | "color">;
 
 export type DayEntry = {
   id: string;
@@ -107,7 +108,7 @@ export async function listHabitsForDate(date: string): Promise<DayHabit[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("habits")
-    .select("id,name,habit_type,unit,target_value,start_date,end_date,plan_text,minimum_text")
+    .select("id,name,habit_type,unit,target_value,start_date,end_date,plan_text,minimum_text,color")
     .lte("start_date", date)
     .or(`end_date.is.null,end_date.gte.${date}`)
     .order("position")

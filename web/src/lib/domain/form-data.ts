@@ -30,6 +30,7 @@ export function habitFromForm(fd: FormData): Record<keyof HabitInput, unknown> {
     plan_text: text(fd, "plan_text"),
     minimum_text: text(fd, "minimum_text"),
     anchor_habit_id: text(fd, "anchor_habit_id"),
+    color: text(fd, "color"),
     goal_ids: fd.getAll("goal_ids").filter((v): v is string => typeof v === "string"),
     schedule_days: fd.getAll("schedule_days").map((d) => Number(d)),
   };

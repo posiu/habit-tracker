@@ -27,6 +27,7 @@ export async function saveHabit(id: string | null, _prev: FormState, fd: FormDat
     identity: h.identity ?? null,
     plan_text: h.plan_text ?? null,
     minimum_text: h.minimum_text ?? null,
+    color: h.color ?? null,
     anchor_habit_id: h.anchor_habit_id && h.anchor_habit_id !== id ? h.anchor_habit_id : null,
   };
 

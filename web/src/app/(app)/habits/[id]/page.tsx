@@ -6,6 +6,7 @@ import { isScheduledOn, weekday, WEEKDAYS } from "@/lib/domain/schedule";
 import { identityVotes } from "@/lib/domain/identity";
 import { currentStreak, longestStreak } from "@/lib/domain/stats";
 import { getHabit, getTimeZone, listCompletions, listIdentityHabits, listSchedules } from "@/lib/queries";
+import { habitTone } from "@/lib/domain/habit-colors";
 import { BackLink } from "@/components/page-header";
 
 function Stat({ label, value }: { label: string; value: number }) {
@@ -65,7 +66,10 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
     <div className="space-y-4">
       <div>
         <BackLink href="/habits" label="Nawyki" />
-        <h1 className="text-[34px] font-bold leading-tight tracking-tight">{habit.name}</h1>
+        <h1 className="flex items-center gap-3 text-[34px] font-bold leading-tight tracking-tight">
+          <span aria-hidden="true" className="size-4 flex-none rounded-full" style={{ background: habitTone(habit.color).dot }} />
+          {habit.name}
+        </h1>
         {habit.identity && <p className="mt-1 text-sm text-muted">Tożsamość: {habit.identity}</p>}
       </div>
 
@@ -94,6 +98,7 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
               <span
                 aria-label={`${d.label}: ${{ done: "wykonane", missed: "niewykonane", off: "poza harmonogramem", future: "jeszcze nie", before: "przed startem nawyku" }[d.state]}`}
                 className={`flex size-9 items-center justify-center rounded-full text-sm font-semibold ${circle[d.state]}`}
+                style={d.state === "done" && habit.color ? { background: habitTone(habit.color).dot, color: "#000" } : undefined}
               >
                 {mark[d.state]}
               </span>
