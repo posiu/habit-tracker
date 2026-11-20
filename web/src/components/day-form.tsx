@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { saveDay, type DayState } from "@/app/(app)/daily/actions";
 import { MOODS, formatDayPl } from "@/lib/domain/entries";
 import type { DayEntry, DayGoal, DayGoalEntry, DayHabit } from "@/lib/queries";
@@ -19,6 +19,10 @@ type Props = {
 
 export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntries }: Props) {
   const [state, action, pending] = useActionState<DayState, FormData>(saveDay.bind(null, date), undefined);
+  const feedback = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (state) feedback.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [state]);
   const e = state?.errors ?? {};
   const sv = state?.values;
   const entryFor = (id: string) => day?.habit_entries.find((h) => h.habit_id === id);
@@ -49,16 +53,6 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
         )}
       </div>
 
-      {e._form && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-          {e._form}
-        </p>
-      )}
-      {state?.saved && (
-        <p role="status" className="text-sm text-ok-text">
-          Zapisano.
-        </p>
-      )}
 
       <section className="space-y-3">
         <h3 className="text-sm font-semibold">Nawyki</h3>
@@ -186,6 +180,20 @@ export function DayForm({ date, prevDate, nextDate, habits, day, goals, goalEntr
       <Field label="Notatka" error={e.notes}>
         <textarea name="notes" rows={4} defaultValue={sv ? String(sv.notes ?? "") : (day?.notes ?? "")} className={inputClass} />
       </Field>
+
+      {/* feedback sits right above the button, where the eye is after pressing it */}
+      <div ref={feedback} className="scroll-mb-40 empty:hidden">
+        {e._form && (
+          <p role="alert" className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+            {e._form}
+          </p>
+        )}
+        {state?.saved && (
+          <p role="status" className="rounded-2xl bg-ok/15 px-4 py-3 text-sm font-semibold text-ok-text">
+            Zapisano.
+          </p>
+        )}
+      </div>
 
       <SubmitButton pending={pending}>Zapisz dzień</SubmitButton>
     </form>

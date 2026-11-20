@@ -5,12 +5,12 @@ const fmt = (n: number) => String(Math.round(n * 100) / 100).replace(".", ",");
 /** Running progress of a goal over time (step line) with the target as a dashed line. Server-rendered SVG. */
 export function GoalChart({ points, target, unit }: { points: GoalSeriesPoint[]; target: number | null; unit: string }) {
   if (points.length < 2) return null;
-  const W = 322;
-  const H = 170;
+  const W = 340;
+  const H = 160;
   const left = 8;
   const right = 8;
   const top = 12;
-  const base = 138;
+  const base = 132;
   const plotW = W - left - right;
   const plotH = base - top;
 
@@ -30,7 +30,7 @@ export function GoalChart({ points, target, unit }: { points: GoalSeriesPoint[];
   const summary = `Postęp od ${first} do ${last}: ${fmt(now.value)}${unit ? ` ${unit}` : ""}${target != null ? ` z ${fmt(target)}${unit ? ` ${unit}` : ""}` : ""}.`;
 
   return (
-    <figure className="rounded-3xl bg-surface p-4" data-testid="goal-chart">
+    <figure className="w-full max-w-md rounded-3xl bg-surface p-4" data-testid="goal-chart">
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={summary} className="w-full">
         {target != null && (
           <>
@@ -39,12 +39,12 @@ export function GoalChart({ points, target, unit }: { points: GoalSeriesPoint[];
           </>
         )}
         <line x1={left} x2={W - right} y1={y(0)} y2={y(0)} className="stroke-line" strokeWidth="0.5" />
-        <path d={path} fill="none" className="stroke-ok" strokeWidth="2.5" strokeLinejoin="round" />
-        <circle cx={x(now.date)} cy={y(now.value)} r="4" className="fill-ok stroke-surface" strokeWidth="2" />
-        <text x={left} y={H - 6} className="fill-muted" fontSize="11">{first}</text>
-        <text x={W - right} y={H - 6} textAnchor="end" className="fill-muted" fontSize="11">{last}</text>
+        <path d={path} fill="none" className="stroke-ok" strokeWidth="1.75" strokeLinejoin="round" />
+        <circle cx={x(now.date)} cy={y(now.value)} r="3" className="fill-ok stroke-surface" strokeWidth="1.5" />
+        <text x={left} y={H - 6} className="fill-muted" fontSize="10">{first}</text>
+        <text x={W - right} y={H - 6} textAnchor="end" className="fill-muted" fontSize="10">{last}</text>
       </svg>
-      <figcaption className="mt-1 text-xs text-muted">Postęp w czasie</figcaption>
+      <figcaption className="mt-1 text-[11px] text-muted">Postęp w czasie</figcaption>
     </figure>
   );
 }

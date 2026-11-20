@@ -18,16 +18,16 @@ export function CategoryForm({ category }: { category?: Category }) {
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
       {e._form && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
-        <input name="name" required maxLength={100} defaultValue={v("name", category?.name)} className={inputClass} />
+        <input name="name" placeholder="np. Zdrowie" required maxLength={100} defaultValue={v("name", category?.name)} className={inputClass} />
       </Field>
       <Field label="Kolor" error={e.color}>
         <input name="color" type="color" defaultValue={v("color", category?.color ?? "#10b981")} className="h-11 w-20 rounded-2xl bg-surface-2" />
       </Field>
       <Field label="Ikona (np. emoji)" error={e.icon}>
-        <input name="icon" maxLength={50} defaultValue={v("icon", category?.icon)} className={inputClass} />
+        <input name="icon" placeholder="np. 💪" maxLength={50} defaultValue={v("icon", category?.icon)} className={inputClass} />
       </Field>
       <Field label="Opis" error={e.description}>
-        <textarea name="description" rows={3} defaultValue={v("description", category?.description)} className={inputClass} />
+        <textarea name="description" placeholder="np. Sen, ruch i jedzenie" rows={3} defaultValue={v("description", category?.description)} className={inputClass} />
       </Field>
       <div className="flex items-center gap-4">
         <SubmitButton pending={pending}>Zapisz</SubmitButton>

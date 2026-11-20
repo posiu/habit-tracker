@@ -28,6 +28,7 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
     listCompletions(),
     listSchedules(),
   ]);
+  const hasAnyHabit = active.length + archived.length > 0;
   const habits = [...active, ...archived].filter((h) => h.start_date <= last && (!h.end_date || h.end_date >= first));
   const doneBy = new Map<string, Set<string>>();
   for (const c of completions) doneBy.set(c.habit_id, (doneBy.get(c.habit_id) ?? new Set()).add(c.date));
@@ -78,7 +79,17 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
         </div>
       </div>
       {rows.length === 0 ? (
-        <p className="text-sm text-muted">Brak nawyków w tym miesiącu.</p>
+        <div className="space-y-3 rounded-3xl bg-surface p-5">
+          <p className="text-[15px] font-semibold">{hasAnyHabit ? "Brak nawyków w tym miesiącu." : "Nie masz jeszcze żadnych nawyków."}</p>
+          <p className="text-sm text-muted">
+            {hasAnyHabit
+              ? "Wybierz inny miesiąc strzałkami albo dodaj nawyk, który obejmuje ten okres."
+              : "Widok miesiąca pokaże siatkę dni, gdy dodasz pierwszy nawyk i zaczniesz go odhaczać."}
+          </p>
+          <Link href="/habits/new" className="inline-flex h-11 items-center rounded-full bg-chip px-5 text-[15px] font-semibold text-chip-text">
+            Dodaj nawyk
+          </Link>
+        </div>
       ) : (
         <div className="overflow-x-auto rounded-3xl bg-surface p-4">
           <table className="border-separate border-spacing-y-2 text-sm" data-testid="month-grid">
