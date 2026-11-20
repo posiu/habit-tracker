@@ -237,3 +237,29 @@ describe("row level security", () => {
     });
   });
 });
+
+describe("user_activity (admin panel)", () => {
+  it("is reserved for the service role and reports last activity and 7-day writes", async () => {
+    if (!secret) return;
+    const u = await newUser("act");
+    const admin = createClient(url, secret, noPersist);
+    try {
+      // regular users cannot call it
+      expect((await u.client.rpc("user_activity")).error).not.toBeNull();
+
+      const before = await admin.rpc("user_activity");
+      expect((before.data as { user_id: string }[]).some((r) => r.user_id === u.id)).toBe(false);
+
+      await u.client.from("categories").insert({ name: "Aktywność" });
+      await u.client.from("habits").insert({ name: "Test" });
+      const after = await admin.rpc("user_activity");
+      const row = (after.data as { user_id: string; last_activity: string; actions_7d: number }[]).find((r) => r.user_id === u.id);
+      expect(row).toBeDefined();
+      expect(Number(row!.actions_7d)).toBe(2);
+      expect(Date.now() - Date.parse(row!.last_activity)).toBeLessThan(60_000);
+    } finally {
+      await admin.auth.admin.deleteUser(u.id);
+    }
+  });
+});
+
