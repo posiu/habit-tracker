@@ -29,7 +29,7 @@ test("sign up, manage categories and habits", async ({ page }) => {
   await page.goto("/habits/new");
   await ui().getByLabel("Nazwa").fill("Bieganie");
   await ui().getByLabel("Typ").selectOption("numeric");
-  await ui().getByLabel("Cel").fill("5,5");
+  await ui().getByLabel("Cel", { exact: true }).fill("5,5");
   await ui().getByLabel("Jednostka").fill("km");
   await ui().getByLabel("Start").fill("2026-11-10");
   await ui().getByLabel("Koniec (opcjonalnie)").fill("2026-11-01");
@@ -38,7 +38,7 @@ test("sign up, manage categories and habits", async ({ page }) => {
   await expect(ui().getByText("Data końcowa nie może być wcześniejsza niż początkowa")).toBeVisible();
   await expect(ui().getByLabel("Nazwa")).toHaveValue("Bieganie");
   await expect(ui().getByLabel("Typ")).toHaveValue("numeric");
-  await expect(ui().getByLabel("Cel")).toHaveValue("5,5");
+  await expect(ui().getByLabel("Cel", { exact: true })).toHaveValue("5,5");
   await expect(ui().getByLabel("Pn")).toBeChecked();
 
   // fix and save, with category

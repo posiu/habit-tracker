@@ -201,6 +201,19 @@ export async function listGoals(closed: boolean): Promise<Goal[]> {
   return data;
 }
 
+/** Open goals counted from a habit (days or streak): the ones a habit can be linked to. */
+export async function listHabitGoals(): Promise<{ id: string; name: string; goal_type: "habit_days" | "habit_streak"; habit_id: string | null }[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("goals")
+    .select("id,name,goal_type,habit_id")
+    .in("goal_type", ["habit_days", "habit_streak"])
+    .is("completed_at", null)
+    .order("created_at");
+  if (error) throw error;
+  return data as { id: string; name: string; goal_type: "habit_days" | "habit_streak"; habit_id: string | null }[];
+}
+
 export async function getGoal(id: string): Promise<Goal | null> {
   const supabase = await createClient();
   const { data, error } = await supabase

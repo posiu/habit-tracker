@@ -3,10 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const ITEMS: { href: string; label: string; match?: string }[] = [
+const ITEMS: { href: string; label: string; match?: string; also?: string[] }[] = [
   { href: "/", label: "Dziś" },
   { href: "/analiza/tydzien", label: "Analiza", match: "/analiza" },
-  { href: "/habits", label: "Nawyki" },
+  { href: "/habits", label: "Nawyki", also: ["/goals"] },
   { href: "/ustawienia", label: "Ustawienia" },
 ];
 
@@ -20,7 +20,7 @@ export function BottomNav() {
     <div className="fixed inset-x-4 bottom-6 z-10 mx-auto flex max-w-md items-center gap-2.5">
       <nav aria-label="Główna nawigacja" className="flex h-16 flex-1 items-center justify-around rounded-full bg-surface-2 px-2 text-xs font-medium text-muted">
         {ITEMS.map((item) => {
-          const active = isActive(pathname, item.match ?? item.href);
+          const active = [item.match ?? item.href, ...(item.also ?? [])].some((h) => isActive(pathname, h));
           return (
             <Link
               key={item.href}

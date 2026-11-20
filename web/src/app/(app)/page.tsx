@@ -86,7 +86,10 @@ async function Dashboard() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold">Nawyki dziś</h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold">Nawyki dziś</h2>
+          <Link href="/habits/new" className="flex h-9 items-center rounded-full bg-surface-2 px-4 text-sm font-semibold">+ Nowy nawyk</Link>
+        </div>
         {rows.length === 0 ? (
           <p className="text-sm text-muted">
             Brak aktywnych nawyków.{" "}
@@ -152,7 +155,13 @@ async function Dashboard() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold">Cele</h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold">Cele</h2>
+          <div className="flex gap-2">
+            <Link href="/goals" className="flex h-9 items-center rounded-full bg-surface-2 px-4 text-sm font-semibold">Wszystkie cele</Link>
+            <Link href="/goals/new" className="flex h-9 items-center rounded-full bg-surface-2 px-4 text-sm font-semibold">+ Nowy cel</Link>
+          </div>
+        </div>
         {goalRows.length === 0 ? (
           <p className="text-sm text-muted">
             Brak aktywnych celów.{" "}

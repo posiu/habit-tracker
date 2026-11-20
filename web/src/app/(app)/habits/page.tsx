@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { activateHabit, archiveHabit, deleteHabit } from "./actions";
+import { HabitsTabs } from "@/components/habits-tabs";
 import { DeleteButton } from "@/components/delete-button";
 import { HABIT_TYPE_LABELS } from "@/lib/domain/schemas";
 import { listHabits } from "@/lib/queries";
@@ -58,6 +59,7 @@ export default function HabitsPage(props: PageProps<"/habits">) {
         <h1 className="text-[34px] font-bold tracking-tight">Nawyki</h1>
         <Link href="/habits/new" className="flex h-11 items-center rounded-full bg-surface-2 px-4 text-[15px] font-semibold">Nowy nawyk</Link>
       </div>
+      <HabitsTabs active="habits" />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <HabitList searchParams={props.searchParams} />
       </Suspense>

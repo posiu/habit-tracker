@@ -2,13 +2,13 @@ import { connection } from "next/server";
 import { Suspense } from "react";
 import { HabitForm } from "@/components/habit-form";
 import { today } from "@/lib/domain/habits";
-import { listCategories, listHabits } from "@/lib/queries";
+import { listCategories, listHabitGoals, listHabits } from "@/lib/queries";
 import { PageHeader } from "@/components/page-header";
 
 async function Form() {
   await connection();
-  const [categories, habits] = await Promise.all([listCategories(), listHabits(true)]);
-  return <HabitForm categories={categories} habits={habits} defaultStart={today()} scheduleDays={[0, 1, 2, 3, 4, 5, 6]} />;
+  const [categories, habits, goals] = await Promise.all([listCategories(), listHabits(true), listHabitGoals()]);
+  return <HabitForm categories={categories} habits={habits} goals={goals} defaultStart={today()} scheduleDays={[0, 1, 2, 3, 4, 5, 6]} />;
 }
 
 export default function NewHabitPage() {

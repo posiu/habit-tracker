@@ -43,14 +43,10 @@ async function Settings() {
           <span>Kategorie</span>
           <span className="text-muted">›</span>
         </Link>
-        <a href="/eksport" download className={`${row} border-b border-surface-2`}>
+        <a href="/eksport" download className={me?.isAdmin ? `${row} border-b border-surface-2` : row}>
           <span>Eksport danych (CSV)</span>
           <span className="text-muted">Pobierz</span>
         </a>
-        <Link href="/goals" className={me?.isAdmin ? `${row} border-b border-surface-2` : row}>
-          <span>Cele</span>
-          <span className="text-muted">›</span>
-        </Link>
         {me?.isAdmin && (
           <Link href="/ustawienia/zaproszenia" className={row}>
             <span>Konta i zaproszenia</span>
