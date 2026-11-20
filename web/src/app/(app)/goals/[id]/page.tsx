@@ -54,7 +54,7 @@ async function Detail({ params }: { params: PageProps<"/goals/[id]">["params"] }
                 {habit.name}
               </Link>
             ) : (
-              "nawyk został usunięty"
+              (goal.habit_id ? "nawyk został usunięty" : "nie wskazano nawyku")
             )}
           </p>
         )}

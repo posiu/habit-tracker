@@ -30,6 +30,7 @@ export function habitFromForm(fd: FormData): Record<keyof HabitInput, unknown> {
     plan_text: text(fd, "plan_text"),
     minimum_text: text(fd, "minimum_text"),
     anchor_habit_id: text(fd, "anchor_habit_id"),
+    goal_ids: fd.getAll("goal_ids").filter((v): v is string => typeof v === "string"),
     schedule_days: fd.getAll("schedule_days").map((d) => Number(d)),
   };
 }
@@ -42,7 +43,7 @@ export function rawValues(fd: FormData): RawValues {
   for (const key of new Set(fd.keys())) {
     if (key.startsWith("$ACTION")) continue;
     const all = fd.getAll(key).filter((v): v is string => typeof v === "string");
-    out[key] = key === "schedule_days" ? all : (all[0] ?? "");
+    out[key] = key === "schedule_days" || key === "goal_ids" ? all : (all[0] ?? "");
   }
   return out;
 }

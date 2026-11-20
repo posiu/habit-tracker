@@ -57,6 +57,20 @@ export async function saveHabit(id: string | null, _prev: FormState, fd: FormDat
     }
   }
 
+  if (!error && habitId) {
+    // Links to goals counted from this habit: link the ticked ones, unlink the unticked (open goals only).
+    const { error: unlinkError } = await supabase
+      .from("goals")
+      .update({ habit_id: null })
+      .eq("habit_id", habitId)
+      .is("completed_at", null)
+      .not("id", "in", `(${h.goal_ids.join(",") || "00000000-0000-0000-0000-000000000000"})`);
+    error = unlinkError;
+    if (!error && h.goal_ids.length > 0) {
+      ({ error } = await supabase.from("goals").update({ habit_id: habitId }).in("id", h.goal_ids));
+    }
+  }
+
   if (error) return { errors: { _form: "Nie udało się zapisać nawyku. Spróbuj ponownie." }, values: rawValues(fd) };
   redirect("/habits");
 }

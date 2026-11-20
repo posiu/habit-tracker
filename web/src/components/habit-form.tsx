@@ -13,12 +13,14 @@ export function HabitForm({
   categories,
   habits,
   defaultStart,
+  goals,
   scheduleDays,
 }: {
   habit?: Habit;
   categories: Category[];
   habits: { id: string; name: string }[];
   defaultStart: string;
+  goals: { id: string; name: string; goal_type: "habit_days" | "habit_streak"; habit_id: string | null }[];
   scheduleDays: number[];
 }) {
   const [state, action, pending] = useActionState<FormState, FormData>(
@@ -28,6 +30,8 @@ export function HabitForm({
   const e = state?.errors ?? {};
   const v = (key: string, fallback?: string | number | null) =>
     state?.values ? String(state.values[key] ?? "") : String(fallback ?? "");
+  const linked = state?.values ? ((state.values.goal_ids as string[] | undefined) ?? []) : goals.filter((g) => habit && g.habit_id === habit.id).map((g) => g.id);
+  const habitName = (id: string | null) => habits.find((h) => h.id === id)?.name;
   const days = state?.values ? ((state.values.schedule_days as string[] | undefined) ?? []).map(Number) : scheduleDays;
 
   return (
@@ -90,6 +94,34 @@ export function HabitForm({
         <Field label="Wersja 2-minutowa" error={e.minimum_text}>
           <input name="minimum_text" maxLength={200} placeholder="np. przeczytać jedną stronę" defaultValue={v("minimum_text", habit?.minimum_text)} className={inputClass} />
         </Field>
+      </div>
+      <div role="group" aria-labelledby="goals-title" className="space-y-3 rounded-3xl bg-surface p-4 text-sm">
+        <p id="goals-title" className="font-semibold">Cele z tego nawyku</p>
+        {goals.length === 0 ? (
+          <p className="text-xs text-muted">
+            Nie masz jeszcze celów liczonych z nawyku. <Link href="/goals/new" className="underline">Dodaj cel</Link> typu „Dni z nawyku” albo „Seria z nawyku”, potem wskażesz go tutaj.
+          </p>
+        ) : (
+          <>
+            <ul className="space-y-2">
+              {goals.map((g) => (
+                <li key={g.id}>
+                  <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-2xl bg-surface-2 px-4 py-2">
+                    <input type="checkbox" name="goal_ids" value={g.id} defaultChecked={linked.includes(g.id)} className="size-4 accent-[var(--accent)]" />
+                    <span className="min-w-0">
+                      <span className="block truncate font-medium">{g.name}</span>
+                      <span className="block text-xs text-muted">
+                        {g.goal_type === "habit_days" ? "Dni z nawyku" : "Seria z nawyku"}
+                        {g.habit_id && g.habit_id !== habit?.id ? ` · teraz z nawyku: ${habitName(g.habit_id) ?? "innego"}` : ""}
+                      </span>
+                    </span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-muted">Zaznaczenie celu liczonego z innego nawyku przepina go na ten nawyk.</p>
+          </>
+        )}
       </div>
       <div role="group" aria-labelledby="schedule-title" className="space-y-3 rounded-3xl bg-surface p-4 text-sm">
         <p id="schedule-title" className="font-semibold">Harmonogram</p>

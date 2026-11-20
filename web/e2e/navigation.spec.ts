@@ -18,10 +18,13 @@ test("settings sub-pages and forms have a way back", async ({ page }) => {
   await ui().getByRole("link", { name: /Ustawienia/ }).first().click();
   await expect(ui().getByRole("heading", { name: "Ustawienia" })).toBeVisible();
 
-  // goals: list → new → back to the list
-  await ui().getByRole("link", { name: "Cele" }).click();
+  // goals live next to habits: Nawyki tab → Cele → new goal → back to the list
+  await page.getByRole("navigation", { name: "Główna nawigacja" }).getByRole("link", { name: "Nawyki" }).click();
+  await ui().getByRole("navigation", { name: "Nawyki i cele" }).getByRole("link", { name: "Cele" }).click();
+  await expect(ui().getByRole("heading", { name: "Cele" })).toBeVisible();
   await ui().getByRole("link", { name: "Nowy cel" }).click();
-  await ui().getByRole("link", { name: /Cele/ }).first().click();
+  await expect(ui().getByRole("heading", { name: "Nowy cel" })).toBeVisible();
+  await ui().getByRole("link", { name: "Cele", exact: true }).click();
   await expect(ui().getByRole("heading", { name: "Cele" })).toBeVisible();
 
   // habits form and day screen

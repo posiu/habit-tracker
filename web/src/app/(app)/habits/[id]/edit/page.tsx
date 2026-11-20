@@ -3,12 +3,12 @@ import { Suspense } from "react";
 import { HabitForm } from "@/components/habit-form";
 import { todayIn } from "@/lib/domain/entries";
 import { scheduleOn } from "@/lib/domain/schedule";
-import { getHabit, getTimeZone, listCategories, listHabits, listSchedules } from "@/lib/queries";
+import { getHabit, getTimeZone, listCategories, listHabitGoals, listHabits, listSchedules } from "@/lib/queries";
 import { PageHeader } from "@/components/page-header";
 
 async function Editor({ params }: { params: PageProps<"/habits/[id]/edit">["params"] }) {
   const { id } = await params;
-  const [habit, categories, habits] = await Promise.all([getHabit(id), listCategories(), listHabits(true)]);
+  const [habit, categories, habits, goals] = await Promise.all([getHabit(id), listCategories(), listHabits(true), listHabitGoals()]);
   if (!habit) notFound();
   const schedules = await listSchedules([habit.id]);
   const current = scheduleOn(schedules, todayIn(await getTimeZone()));
@@ -17,6 +17,7 @@ async function Editor({ params }: { params: PageProps<"/habits/[id]/edit">["para
       habit={habit}
       categories={categories}
       habits={habits}
+      goals={goals}
       defaultStart={habit.start_date}
       scheduleDays={current?.days ?? [0, 1, 2, 3, 4, 5, 6]}
     />
