@@ -34,7 +34,7 @@ export function HabitForm({
     <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
       {e._form && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
-        <input name="name" required maxLength={200} defaultValue={v("name", habit?.name)} className={inputClass} />
+        <input name="name" placeholder="np. Czytanie przed snem" required maxLength={200} defaultValue={v("name", habit?.name)} className={inputClass} />
       </Field>
       <Field label="Typ" error={e.habit_type}>
         <select name="habit_type" defaultValue={v("habit_type", habit?.habit_type ?? "boolean")} className={inputClass}>
@@ -45,10 +45,10 @@ export function HabitForm({
       </Field>
       <div className="grid grid-cols-2 gap-4">
         <Field label="Cel" error={e.target_value}>
-          <input name="target_value" inputMode="decimal" defaultValue={v("target_value", habit?.target_value)} className={inputClass} />
+          <input name="target_value" placeholder="np. 30" inputMode="decimal" defaultValue={v("target_value", habit?.target_value)} className={inputClass} />
         </Field>
         <Field label="Jednostka" error={e.unit}>
-          <input name="unit" maxLength={50} defaultValue={v("unit", habit?.unit)} className={inputClass} />
+          <input name="unit" placeholder="np. min, km, stron" maxLength={50} defaultValue={v("unit", habit?.unit)} className={inputClass} />
         </Field>
       </div>
       <div role="group" aria-labelledby="plan-title" className="space-y-4 rounded-3xl bg-surface p-4">

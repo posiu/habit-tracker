@@ -36,7 +36,7 @@ export function GoalForm({
         </p>
       )}
       <Field label="Nazwa" error={e.name}>
-        <input name="name" required maxLength={200} defaultValue={v("name", goal?.name)} className={inputClass} />
+        <input name="name" placeholder="np. Odłożyć na wakacje" required maxLength={200} defaultValue={v("name", goal?.name)} className={inputClass} />
       </Field>
       <Field label="Typ celu" error={e.goal_type}>
         <select name="goal_type" value={type} onChange={(ev) => setType(ev.target.value as GoalType)} className={inputClass}>
@@ -52,10 +52,10 @@ export function GoalForm({
       {type === "target_value" && (
         <div className="grid grid-cols-2 gap-4">
           <Field label="Wartość docelowa" error={e.target_value}>
-            <input name="target_value" inputMode="decimal" defaultValue={v("target_value", m?.target_value)} className={inputClass} />
+            <input name="target_value" placeholder="np. 5000" inputMode="decimal" defaultValue={v("target_value", m?.target_value)} className={inputClass} />
           </Field>
           <Field label="Jednostka" error={e.unit}>
-            <input name="unit" maxLength={50} defaultValue={v("unit", goal?.unit)} className={inputClass} />
+            <input name="unit" placeholder="np. zł, km, kg" maxLength={50} defaultValue={v("unit", goal?.unit)} className={inputClass} />
           </Field>
         </div>
       )}

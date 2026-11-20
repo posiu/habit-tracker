@@ -15,8 +15,12 @@
 
 Kolejność: 1 → 2 → (3, 4, 5 niezależnie, po jednym) → 6. 1 i 2 są najtańsze i usuwają większość irytacji.
 
-## Pytania do Michała (decyzje przed partiami 3 i 5)
+## Decyzje Michała (2026-11-20)
 
-1. Czy „Odhacz” dla nawyku tak/nie ma dalej zapisywać jednym tapnięciem na Dziś (szybko, bez przejścia), a do ekranu wykonania prowadzi tylko „Uzupełnij” (czas, liczba) i klik w nazwę nawyku? Czy zawsze przechodzić na osobny ekran?
-2. Powiązanie nawyku z celem: (a) w formularzu nawyku sekcja „Cele z tego nawyku” z przyciskiem „Dodaj cel z tego nawyku” (otwiera formularz celu z wybranym nawykiem), czy (b) lista istniejących celów do wskazania? Dziś cel z nawyku wskazuje nawyk, nie odwrotnie.
-3. Czy „Cele” mają dostać własną pozycję w dolnej nawigacji (kosztem np. Analizy albo jako piąta zakładka)?
+1. Odhacz: tam gdzie wystarczy jedno działanie (nawyk tak/nie), potwierdzenie od razu na Dziś; tam gdzie trzeba coś uzupełnić (czas, liczba), przejście na osobny ekran wykonania.
+2. Powiązanie nawyku z celem: wybór z listy istniejących celów.
+3. „Cele” jako zakładka w dolnej nawigacji; jeśli nie zmieści się na telefonie, wejście z zakładki Nawyki.
+
+## Status
+
+- PR 1: zrobiony (fix/ux-batch-1). Przyczyna „błędu dni tygodnia”: nie dane, tylko widok: dni tygodnia przed datą startu nowego nawyku były rysowane jako „niewykonane”, a przyszłe jako puste obrysy. Teraz dni przed startem mają osobny stan „przed startem nawyku”.

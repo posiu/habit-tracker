@@ -48,7 +48,7 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
   const monday = addDays(today, -((weekday(today) + 6) % 7));
   const week = WEEKDAYS.map(([, label], i) => {
     const date = addDays(monday, i);
-    const state: "future" | "done" | "missed" | "off" = date > today ? "future" : done.has(date) ? "done" : scheduled(date) ? "missed" : "off";
+    const state: "future" | "before" | "done" | "missed" | "off" = date > today ? "future" : date < habit.start_date ? "before" : done.has(date) ? "done" : scheduled(date) ? "missed" : "off";
     return { label, date, state };
   });
   const circle = {
@@ -56,8 +56,9 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
     missed: "bg-surface-2 text-muted",
     off: "border border-dashed border-faint text-faint",
     future: "border border-line text-faint",
+    before: "border border-line text-faint",
   } as const;
-  const mark = { done: "✓", missed: "–", off: "", future: "" } as const;
+  const mark = { done: "✓", missed: "–", off: "", future: "", before: "" } as const;
 
   return (
     <div className="space-y-4">
@@ -89,7 +90,7 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
             <li key={d.date} className="flex flex-col items-center gap-1.5">
               <span>{d.label}</span>
               <span
-                aria-label={`${d.label}: ${{ done: "wykonane", missed: "niewykonane", off: "poza harmonogramem", future: "jeszcze nie" }[d.state]}`}
+                aria-label={`${d.label}: ${{ done: "wykonane", missed: "niewykonane", off: "poza harmonogramem", future: "jeszcze nie", before: "przed startem nawyku" }[d.state]}`}
                 className={`flex size-9 items-center justify-center rounded-full text-sm font-semibold ${circle[d.state]}`}
               >
                 {mark[d.state]}
@@ -108,7 +109,7 @@ async function Detail({ params }: { params: PageProps<"/habits/[id]">["params"] 
       )}
 
       <div className="flex gap-3 pt-2">
-        <Link href={`/habits/${habit.id}/edit`} className="flex h-14 flex-1 items-center justify-center rounded-full bg-[#e4e4ea] text-base font-semibold text-chip-text">
+        <Link href={`/habits/${habit.id}/edit`} className="flex h-14 flex-1 items-center justify-center rounded-full bg-chip text-base font-semibold text-chip-text">
           Edytuj
         </Link>
         <Link href="/habits" className="flex h-14 items-center rounded-full bg-surface-2 px-6 text-base font-semibold">
