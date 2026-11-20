@@ -1,3 +1,4 @@
+import { habitTone } from "@/lib/domain/habit-colors";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AnalysisTabs } from "@/components/analysis-tabs";
@@ -107,7 +108,10 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
               {rows.map(({ habit, cells, pct, streak }) => (
                 <tr key={habit.id}>
                   <th scope="row" className="sticky left-0 max-w-36 truncate bg-surface pr-3 text-left font-semibold">
-                    <Link href={`/habits/${habit.id}`}>{habit.name}</Link>
+                    <Link href={`/habits/${habit.id}`} className="inline-flex items-center gap-2">
+                      <span aria-hidden="true" className="size-2.5 flex-none rounded-full" style={{ background: habitTone(habit.color).dot }} />
+                      <span className="truncate">{habit.name}</span>
+                    </Link>
                   </th>
                   {cells.map((c) => (
                     <td key={c.date} className="px-0.5">
@@ -115,6 +119,7 @@ async function Month({ searchParams }: { searchParams: PageProps<"/analiza/miesi
                         role="img"
                         aria-label={`${habit.name}, ${c.date}: ${label[c.state as keyof typeof label]}`}
                         className={`block size-5 rounded-md ${cellClass[c.state as keyof typeof cellClass]}`}
+                        style={c.state === "done" && habit.color ? { background: habitTone(habit.color).dot } : undefined}
                       />
                     </td>
                   ))}

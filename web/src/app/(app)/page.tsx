@@ -1,3 +1,4 @@
+import { habitTone } from "@/lib/domain/habit-colors";
 import Link from "next/link";
 import { Suspense } from "react";
 import { checkIn, checkInMinimum } from "./actions";
@@ -8,8 +9,6 @@ import { buildHeatmap, currentStreak, heatmapStart, longestStreak } from "@/lib/
 import { goalProgress } from "@/lib/domain/goals";
 import { isScheduledOn, type Schedule } from "@/lib/domain/schedule";
 import { getHeatmapCounts, getTimeZone, listCompletions, listMinimumHabitIds, listGoalEntries, listGoals, listHabitsForDate, listSchedules, loadHabitGoalData } from "@/lib/queries";
-
-const PALETTE = [1, 2, 3, 4, 5, 6].map((n) => ({ dot: `var(--h${n}-dot)`, bg: `var(--h${n}-bg)`, border: `var(--h${n}-border)` }));
 
 function Tile({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
@@ -100,8 +99,8 @@ async function Dashboard() {
           </p>
         ) : (
           <ul className="grid grid-cols-2 gap-3">
-            {rows.map(({ habit, doneToday: done, streak, best }, i) => {
-              const c = PALETTE[i % PALETTE.length];
+            {rows.map(({ habit, doneToday: done, streak, best }) => {
+              const c = habitTone(habit.color);
               return (
                 <li
                   key={habit.id}

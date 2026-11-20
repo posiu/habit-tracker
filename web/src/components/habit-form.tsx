@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { saveHabit, type FormState } from "@/app/(app)/habits/actions";
+import { HABIT_COLORS, HABIT_COLOR_LABELS, habitTone } from "@/lib/domain/habit-colors";
 import { WEEKDAYS } from "@/lib/domain/schedule";
 import { HABIT_TYPES, HABIT_TYPE_LABELS } from "@/lib/domain/schemas";
 import type { Category, Habit } from "@/lib/queries";
@@ -57,6 +58,28 @@ export function HabitForm({
           <input name="unit" placeholder="np. min, km, stron" maxLength={50} defaultValue={v("unit", habit?.unit)} className={inputClass} />
         </Field>
       </div>
+      <fieldset className="space-y-2">
+        <legend className="text-sm font-medium">Kolor</legend>
+        <div className="flex flex-wrap gap-2">
+          <label className="cursor-pointer">
+            <input type="radio" name="color" value="" defaultChecked={!v("color", habit?.color)} className="peer sr-only" />
+            <span className="flex size-10 items-center justify-center rounded-full border-2 border-transparent bg-surface-2 text-xs text-muted peer-checked:border-foreground peer-focus-visible:outline-2" title="Domyślny">
+              <span className="size-4 rounded-full" style={{ background: habitTone(null).dot }} />
+              <span className="sr-only">Domyślny</span>
+            </span>
+          </label>
+          {HABIT_COLORS.map((c) => (
+            <label key={c} className="cursor-pointer">
+              <input type="radio" name="color" value={c} defaultChecked={v("color", habit?.color) === c} className="peer sr-only" />
+              <span className="flex size-10 items-center justify-center rounded-full border-2 border-transparent peer-checked:border-foreground peer-focus-visible:outline-2" title={HABIT_COLOR_LABELS[c]} style={{ background: habitTone(c).bg }}>
+                <span className="size-4 rounded-full" style={{ background: habitTone(c).dot }} />
+                <span className="sr-only">{HABIT_COLOR_LABELS[c]}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+        {e.color && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e.color}</p>}
+      </fieldset>
       <Field label="Kategoria" error={e.category_id}>
         <select name="category_id" defaultValue={v("category_id", habit?.category_id)} className={inputClass}>
           <option value="">Bez kategorii</option>

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { HABIT_COLORS } from "./habit-colors";
 
 const isoDate = z
   .string()
@@ -39,6 +40,7 @@ export const habitSchema = z
     plan_text: z.string().trim().max(300, "Maksymalnie 300 znaków").optional(),
     minimum_text: z.string().trim().max(200, "Maksymalnie 200 znaków").optional(),
     anchor_habit_id: z.uuid("Nieprawidłowy nawyk").optional(),
+    color: z.enum(HABIT_COLORS, { error: "Nieprawidłowy kolor" }).optional(),
     goal_ids: z.array(z.string().uuid()).default([]),
     schedule_days: z
       .array(z.number().int().min(0).max(6))
