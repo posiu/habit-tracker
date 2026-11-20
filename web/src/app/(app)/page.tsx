@@ -138,7 +138,7 @@ async function Dashboard() {
                     </form>
                   ) : (
                     <Link
-                      href="/daily"
+                      href={`/habits/${habit.id}/log`}
                       aria-label={`${habit.name}: ${done ? "ukończony dziś" : "uzupełnij wartość"}`}
                       className={`mt-auto flex h-11 items-center justify-center rounded-full text-[15px] font-semibold ${done ? "bg-foreground/15 text-foreground" : "border-[1.5px] text-foreground"}`}
                       style={done ? undefined : { borderColor: c.dot }}
