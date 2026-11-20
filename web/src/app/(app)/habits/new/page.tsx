@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { HabitForm } from "@/components/habit-form";
 import { today } from "@/lib/domain/habits";
 import { listCategories, listHabits } from "@/lib/queries";
+import { PageHeader } from "@/components/page-header";
 
 async function Form() {
   await connection();
@@ -13,7 +14,7 @@ async function Form() {
 export default function NewHabitPage() {
   return (
     <main className="space-y-6">
-      <h1 className="text-[34px] font-bold tracking-tight">Nowy nawyk</h1>
+      <PageHeader title="Nowy nawyk" back={{ href: "/habits", label: "Nawyki" }} />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Form />
       </Suspense>

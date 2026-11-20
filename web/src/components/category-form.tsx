@@ -15,7 +15,7 @@ export function CategoryForm({ category }: { category?: Category }) {
   const v = (key: string, fallback?: string | null) => (state?.values ? String(state.values[key] ?? "") : (fallback ?? ""));
 
   return (
-    <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4">
+    <form key={state?.values ? JSON.stringify(state.values) : "initial"} action={action} className="max-w-md space-y-4 md:max-w-xl">
       {e._form && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{e._form}</p>}
       <Field label="Nazwa" error={e.name}>
         <input name="name" placeholder="np. Zdrowie" required maxLength={100} defaultValue={v("name", category?.name)} className={inputClass} />

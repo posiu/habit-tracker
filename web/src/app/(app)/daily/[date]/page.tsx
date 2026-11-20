@@ -4,6 +4,7 @@ import { DayForm } from "@/components/day-form";
 import { addDays, isValidDate, todayIn } from "@/lib/domain/entries";
 import { goalLoggableOn } from "@/lib/domain/goals";
 import { getDayEntry, getDayGoalEntries, getTimeZone, listGoalsForDate, listHabitsForDate } from "@/lib/queries";
+import { PageHeader } from "@/components/page-header";
 
 async function Day({ params }: { params: PageProps<"/daily/[date]">["params"] }) {
   const { date } = await params;
@@ -35,7 +36,7 @@ async function Day({ params }: { params: PageProps<"/daily/[date]">["params"] })
 export default function DayPage(props: PageProps<"/daily/[date]">) {
   return (
     <main className="space-y-6">
-      <h1 className="text-[34px] font-bold tracking-tight">Dzień</h1>
+      <PageHeader title="Dzień" back={{ href: "/", label: "Dziś" }} />
       <Suspense fallback={<p className="text-sm">Ładowanie…</p>}>
         <Day params={props.params} />
       </Suspense>

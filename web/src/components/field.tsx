@@ -28,7 +28,7 @@ export function SubmitButton({ pending, children }: { pending: boolean; children
     <button
       type="submit"
       disabled={pending}
-      className="h-14 flex-1 rounded-full bg-accent px-6 text-base font-semibold text-accent-text disabled:opacity-60"
+      className="h-14 flex-1 rounded-full bg-accent px-6 md:flex-none md:min-w-56 text-base font-semibold text-accent-text disabled:opacity-60"
     >
       {pending ? "Zapisywanie…" : children}
     </button>
