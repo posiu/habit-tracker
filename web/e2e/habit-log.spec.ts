@@ -39,7 +39,9 @@ test("yes/no habits confirm on Today; value habits open their own screen", async
   await ui().getByRole("textbox").fill("1,5");
   await page.getByRole("button", { name: "Zapisz" }).click();
   await expect(page.getByRole("heading", { name: "Dziś", level: 1 })).toBeVisible();
-  await expect(ui().getByText("1/3")).toBeVisible(); // Woda done, Bieg below its target
+  await expect(ui().getByText("1/3")).toBeVisible();
+  // the saved value is visible on the tile even though it is below the target
+  await expect(ui().getByTestId("habit-row").filter({ hasText: "Bieg" }).getByTestId("habit-progress")).toContainText("Dziś: 1.5 km z 2"); // Woda done, Bieg below its target
 
   // reaching the target completes it; the screen shows the saved value
   await page.goto(`/habits/${await idOf(page, "Bieg")}/log`);
